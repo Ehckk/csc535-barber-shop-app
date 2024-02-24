@@ -2,7 +2,7 @@ from pymysql import Connection
 from pymysql.cursors import DictCursor 
 
 
-def connect_db(config):
+def connect(config):
     try:
         print("Connecting to database...")
         connection = Connection(
@@ -12,7 +12,8 @@ def connect_db(config):
             password=config["MYSQL_PASSWORD"],
             database=config["MYSQL_DB"],
             charset='utf8mb4',
-            cursorclass=DictCursor
+            cursorclass=DictCursor,
+            autocommit=True
         )
     except KeyError as key:
         message = f"Unable to find required environment variable {key} in \'.flaskenv\'. Does it exist?"
@@ -20,4 +21,4 @@ def connect_db(config):
     
     name = connection.db.decode("ascii")
     print(f"Connected to database \'{name}\'")
-    return connection
+    return name, connection
