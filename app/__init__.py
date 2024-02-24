@@ -1,9 +1,6 @@
 from flask import Flask
-from config import app_config
-from data.db import Database
+from ..database import db, app_config
 
-
-db = Database(app_config)
 
 def create_app():
     print("Starting application...")

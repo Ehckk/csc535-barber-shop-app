@@ -4,9 +4,8 @@ from pathlib import Path
 
 CWD = Path.cwd()
 
-def load(filename=".flaskenv"):
-    parent = Path(__file__).parent
-    config_path = Path.joinpath(CWD, parent, filename)
+def load():
+    config_path = Path.joinpath(CWD, ".flaskenv")
     print(f"Loading configuration from {config_path}...")
 
     if not Path.exists(config_path):
