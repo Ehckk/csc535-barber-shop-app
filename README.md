@@ -14,6 +14,7 @@ Create a `.flaskenv` file in the `config` folder of the project.
 
 Within the  `.flaskenv` file, add the following contents:
 ```
+FLASK_APP='main.py'
 MYSQL_IP='127.0.0.1'
 MYSQL_PORT=3306
 MYSQL_USER='root'
