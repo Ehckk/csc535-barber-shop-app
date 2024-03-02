@@ -1,0 +1,47 @@
+{#
+{% macro switch_field(field) %}
+    {% for field in fields %}
+        
+    {% endfor %}
+{% endmacro %}
+
+{% macro text_field(field) %}
+    {% for field in fields %}
+        
+    {% endfor %}
+{% endmacro %}
+#}
+
+{% macro _render_errors(field) %}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_field(field) %}
+    {% if not field.type == 'SubmitField' %}
+        {{ field.label }}
+    {% endif %}
+    {{ field()|safe }}
+    {{ _render_errors(field) }}
+{% endmacro %}
+
+{% macro render_form(form, name=None, action=None) %}
+    {% if name %}
+        <h2>{{ name }}</h2>
+    {% endif %}
+    <form 
+        {% if action != None %} action="{{ action }}" {% endif %} 
+        method="post"
+        class=""
+    >
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+            {% if not is_hidden_field(field) %}
+                {{ render_field(field) }}
+            {% endif %}
+        {% endfor %}
+    </form>
+{% endmacro %}
