@@ -1,4 +1,7 @@
+DROP DATABASE IF EXISTS csc535_barber;
+CREATE DATABASE csc535_barber;
 USE csc535_barber;
+
 
 DROP PROCEDURE IF EXISTS csc535_barber.`sp_barber_availability_for_range`;
 
