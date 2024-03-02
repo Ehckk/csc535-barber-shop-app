@@ -1,8 +1,12 @@
 <form method="POST" action="/">
     {{ form.hidden_tag() }}
-    {{ form.email.label }} 
-    {{ form.email(size=32) }}
-    {{ form.password.label }} 
-    {{ form.password(size=32) }}
+    <p>
+        {{ form.email.label }}
+        {{ form.email(size=32) }}
+    </p>
+    <p>
+        {{ form.password.label }}
+        {{ form.password(size=32) }}
+    </p>
     <input type="submit" value="Login">
 </form>

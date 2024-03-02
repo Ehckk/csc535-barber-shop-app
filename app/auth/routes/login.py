@@ -1,4 +1,4 @@
-from flask import flash, render_template
+from flask import flash, render_template, session
 from .. import auth
 from .forms.login import LoginForm
 from ..queries.login import login_user
@@ -14,6 +14,7 @@ def login():
             flash("Login Failed")
         if user:
             flash("Login Successful")
+            session["user"] = user
             # Redirect to Client home if client
             # Redirect to Barber home if barber
     return render_template("login.html", form=form)
