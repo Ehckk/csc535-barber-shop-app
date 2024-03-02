@@ -6,6 +6,7 @@ Term Project for CSC-535
 ### Required
 
 MySQL Server    >= 8.0.34   [Download](https://dev.mysql.com/downloads/installer/)
+
 Python          >= 3.11.8   [Download](https://www.python.org/downloads/)
 
 ## Creating .flaskenv
