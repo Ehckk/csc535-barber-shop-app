@@ -1,9 +1,9 @@
 from flask import Flask
 from ..database import db, app_config
-from . import auth
-from . import api
-from . import barber
-from . import client
+from .auth import auth 
+from .barber import barber
+from .client import client
+
 
 def create_app():
     print("Starting application...")
@@ -12,9 +12,8 @@ def create_app():
     app.secret_key = "dev"
     app.config.from_mapping(app_config)
 
-    app.register_blueprint(auth.auth)
-    app.register_blueprint(api.api)
-    app.register_blueprint(barber.barber)
-    app.register_blueprint(client.client)
+    app.register_blueprint(auth)
+    app.register_blueprint(barber)
+    app.register_blueprint(client)
 
     return app
