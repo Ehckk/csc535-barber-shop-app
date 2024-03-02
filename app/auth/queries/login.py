@@ -1,7 +1,7 @@
 from ... import db
 
 
-def login(email, password):
+def login_user(email, password):
     query = """
         SELECT * FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
