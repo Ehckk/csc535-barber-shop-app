@@ -1,20 +1,10 @@
 {% from "_render_form.html" import render_form %}
+
 {% extends "base.html" %}
 {% block title %}
     Login
 {% endblock %}
 {% block body %}
-    {{ render_form(form, name="Login", action="/") }}
-{#<form method="POST" action="/">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.email.label }}
-        {{ form.email(size=32) }}
-    </p>
-    <p>
-        {{ form.password.label }}
-        {{ form.password(size=32) }}
-    </p>
-    <input type="submit" value="Login">
-</form>#}
+    {% call render_form(form, name="Login", action="/") %}
+    {% endcall %}
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}
+    Client
+{% endblock %}
+{% block body %}
+    <h1>Client Home</h1>
+    <p>{{ user.first_name }} {{ user.last_name }}</p>
+    <a href="{{ url_for('auth.logout') }}">
+        <button>Log Out</button>
+    </a>
+{% endblock %}

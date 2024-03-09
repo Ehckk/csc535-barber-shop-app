@@ -51,7 +51,6 @@
                 {{ render_field(field) }}
             {% endif %}
         {% endfor %}
-        {{ caller() }}
     </div>
 {% endmacro %}
 
@@ -69,7 +68,7 @@
                 {% endif %}
             {% endfor %}
         </div>
+        {{ render_buttons(form) }}
+        {{ caller() }}
     </form>
-    {% call render_buttons(form) %}
-    {% endcall %}
 {% endmacro %}

@@ -6,11 +6,21 @@ from ..queries.schedules import list_schedule
 
 
 class User:
-    def __init__(self, id, first_name, last_name, email, verified=False):
-        self.id = id
+    def __init__(
+        self, 
+        user_id, 
+        email, 
+        first_name, 
+        last_name, 
+        role, 
+        verified=False
+    ):
+        self.id = user_id
+        self.role = role
+        self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.email = email
+        self.role = role
         self.verified = verified
 
     def logout(self):

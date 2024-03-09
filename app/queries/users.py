@@ -3,7 +3,7 @@ from .. import db
 
 def check_email(email: str):
     query = """
-        SELECT * 
+        SELECT `user_id` 
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
     """    
@@ -13,7 +13,10 @@ def check_email(email: str):
 
 def check_password(email: str, password: str):
     query = """
-        SELECT * 
+        SELECT 
+            `user_id`,
+            `email`,
+            `role`
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
         AND `password` = %(password)s
@@ -24,12 +27,34 @@ def check_password(email: str, password: str):
 
 def list_barbers():
     query = """
-        SELECT * 
+        SELECT 
+            `user_id`,
+            `first_name`,
+            `last_name`,
+            `email`,
+            `role`,
+            `verified`
         FROM csc535_barber.`user`
         WHERE `role` = 'Barber'
     """
     cursor = db.execute(query)
     return cursor.fetchall()
+
+
+def retrieve_user(id: int):
+    query = """
+        SELECT 
+            `user_id`,
+            `first_name`,
+            `last_name`,
+            `email`,
+            `role`,
+            `verified`
+        FROM csc535_barber.`user`
+        WHERE `user_id` = %(id)s
+    """
+    cursor = db.execute(query, {"id": id})
+    return cursor.fetchone()    
 
 
 def create_user(

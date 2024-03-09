@@ -5,7 +5,7 @@ barber = Blueprint(
     "barber", 
     __name__, 
     url_prefix="/barber",
-    template_folder='templates'
+    template_folder='./templates'
 )
 
 
