@@ -1,7 +1,7 @@
 from flask import flash, render_template, session
+from ...queries.users import login_user
 from .. import auth
 from .forms.login import LoginForm
-from ..queries.login import login_user
 
 
 @auth.route("/", methods=["GET", "POST"])
