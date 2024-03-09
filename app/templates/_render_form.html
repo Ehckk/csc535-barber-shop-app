@@ -1,0 +1,76 @@
+{#
+{% macro switch_field(field) %}
+    {% for field in fields %}
+        
+    {% endfor %}
+{% endmacro %}
+
+{% macro text_field(field) %}
+    {% for field in fields %}
+        
+    {% endfor %}
+{% endmacro %}
+#}
+
+{% macro _render_errors(field) %}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <p class="field-error">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_field(field, inline=False) %}
+    {% if not is_submit_field(field) %}
+        {% if field.type == "BooleanField" or inline %}
+            <div class="field-col">
+                <div class="field-row">
+                    <div class="field">
+                        {{ field.label }}
+                        {{ field|safe }}
+                    </div>
+                </div>
+                {{ _render_errors(field) }}
+            </div>
+        {% else %}
+            <div class="field-col">                
+                <div class="field-col">
+                    {{ field.label }}
+                    {{ field(class="input-field")|safe }}
+                    {{ _render_errors(field) }}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        {{ field(class="primary-1 text-light-2")|safe }}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_buttons(form) %}
+    <div class="form-buttons">
+        {% for field in form %}
+            {% if is_submit_field(field) %}
+                {{ render_field(field) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+
+{% macro render_form(form, name=None, action=None, cols="1") %}
+    <form {% if action != None %} action="{{ action }}" {% endif %} method="post">
+        {% if name %}
+            <h2 class="form-title">{{ name }}</h2>
+        {% endif %}
+        {{ form.hidden_tag() }}
+        <div class="form-fields">
+            {% for field in form %}
+                {% if not is_hidden_field(field) and not is_submit_field(field) %}
+                    {{ render_field(field) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {{ render_buttons(form) }}
+        {{ caller() }}
+    </form>
+{% endmacro %}

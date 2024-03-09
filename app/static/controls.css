@@ -1,0 +1,44 @@
+input {
+    padding: 0.25rem;
+    background-color: var(--w-1);
+    border-radius: .25rem;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--s-2);
+    font-size: 1rem;
+    opacity: .85;
+    transition-property: opacity, transform;
+    transition-duration: .1s;
+    transition-timing-function: ease-in-out;
+}
+
+input:focus {
+    opacity: 1;
+}
+
+button, input[type=submit] {
+    appearance: none;
+    padding: 0.5rem 1rem;
+    border-radius: .25rem;
+    box-shadow: var(--drop-shadow);
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    opacity: .85;
+    transition-property: opacity, transform;
+    transition-duration: .1s;
+    transition-timing-function: ease-in-out;
+}
+
+button:hover, input[type=submit]:hover {
+    cursor: pointer;
+}
+
+button:hover, input[type=submit]:hover,
+button:focus, input[type=submit]:focus {
+    opacity: 1;
+}
+
+button:active, input[type=submit]:active {
+    transform: translateY(2px);
+}
