@@ -29,18 +29,49 @@ def create_schedule(
     start_time: time,
     end_time: time
 ):
-    return
+    query = """
+        INSERT INTO csc535_barber.`schedule` VALUES (
+            DEFAULT, 
+            %(barber_id)s, 
+            %(weekday_id)s, 
+            %(start_time)s, 
+            %(end_time)s
+        );
+    """
+    db.execute(query, {
+        "barber": barber_id,
+        "weekday_id": weekday_id,
+        "start_time": start_time.strftime('%H-%M'),
+        "end_time": end_time.strftime('%H-%M')
+    })
+    db.commit()
     
 
 def update_schedule(
     schedule_id: int,
     new_start: time,
-    new_end: time    
+    new_end: time 
 ):
-    return
-    
+    query = """
+        UPDATE csc535_barber.`schedule` 
+        SET `start_time` = %(start_time)s,
+            `end_time` = %(end_time)s
+        WHERE `schedule_id` = %(schedule_id)s;
+    """
+    db.execute(query, {
+        "schedule_id": schedule_id,
+        "start_time": new_start.strftime('%H-%M'),
+        "end_time": new_end.strftime('%H-%M')
+    })
+    db.commit()
+ 
 
 def delete_schedule(
     schedule_id: int
 ):
-    return
+    query = """
+        DELETE FROM csc535_barber.`schedule` 
+        WHERE `schedule_id` = %(schedule_id)s;
+    """
+    db.execute(query, {"schedule_id": schedule_id})
+    db.commit()

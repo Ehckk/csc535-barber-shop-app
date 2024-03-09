@@ -1,5 +1,6 @@
 from flask import flash, render_template, session
-from ...queries.users import login_user
+from ...queries.users import check_email, check_password
+from ...models.user import User
 from .. import auth
 from .forms.login import LoginForm
 
@@ -8,13 +9,17 @@ from .forms.login import LoginForm
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = login_user(form.email.data, form.password.data)
-        print(user)
+        email = form.email.data
+        password = form.password.data
+        user = check_email(form.email.data)
         if not user:
-            flash("Login Failed")
+            flash(f"No user found with email \"{email}\"")
+        user = check_password(email, password)
+        if not user:
+            flash(f"Incorrect password")
         if user:
             flash("Login Successful")
-            session["user"] = user
+            session["user"] = User()
             # Redirect to Client home if client
             # Redirect to Barber home if barber
     return render_template("login.html", form=form)

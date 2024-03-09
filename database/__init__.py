@@ -11,5 +11,8 @@ class Database:
             cursor.execute(sql, params)
             return cursor
         
+    def commit(self):
+        self.connection.commit()
+        
 
 db = Database(app_config)
