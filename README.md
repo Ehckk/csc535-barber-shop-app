@@ -10,7 +10,7 @@ MySQL Server    >= 8.0.34   [Download](https://dev.mysql.com/downloads/installer
 Python          >= 3.11.8   [Download](https://www.python.org/downloads/)
 
 ## Creating .flaskenv
-Create a `.flaskenv` file in the `config` folder of the project. 
+Create a `.flaskenv` file in the root folder of the project. 
 
 Within the  `.flaskenv` file, add the following contents:
 ```
