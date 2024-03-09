@@ -15,33 +15,61 @@
 {% macro _render_errors(field) %}
     {% if field.errors %}
         {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
+            <p class="field-error">{{ error }}</p>
         {% endfor %}
     {% endif %}
 {% endmacro %}
 
-{% macro render_field(field) %}
-    {% if not field.type == 'SubmitField' %}
-        {{ field.label }}
+{% macro render_field(field, inline=False) %}
+    {% if not is_submit_field(field) %}
+        {% if field.type == "BooleanField" or inline %}
+            <div class="field-col">
+                <div class="field-row">
+                    {{ field.label }}
+                    {{ field(_class="input-field")|safe }}
+                </div>
+                {{ _render_errors(field) }}
+            </div>
+        {% else %}
+            <div class="field-col">                
+                {{ field.label }}
+                <div class="field-col">
+                    {{ field(class="input-field")|safe }}
+                    {{ _render_errors(field) }}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        {{ field(class="primary-1 text-light-2")|safe }}
     {% endif %}
-    {{ field()|safe }}
-    {{ _render_errors(field) }}
 {% endmacro %}
 
-{% macro render_form(form, name=None, action=None) %}
-    {% if name %}
-        <h2>{{ name }}</h2>
-    {% endif %}
-    <form 
-        {% if action != None %} action="{{ action }}" {% endif %} 
-        method="post"
-        class=""
-    >
-        {{ form.hidden_tag() }}
+{% macro render_buttons(form) %}
+    <div class="form-buttons">
         {% for field in form %}
-            {% if not is_hidden_field(field) %}
+            {% if is_submit_field(field) %}
                 {{ render_field(field) }}
             {% endif %}
         {% endfor %}
+        {{ caller() }}
+    </div>
+{% endmacro %}
+
+
+{% macro render_form(form, name=None, action=None, cols="1") %}
+    <form {% if action != None %} action="{{ action }}" {% endif %} method="post">
+        {% if name %}
+            <h2 class="form-title">{{ name }}</h2>
+        {% endif %}
+        {{ form.hidden_tag() }}
+        <div class="form-fields">
+            {% for field in form %}
+                {% if not is_hidden_field(field) and not is_submit_field(field) %}
+                    {{ render_field(field) }}
+                {% endif %}
+            {% endfor %}
+        </div>
     </form>
+    {% call render_buttons(form) %}
+    {% endcall %}
 {% endmacro %}
