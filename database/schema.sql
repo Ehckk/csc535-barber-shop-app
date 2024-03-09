@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS csc535_barber;
 CREATE DATABASE csc535_barber;
 USE csc535_barber;
 
-
 DROP PROCEDURE IF EXISTS csc535_barber.`sp_barber_availability_for_range`;
 
 DROP VIEW IF EXISTS csc535_barber.`vw_barber_schedule`;
@@ -91,16 +90,17 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`appointment` (
     `start_time` TIME NOT NULL,
     `duration` SMALLINT UNSIGNED NOT NULL,
     `description` TEXT NULL,
+    `is_approved` BOOL DEFAULT 0,
     PRIMARY KEY (`appointment_id`),
 	FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE,
 	FOREIGN KEY (`client_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );
 
 INSERT INTO csc535_barber.`appointment` VALUES
-	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, DEFAULT),
-    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, DEFAULT),
-	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT),
-    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT);
+	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, DEFAULT, 1),
+    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, DEFAULT, 1),
+	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT, 1),
+    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1);
 
 CREATE VIEW csc535_barber.`vw_barber_schedule` AS
 SELECT 
@@ -133,6 +133,7 @@ WITH appointments AS (
 	AND V.`weekday_id` = WEEKDAY(A.`booked_date`)	-- Same weekday
 	AND V.`start_time` <= A.`start_time`			-- Within range
 	AND DATE_ADD(A.`start_time`, INTERVAL A.`duration` MINUTE) <= V.`end_time`
+    WHERE A.`is_approved` = true
 ),
 overlapping_appointments AS (
 	SELECT 
@@ -175,6 +176,7 @@ ORDER BY `barber_id`, `weekday_id`, `start_time`, `end_time`;
 
 DELIMITER //
 CREATE PROCEDURE sp_barber_availability_for_range(
+	IN barber int,
 	IN range_start date, 
     IN range_duration enum ('D', 'W', 'M')
 )
@@ -198,8 +200,11 @@ BEGIN
 		SELECT * FROM dates
 		WHERE NOT EXISTS (
 			SELECT * FROM csc535_barber.`unavailable`
-			WHERE (`end_date` IS NULL AND `date` = `start_date`)
-			OR `date` BETWEEN `start_date` AND `end_date`
+			WHERE `barber_id` = barber
+            AND (
+				(`end_date` IS NULL AND `date` = `start_date`)
+				OR `date` BETWEEN `start_date` AND `end_date`
+			)
 		)
 	),
 	dates_with_appointments AS (
@@ -216,14 +221,13 @@ BEGIN
 		FROM available_dates
 		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
-		WHERE `booked_date` IS NULL AND `date` NOT IN (
+		WHERE A.`barber_id` = barber
+        AND `booked_date` IS NULL AND `date` NOT IN (
 			SELECT `date` FROM dates_with_appointments
 		)
 	)
 	SELECT 
 		D1.`date`,
-		`barber_id`,
-		`weekday_id`,
 		`start_time`,
 		`end_time`
 	FROM dates AS D1
