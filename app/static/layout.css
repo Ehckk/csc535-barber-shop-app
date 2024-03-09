@@ -1,0 +1,10 @@
+.auth {
+    position: absolute;
+    top: 10%;
+    min-width: 20rem;
+    margin: 0 auto;
+    padding: .5rem;
+    border-radius: .5rem;
+    background-color: var(--w-2);
+    box-shadow: vaR(--drop-shadow);
+}

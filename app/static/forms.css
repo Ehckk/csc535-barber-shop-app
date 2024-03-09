@@ -7,15 +7,17 @@ form {
 
 .form-title {
     text-align: center;
+    font-size: 2rem;
 }
 
 .form-fields {
     display: grid;
-    row-gap: .5rem;
+    row-gap: 1rem;
 }
 
 .form-buttons {
-    padding-top: 1rem;
+    margin: .5rem 0;
+    padding: .5rem;
     display: flex;
     justify-content: space-evenly;
     align-items: center;

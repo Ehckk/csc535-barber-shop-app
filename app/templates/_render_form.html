@@ -25,15 +25,17 @@
         {% if field.type == "BooleanField" or inline %}
             <div class="field-col">
                 <div class="field-row">
-                    {{ field.label }}
-                    {{ field(_class="input-field")|safe }}
+                    <div class="field">
+                        {{ field.label }}
+                        {{ field|safe }}
+                    </div>
                 </div>
                 {{ _render_errors(field) }}
             </div>
         {% else %}
             <div class="field-col">                
-                {{ field.label }}
                 <div class="field-col">
+                    {{ field.label }}
                     {{ field(class="input-field")|safe }}
                     {{ _render_errors(field) }}
                 </div>

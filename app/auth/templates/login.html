@@ -1,10 +1,10 @@
 {% from "_render_form.html" import render_form %}
 
-{% extends "base.html" %}
+{% extends "auth.html" %}
 {% block title %}
     Login
 {% endblock %}
-{% block body %}
+{% block auth %}
     {% call render_form(form, name="Login", action="/") %}
     {% endcall %}
 {% endblock %}
