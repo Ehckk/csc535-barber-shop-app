@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, SubmitField
+from wtforms import StringField, PasswordField, EmailField, SubmitField, RadioField
 from wtforms.validators import DataRequired
 
 class Registration(FlaskForm):
@@ -21,6 +21,12 @@ class Registration(FlaskForm):
     password = PasswordField(
         validators=[DataRequired()], 
         label="Password"
+    )
+
+    role = RadioField(
+        validators=[DataRequired()],
+        label="Role",
+        choices=["Barber", "Client"]
     )
 
     submit = SubmitField(label="Register")
