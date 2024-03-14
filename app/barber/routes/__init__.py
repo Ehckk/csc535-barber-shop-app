@@ -1,3 +1,5 @@
 __all__ = [
-    "home"
+    "home",
+    "calendar",
+    "view_appointment"
 ]
