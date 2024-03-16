@@ -1,0 +1,56 @@
+.flash-messages {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 1rem;
+    list-style: none;
+}
+
+.flash-message {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: .5rem;
+    box-shadow: var(--drop-shadow);    
+}
+
+.flash-message::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: .5rem;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
+}
+
+.flash-message.text-error-0::after {
+    background-color: var(--e-1);
+}
+
+.flash-message.text-warning-0::after {
+    background-color: var(--w-1);
+} 
+
+.flash-message.text-success-0::after {
+    background-color: var(--g-1);
+} 
+
+.flash-message-content {
+    width: 20rem;
+    margin-left: .5rem;
+}
+
+.flash-message-control > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .25rem;
+    border-radius: 50%;
+    min-width: 2rem;
+    min-height: 2rem;
+    font-size: 1rem;
+}

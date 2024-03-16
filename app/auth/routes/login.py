@@ -13,12 +13,14 @@ def login():
         password = form.password.data
         user = check_email(form.email.data)
         if not user:
-            flash(f"No user found with email \"{email}\"")
+            flash(f"No user found with email \"{email}\"", category="error")
+            return render_template("login.html", form=form)
         user = check_password(email, password)
         if not user:
-            flash(f"Incorrect password")
+            flash(f"Incorrect password", category="error")
+            return render_template("login.html", form=form)
         if user:
-            flash("Login Successful")
+            flash("Login Successful", category="success")
             session["user"] = {
                 "id":       user["user_id"],
                 "email":    user["email"],
