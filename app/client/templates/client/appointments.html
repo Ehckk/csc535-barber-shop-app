@@ -13,7 +13,7 @@
         <div>
             <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
             <p>{{ appointment.barber.display_name() }}</p>
-            <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+            <button>Details</button>
         </div>
     {% endfor %}
 {% endblock %}

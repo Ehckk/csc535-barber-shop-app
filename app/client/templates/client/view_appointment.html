@@ -5,5 +5,12 @@
 {% endblock %}
 
 {% block side_content %}
-    Appointment details here
+    <p>Barber: {{ appointment.barber.display_name() }}</p>
+    <p>Client: {{ appointment.client.display_name() }}</p>
+    <p>{{ appointment.booked_date }}</p>
+    <p>{{ appointment.start_time }}</p>
+    <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+
+    <!-- cancel appointment button here -->
+    <!-- reschedule appointment button here -->
 {% endblock %}
