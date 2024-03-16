@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`user` (
 );
 
 INSERT INTO csc535_barber.`user` VALUES 
-	(1, 'test@test.com', 'test', 'Test', 'Test', 'Barber', 1),
-    (2, 'test1@test.com', 'client1', 'Test1', 'Client1', 'Client', 1),
-    (3, 'test2@test.com', 'client2', 'Test2', 'Client2', 'Client', 1);
+	(DEFAULT, 'test@test.com', SHA('test'), 'Test', 'Test', 'Barber', 1),
+    (DEFAULT, 'test1@test.com', SHA('client1'), 'Test1', 'Client1', 'Client', 1),
+    (DEFAULT, 'test2@test.com', SHA('client2'), 'Test2', 'Client2', 'Client', 1);
     
 
 CREATE TABLE IF NOT EXISTS csc535_barber.`weekday` (

@@ -19,7 +19,7 @@ def check_password(email: str, password: str):
             `role`
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
-        AND `password` = %(password)s
+        AND `password` = SHA(%(password)s)
     """
     cursor = db.execute(query, {"email": email, "password": password})
     return cursor.fetchone()
@@ -68,7 +68,7 @@ def create_user(
         INSERT INTO csc535_barber.`user` VALUES (
             DEFAULT, 
             %(email)s, 
-            %(password)s, 
+            SHA(%(password)s), 
             %(first_name)s, 
             %(last_name)s,
             %(role)s,

@@ -1,7 +1,9 @@
 from collections import OrderedDict
 from datetime import date, time
 from flask import session
+
 from .window import Window, Interval
+from ..utils.email import send_mail
 from ..queries.schedules import list_schedule
 
 
@@ -26,8 +28,20 @@ class User:
     def logout(self):
         session["user"] = None
 
-    def reset_password(self):
-        return
+    def send_reset_email(self):
+        send_mail(
+            subject="Password Reset", 
+            recipients=[self.email], 
+            body="""
+                You have requested to reset your password.
+
+                ADD LINK HERE
+            """
+        )
+
+    def reset_password(self, new_password):
+        
+        return 
     
 
 class Client:

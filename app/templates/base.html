@@ -14,8 +14,13 @@
     <title>{% block title %}{% endblock %} - Barber Shop App</title>
 </head>
 <body>
-    {{ flash_messages() }}
-    {% block body %}
-    {% endblock %}
+    <div class="site-header primary-0 text-light-2">
+        <h2 class="site-title">Barber Shop App</h2>
+    </div>
+    <main class="content">
+        {% block body %}
+        {% endblock %}
+        {{ flash_messages() }}
+    </main>
 </body>
 </html>

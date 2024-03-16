@@ -1,11 +1,12 @@
-{% extends "base.html" %}
+{% extends "barber.html" %}
+
 {% block title %}
-    Barber
+    Home
 {% endblock %}
-{% block body %}
-    <h1>Barber Home</h1>
-    <p>{{ user.first_name }} {{ user.last_name }}</p>
-    <a href="{{ url_for('auth.logout') }}">
-        <button>Log Out</button>
-    </a>
+
+{% block page %}
+    <h1>Hello, {{ user.first_name }} {{ user.last_name }}!</h1>
+{% endblock %}
+{% block content %}
+    <!-- TBA -->
 {% endblock %}
