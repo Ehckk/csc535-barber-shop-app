@@ -1,0 +1,10 @@
+{% from "_render_form.html" import render_form %}
+
+{% extends "auth.html" %}
+{% block title %}
+    Login
+{% endblock %}
+{% block auth %}
+    <p>Email has been verified</p>
+    <p>You may now <a href="{{ url_for('auth.login') }}">log in</a></p>
+{% endblock %}
