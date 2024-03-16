@@ -18,8 +18,16 @@
         {% endblock %}
     </main>
     <div class="side-panel light-0">
-        {% block side %}
-        {% endblock %}
+        <header class="side-header">
+            <h2 class="side-header-title">
+                {% block side_text %}
+                {% endblock %}
+            </h2>
+        </header>
+        <div class="side-content">
+            {% block side_content %}
+            {% endblock %}
+        </div>
     </div>
 </div>
 {% endblock %}

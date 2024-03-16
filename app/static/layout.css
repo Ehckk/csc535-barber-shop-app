@@ -53,6 +53,18 @@ main.content {
     padding: 1rem;
 }
 
+.dashboard-header {
+    display: flex;
+}
+
+.dashboard-header-title {
+    margin-right: auto;
+} 
+
 .side-panel {
-    min-width: 24rem;
+    min-width: 32rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
 }
