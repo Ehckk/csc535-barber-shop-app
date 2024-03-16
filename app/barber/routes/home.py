@@ -6,4 +6,4 @@ from .. import barber
 @barber.route("/", methods=["GET", "POST"])
 def barber_home():
     user = current_user()
-    return render_template('home.html', user=user)
+    return render_template('barber/home.html', user=user)

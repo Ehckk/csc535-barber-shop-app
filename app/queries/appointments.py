@@ -1,32 +1,46 @@
 from datetime import date, time
+
+from ..models.appointment import Appointment
 from .. import db
+
+
+def list_appointments(appointments_data):
+    appointments = []
+    for appointment_data in appointments_data:
+        appointment = Appointment(**appointment_data)
+        appointments.append(appointment)
+    return appointments
 
 
 def list_barber_appointments(barber_id: int):
     query = """
-        SELECT * FROM csc535_barber.`appointment` 
+        SELECT * 
+        FROM csc535_barber.`appointment` 
         WHERE `barber_id` = %(barber_id)s;
     """
     cursor = db.execute(query, {"barber_id": barber_id})
-    return cursor.fetchmany()
+    return list_appointments(cursor.fetchall())
 
 
 def list_client_appointments(client_id: int):
     query = """
-        SELECT * FROM csc535_barber.`appointment`
+        SELECT * 
+        FROM csc535_barber.`appointment`
         WHERE `client_id` = %(client_id)s;
     """
     cursor = db.execute(query, {"client_id": client_id})
-    return cursor.fetchmany()
+    return list_appointments(cursor.fetchall())
 
 
 def retrieve_appointment(appointment_id: int): 
     query = """
-        SELECT * FROM csc535_barber.`appointment` 
+        SELECT * 
+        FROM csc535_barber.`appointment` 
         WHERE `appointment_id` = %(appointment_id)s;
     """
     cursor = db.execute(query, {"appointment_id": appointment_id})
-    return cursor.fetchone()
+    appointment_data = cursor.fetchone()
+    return Appointment(**appointment_data)
 
 
 def create_appointment(

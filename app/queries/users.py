@@ -1,4 +1,6 @@
 from typing import Literal
+
+from ..models.user import BarberUser, ClientUser, User
 from .. import db
 
 def check_email(email: str):
@@ -19,13 +21,13 @@ def check_password(email: str, password: str):
             `role`
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
-        AND `password` = %(password)s
+        AND `password` = SHA(%(password)s)
     """
     cursor = db.execute(query, {"email": email, "password": password})
     return cursor.fetchone()
 
 
-def list_barbers():
+def list_barbers() -> list[BarberUser]:
     query = """
         SELECT 
             `user_id`,
@@ -38,10 +40,14 @@ def list_barbers():
         WHERE `role` = 'Barber'
     """
     cursor = db.execute(query)
-    return cursor.fetchall()
+    barbers = []
+    for barber_data in cursor.fetchall():
+        barber = BarberUser(**barber_data)
+        barbers.append(barber)
+    return barbers
 
 
-def retrieve_user(id: int):
+def retrieve_user(id: int) -> User:
     query = """
         SELECT 
             `user_id`,
@@ -54,7 +60,12 @@ def retrieve_user(id: int):
         WHERE `user_id` = %(id)s
     """
     cursor = db.execute(query, {"id": id})
-    return cursor.fetchone()    
+    user_data = cursor.fetchone()
+    if user_data is None:
+        return None
+    if user_data["role"] == "Barber":
+        return BarberUser(**user_data)
+    return ClientUser(**user_data)
 
 
 def create_user(
@@ -68,7 +79,7 @@ def create_user(
         INSERT INTO csc535_barber.`user` VALUES (
             DEFAULT, 
             %(email)s, 
-            %(password)s, 
+            SHA(%(password)s), 
             %(first_name)s, 
             %(last_name)s,
             %(role)s,

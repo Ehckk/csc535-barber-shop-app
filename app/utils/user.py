@@ -7,6 +7,5 @@ def current_user():
     if not session["user"]:
         return None
     id = int(session["user"]["id"])
-    user_data = retrieve_user(id) 
-    return User(**user_data)
+    return retrieve_user(id) 
     

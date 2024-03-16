@@ -1,0 +1,27 @@
+{% macro flash_messages() %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flash-messages" id="flash">
+            {% for category, message in messages %}
+                <li class="flash-message text-{{ category }}-0 light-2" id="flash-{{ loop.index }}">
+                    <div class="flash-message-content">
+                        <p>{{ message }}</p>
+                    </div>
+                    <div class="flash-message-control">
+                        <button class="text-{{ category }}-0 btn-close">
+                            &#x2715
+                        </button>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <script>
+        const messages = document.querySelectorAll("#flash > .flash-message")
+        for (const message of messages) {
+            const closeBtn = message.querySelector("button.btn-close")
+            closeBtn.addEventListener("click", () => message.remove())
+        }
+    </script>
+{% endmacro %}

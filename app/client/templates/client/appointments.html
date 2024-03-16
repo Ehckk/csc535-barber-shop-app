@@ -1,0 +1,19 @@
+{% extends "barber.html" %}
+
+{% block title %}
+    Appointments
+{% endblock %}
+
+{% block header_text %}
+    My Appointments
+{% endblock %}
+
+{% block main_content %}
+    {% for appointment in appointments %}
+        <div>
+            <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
+            <p>{{ appointment.barber.display_name() }}</p>
+            <button>Details</button>
+        </div>
+    {% endfor %}
+{% endblock %}

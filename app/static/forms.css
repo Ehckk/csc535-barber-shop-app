@@ -8,6 +8,7 @@ form {
 .form-title {
     text-align: center;
     font-size: 2rem;
+    margin-bottom: .5rem;
 }
 
 .form-fields {
@@ -16,7 +17,8 @@ form {
 }
 
 .form-buttons {
-    margin: .5rem 0;
+    margin-top: 1rem;
+    margin-bottom: .5rem;
     padding: .5rem;
     display: flex;
     justify-content: space-evenly;

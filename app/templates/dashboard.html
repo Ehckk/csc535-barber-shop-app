@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="dashboard">
+    <nav class="side-nav light-0">
+        <ul class="side-nav-links">
+            {% block nav %}
+            {% endblock %}
+            <li class="side-nav-item">
+                <a class="side-nav-link" href="{{ url_for('auth.logout') }}">
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <main class="dashboard-content">
+        {% block dashboard %}
+        {% endblock %}
+    </main>
+    <div class="side-panel light-0">
+        <header class="side-header">
+            <h2 class="side-header-title">
+                {% block side_text %}
+                {% endblock %}
+            </h2>
+        </header>
+        <div class="side-content">
+            {% block side_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
