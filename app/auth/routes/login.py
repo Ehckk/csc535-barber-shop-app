@@ -1,6 +1,7 @@
 from flask import flash, redirect, render_template, session, url_for
+
+from ...utils.email import send_mail
 from ...queries.users import check_email, check_password
-from ...models.user import User
 from .. import auth
 from .forms.login import LoginForm
 
