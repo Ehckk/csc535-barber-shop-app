@@ -27,7 +27,7 @@ def check_password(email: str, password: str):
     return cursor.fetchone()
 
 
-def list_barbers():
+def list_barbers() -> list[BarberUser]:
     query = """
         SELECT 
             `user_id`,
@@ -40,7 +40,11 @@ def list_barbers():
         WHERE `role` = 'Barber'
     """
     cursor = db.execute(query)
-    return cursor.fetchall()
+    barbers = []
+    for barber_data in cursor.fetchall():
+        barber = BarberUser(**barber_data)
+        barbers.append(barber)
+    return barbers
 
 
 def retrieve_user(id: int) -> User:

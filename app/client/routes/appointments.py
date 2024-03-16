@@ -10,9 +10,10 @@ from .. import client
 @client.route("/appointments", methods=["GET"])
 def appointments():
     user = current_user()
-    appointments = [] 
-    for appointment_data in list_client_appointments(user.id):
-        appointment = Appointment(**appointment_data)
-        appointments.append(appointment)
+    appointments = list_client_appointments(user.id)
     print(appointments)
-    return render_template('client/appointments.html', user=user, appointments=appointments)
+    return render_template(
+        'client/appointments.html', 
+        user=user, 
+        appointments=appointments
+    )
