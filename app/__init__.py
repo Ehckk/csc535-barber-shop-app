@@ -4,6 +4,8 @@ from ..database import db, app_config
 from .auth import auth 
 from .barber import barber
 from .client import client
+from flask_mail import Mail
+from os import environ
 
 
 def is_hidden_field(field):
@@ -16,9 +18,20 @@ def create_app():
     print("Starting application...")
     
     app = Flask(__name__)
-    app.secret_key = "dev"
-    app.config.from_mapping(app_config)
 
+
+    app.secret_key = "dev"
+    app.config.update(
+        MAIL_SERVER = environ.get('MAIL_SERVER'),
+        MAIL_PORT = environ.get('MAIL_PORT'),
+        MAIL_USE_TLS = environ.get('MAIL_USE_TLS'),
+        MAIL_USE_SSL = environ.get('MAIL_USE_SSL'), 
+        MAIL_USERNAME = environ.get('MAIL_USERNAME'),
+        MAIL_PASSWORD = environ.get('MAIL_PASSWORD'),
+        MAIL_DEFAULT_SENDER = ('Your Local Barbershop', 'sinclairk205@gmail.com'))
+    app.config.from_mapping(app_config)
+    global mail 
+    mail = Mail(app)
     app.jinja_env.globals['is_hidden_field'] = is_hidden_field
     app.jinja_env.globals['is_submit_field'] = is_submit_field
 
