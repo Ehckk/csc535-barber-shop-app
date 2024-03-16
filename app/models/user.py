@@ -11,17 +11,16 @@ class User:
     def __init__(
         self, 
         user_id, 
-        email, 
         first_name, 
         last_name, 
+        email, 
         role, 
         verified=False
     ):
         self.id = user_id
-        self.role = role
-        self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.email = email
         self.role = role
         self.verified = verified
 
@@ -67,13 +66,11 @@ class Barber:
 
 
 class ClientUser(User, Client):
-    def __init__(self, *args, **kwargs):
-        super(User).__init__(*args, **kwargs)
+    pass
 
 
 class BarberUser(User, Barber):
-    def __init__(self, *args, **kwargs):
-        super(User).__init__(*args, **kwargs)
+    pass
 
     def get_schedule(self, start_date: date, interval: Interval):
         if interval == Interval.MONTH:  # If interval is month, set the date to the first of that month

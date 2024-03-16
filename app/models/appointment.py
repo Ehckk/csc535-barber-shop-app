@@ -1,18 +1,24 @@
 from datetime import date, time
-from .client import ClientUser
+from ..queries.users import retrieve_user
 
 
 class Appointment:
     def __init__(
         self, 
-        client: ClientUser, 
-        start_date: date, 
+        appointment_id: int,
+        client_id: int,
+        barber_id: int,
+        description: str,
+        booked_date: date, 
         start_time: time, 
         duration: int, 
         is_approved: bool=False
     ):
-        self.client = client
-        self.start_date = start_date
+        self.id = appointment_id
+        self.client = retrieve_user(client_id)
+        self.barber = retrieve_user(barber_id)
+        self.description = description
+        self.booked_date = booked_date
         self.start_time = start_time
         self.duration = duration
         self.is_approved = is_approved

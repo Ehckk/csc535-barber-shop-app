@@ -1,4 +1,6 @@
 from typing import Literal
+
+from ..models.user import BarberUser, ClientUser, User
 from .. import db
 
 def check_email(email: str):
@@ -41,7 +43,7 @@ def list_barbers():
     return cursor.fetchall()
 
 
-def retrieve_user(id: int):
+def retrieve_user(id: int) -> User:
     query = """
         SELECT 
             `user_id`,
@@ -54,7 +56,12 @@ def retrieve_user(id: int):
         WHERE `user_id` = %(id)s
     """
     cursor = db.execute(query, {"id": id})
-    return cursor.fetchone()    
+    user_data = cursor.fetchone()
+    if user_data is None:
+        return None
+    if user_data["role"] == "Barber":
+        return BarberUser(**user_data)
+    return ClientUser(**user_data)
 
 
 def create_user(
