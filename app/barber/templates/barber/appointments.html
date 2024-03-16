@@ -9,5 +9,11 @@
 {% endblock %}
 
 {% block main_content %}
-    <!-- TBA appointments -->
+    {% for appointment in appointments %}
+        <div>
+            <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
+            <p>{{ appointment.client.display_name() }}</p>
+            <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+        </div>
+    {% endfor %}
 {% endblock %}

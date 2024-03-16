@@ -42,6 +42,8 @@ class User:
         
         return 
     
+    def display_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 class Client:
     def request_appointment(
