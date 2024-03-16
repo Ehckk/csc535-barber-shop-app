@@ -2,6 +2,16 @@ from dotenv import dotenv_values
 from pathlib import Path
 
 
+email_config = {
+    "MAIL_SERVER": "smtp.gmail.com",
+    "MAIL_PORT": 587,
+    "MAIL_USERNAME": "csc535barberapp@gmail.com",
+    "MAIL_PASSWORD": "ehxh xybx phlp mltp",
+    "MAIL_USE_TLS": 1,
+    "MAIL_USE_SSL": False
+}
+
+
 CWD = Path.cwd()
 
 def load():
@@ -14,6 +24,8 @@ def load():
         )
     
     print("Configuration loaded.")
-    return dotenv_values(config_path)
+    config = dotenv_values(config_path) 
+    config.update(email_config)
+    return config
 
 app_config = load()

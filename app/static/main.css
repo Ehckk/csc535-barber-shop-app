@@ -5,15 +5,15 @@
     --s-2: hsl(0 0% 70%);
     --s-1: hsl(0 0% 60%);
     --s-0: hsl(0 0% 50%);
-    --e-2: hsl(355 70% 75%);
-    --e-1: hsl(355 65% 60%);
-    --e-0: hsl(355 60% 45%);
+    --e-2: hsl(355 75% 75%);
+    --e-1: hsl(355 70% 40%);
+    --e-0: hsl(355 65% 25%);
     --w-2: hsl(30 70% 75%);
-    --w-1: hsl(30 65% 60%);
-    --w-0: hsl(30 60% 45%);
+    --w-1: hsl(30 65% 40%);
+    --w-0: hsl(30 60% 25%);
     --g-2: hsl(135 70% 75%);
-    --g-1: hsl(135 65% 60%);
-    --g-0: hsl(135 60% 45%);
+    --g-1: hsl(135 65% 40%);
+    --g-0: hsl(135 60% 25%);
     --i-2: hsl(200 70% 75%);
     --i-1: hsl(200 65% 60%);
     --i-0: hsl(200 60% 45%);
@@ -44,6 +44,7 @@ body {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     flex-grow: 1;
@@ -53,5 +54,5 @@ body {
 :focus {
     outline-style: solid;
     outline-width: thick;
-    outline-color: var(--i-1);
+    outline-color: var(--i-2);
 }

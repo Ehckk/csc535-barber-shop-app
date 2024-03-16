@@ -1,0 +1,32 @@
+{% extends "dashboard.html" %}
+
+{% block nav %}
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('client.client_home') }}">
+        Home
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('client.appointments') }}">
+        Appointments
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('client.browse_barbers') }}">
+        Barbers
+    </a>
+</li>
+{% endblock %}
+
+{% block dashboard %}
+<header class="dashboard-header">
+    <h1 class="dashboard-header-title">
+        {% block header_text %}
+        {% endblock %}
+        {% block header_controls %}
+        {% endblock %}
+    </h1>
+</header>
+{% block main_content %}
+{% endblock %}
+{% endblock %}

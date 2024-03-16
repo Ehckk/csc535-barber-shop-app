@@ -1,0 +1,32 @@
+{% extends "dashboard.html" %}
+
+{% block nav %}
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.barber_home') }}">
+        Home
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.appointments') }}">
+        Appointments
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.calendar') }}">
+        Calendar
+    </a>
+</li>
+{% endblock %}
+
+{% block dashboard %}
+<header class="dashboard-header">
+    <h1 class="dashboard-header-title">
+        {% block header_text %}
+        {% endblock %}
+        {% block header_controls %}
+        {% endblock %}
+    </h1>
+</header>
+{% block main_content %}
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "barber.html" %}
+
+{% block title %}
+    Appointments
+{% endblock %}
+
+{% block header_text %}
+    Booked Appointments
+{% endblock %}
+
+{% block main_content %}
+    {% for appointment in appointments %}
+        <div>
+            <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
+            <p>{{ appointment.client.display_name() }}</p>
+            <a href="{{ url_for('barber.appointment_details', appt_id=appointment.id) }}">
+                <button>Details</button>
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}

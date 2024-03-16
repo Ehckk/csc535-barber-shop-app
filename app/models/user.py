@@ -1,7 +1,9 @@
 from collections import OrderedDict
 from datetime import date, time
 from flask import session
+
 from .window import Window, Interval
+from ..utils.email import send_mail
 from ..queries.schedules import list_schedule
 
 
@@ -9,26 +11,39 @@ class User:
     def __init__(
         self, 
         user_id, 
-        email, 
         first_name, 
         last_name, 
+        email, 
         role, 
         verified=False
     ):
         self.id = user_id
-        self.role = role
-        self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.email = email
         self.role = role
         self.verified = verified
 
     def logout(self):
         session["user"] = None
 
-    def reset_password(self):
-        return
+    def send_reset_email(self):
+        send_mail(
+            subject="Password Reset", 
+            recipients=[self.email], 
+            body="""
+                You have requested to reset your password.
+
+                ADD LINK HERE
+            """
+        )
+
+    def reset_password(self, new_password):
+        
+        return 
     
+    def display_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 class Client:
     def request_appointment(
@@ -53,13 +68,11 @@ class Barber:
 
 
 class ClientUser(User, Client):
-    def __init__(self, *args, **kwargs):
-        super(User).__init__(*args, **kwargs)
+    pass
 
 
 class BarberUser(User, Barber):
-    def __init__(self, *args, **kwargs):
-        super(User).__init__(*args, **kwargs)
+    pass
 
     def get_schedule(self, start_date: date, interval: Interval):
         if interval == Interval.MONTH:  # If interval is month, set the date to the first of that month

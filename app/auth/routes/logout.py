@@ -1,4 +1,4 @@
-from flask import redirect
+from flask import flash, redirect
 from ...utils.user import current_user
 from .. import auth
 
@@ -7,4 +7,5 @@ from .. import auth
 def logout():
     user = current_user()
     user.logout()
+    flash("You have been logged out", category="success")
     return redirect("/")
