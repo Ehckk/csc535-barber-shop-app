@@ -5,7 +5,7 @@ client = Blueprint(
     "client", 
     __name__, 
     url_prefix="/client",
-    template_folder='./templates'
+    template_folder='templates'
 )
 
 

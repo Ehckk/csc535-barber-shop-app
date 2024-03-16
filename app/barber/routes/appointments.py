@@ -6,4 +6,4 @@ from .. import barber
 @barber.route("/appointments", methods=["GET"])
 def appointments():
     user = current_user()
-    return render_template('appointments.html', user=user)
+    return render_template('barber/appointments.html', user=user)

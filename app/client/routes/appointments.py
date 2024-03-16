@@ -1,6 +1,9 @@
-from flask import Blueprint, render_template
+from flask import render_template
+from ...utils.user import current_user
 from .. import client
+
 
 @client.route("/appointments", methods=["GET"])
 def appointments():
-    return "Client Appointments"
+    user = current_user()
+    return render_template('client/appointments.html', user=user)

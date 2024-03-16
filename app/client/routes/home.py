@@ -6,4 +6,4 @@ from .. import client
 @client.route("/", methods=["GET", "POST"])
 def client_home():
     user = current_user()
-    return render_template('home.html', user=user)
+    return render_template('client/home.html', user=user)
