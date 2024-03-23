@@ -27,7 +27,6 @@ class Appointment:
         if not self.is_approved:
             pass
 
-
     def cancel(self):
         pass
 
