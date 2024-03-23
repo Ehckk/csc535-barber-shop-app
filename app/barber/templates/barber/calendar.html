@@ -9,5 +9,35 @@
 {% endblock %}
 
 {% block main_content %}
+<div class="content-header">
+    {% if not unit == 'D' %}
+        <a class="link-btn" href="{{ url_for('barber.calendar', unit='D', d=current) }}">
+            <button class="primary-1 text-light-2">
+                Day
+            </button>
+        </a>
+    {% endif %}
+    {% if not unit == 'W' %}
+        <a class="link-btn" href="{{ url_for('barber.calendar', unit='W', d=current) }}">
+            <button class="primary-1 text-light-2">
+                Week
+            </button>
+        </a>
+    {% endif %}
+    {% if not unit == 'M' %}
+        <a class="link-btn" href="{{ url_for('barber.calendar', unit='M', d=current) }}">
+            <button class="btn-small primary-1 text-light-2">
+                Month
+            </button>
+        </a>
+    {% endif %}
+</div>
+<div class="calendar_date">
+    <div class="calendar-inc">
+
+    </div>
+</div>
+    {% block calendar_content %}
+    {% endblock %}
     <!-- TBA appointments -->
 {% endblock %}

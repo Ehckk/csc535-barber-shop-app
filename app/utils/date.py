@@ -4,42 +4,20 @@ from collections import defaultdict
 from ..models.window import Interval
 
 
-def todays_date(interval: int, prev: bool):
-    today = date.today()
-    if prev:
-        return today - timedelta(days=interval)
-    return today + timedelta(days=interval)
+def week_start(current: date):
+    return current - timedelta(days=current.weekday())
 
 
-def week_start(interval: int, prev: bool):
-    today = date.today()
-    start_date = today - timedelta(days=today.weekday())
-    if prev:
-        return start_date - timedelta(weeks=interval)
-    return start_date + timedelta(weeks=interval)
-
-
-def month_start(interval: int, prev: bool):
-    today = date.today()
-    start_date = date(today.year, today.month, 1)
-    if prev:
-        return start_date - timedelta(months=interval)
-    return start_date + timedelta(months=interval)
-
-
-base_dates = defaultdict(lambda: date.today(), {
-    Interval.DAY: todays_date,
-    Interval.WEEK: week_start,
-    Interval.MONTH: month_start
-})
+def month_start(current: date):
+    return date(current.year, current.month, 1)
 
 
 def format_day(start_date: date):
-    return start_date.strftime("%B %-d, %Y")
+    return start_date.strftime("%B %d, %Y")
 
 
 def format_month_day(start_date: date):
-    return start_date.strftime("%B %-d")
+    return start_date.strftime("%B %d")
 
 
 def format_week(start_date: date):
@@ -60,8 +38,48 @@ def format_month(start_date: date):
     return start_date.strftime("%B %Y")
 
 
+interval_values = set([v.value for v in Interval])
+
+
 date_names = defaultdict(format_day, {
     Interval.DAY: format_day,
     Interval.WEEK: format_week,
     Interval.MONTH: format_month
 })
+
+
+date_templates = {
+    Interval.DAY: "calendar_day.html",
+    Interval.WEEK: "calendar_week.html",
+    Interval.MONTH: "calendar_month.html"  
+}
+
+def prev_month_date(current: date):
+    prev_month = current.month - 1
+    if prev_month == 0:
+        return date(current.year - 1, 12, 1)
+    return date(current.year, prev_month, 1)
+
+
+def next_month_date(current: date):
+    next_month = current.month + 1
+    if next_month > 12:
+        return date(current.year + 1, 1, 1)
+    return date(current.year, next_month, 1)
+
+
+def date_increments(current: date, units):
+    if units == Interval.MONTH:
+        return (
+            prev_month_date(current),
+            next_month_date(current)
+        )
+    if units == Interval.WEEK:
+        return (
+            current - timedelta(weeks=1),
+            current + timedelta(weeks=1)
+        )
+    return (
+        current - timedelta(days=1),
+        current + timedelta(days=1)
+    )
