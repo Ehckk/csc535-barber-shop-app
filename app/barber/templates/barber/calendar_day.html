@@ -1,22 +1,30 @@
 {% extends "barber/calendar.html" %}
 
 {% block calendar_content %}
-<div class="calendar-day">
-    {% for time, hour_times in times %}
-        <table class="day">
-            {% for hour_time in hour_times %}
-            <tr class="day-row">
-                <th class="day-label">
-                    {% if loop.index == 1 %}
-                        {{ hour_time }}
-                    {% endif %}
-                </th>
-                <td class="day-content">
-                    
-                </td>
-            </tr>
+<div class="calendar day-container">
+    <div class="calendar-times">
+        {% for time, hour_times in times %}
+            <div class="calendar-ruler">
+                {% for hour_time in hour_times %}
+                    <span class="calendar-ruler-value">
+                        {% if loop.index == 1 %}
+                            {{ hour_time }}
+                        {% endif %}
+                    </span>
+                {% endfor %}
+            </div>
         {% endfor %}
-        </table>
-    {% endfor %}
+    </div>
+    <div class="calendar-days">
+        {% for time, hour_times in times %}
+            <div class="calendar-ruler">
+                {% for hour_time in hour_times %}
+                    <span class="calendar-ruler-value"></span>
+                {% endfor %}
+                {% for appointment in appointments %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -1,1 +1,34 @@
 {% extends "barber/calendar.html" %}
+
+{% block calendar_content %}
+<div class="calendar">
+    <div class="calendar">
+        <thead class="calendar-weekdays">
+            <tr class="weekday-row">
+                <th scope="col"></th>
+                {% for weekday in weekdays %}
+                    <th scope="col" class="weekday">
+                        {{ weekday }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        {% for time, hour_times in times %}
+            <tbody>
+                {% for hour_time in hour_times %}
+                    <tr class="time-row">
+                        <th class="time-label" scope="row">
+                            {% if loop.index == 1 %}
+                            {{ hour_time }}
+                            {% endif %}
+                        </th>
+                        <td class="day-cell">
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

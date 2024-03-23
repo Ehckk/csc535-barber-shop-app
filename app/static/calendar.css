@@ -18,7 +18,7 @@
     overflow-y: scroll;
 }
 
-.calendar-day {
+.calendar {
     position: absolute;
     top: 2px;
     bottom: 2px;
@@ -26,27 +26,65 @@
     right: 0;
 }
 
-table.day {
-    width: 100%;
-    table-layout: auto;
-    border-collapse: collapse;
+.calendar.day-container {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+}
+
+.calendar-times, .calendar-days {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--w-0);
+    border-top: 1px solid var(--s-0);
+    border-bottom: 1px solid var(--s-0);
+}
+
+.calendar-ruler {
+    border-color: var(--s-0);
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-right-width: 2px;
+    border-left-width: 0;
+}
+
+.calendar-ruler-value {
+    margin: 0;
+    padding-left: .25rem;
+    display: flex;
+    align-items: center;
+    min-height: 1.5rem;
+    font-weight: bold;
+}
+
+.calendar-ruler-value:last-child {
+    border-top: 1px dashed var(--s-0);
+}
+
+.calendar-days {
+    position: relative;
+    background-color: var(--s-2);
+}
+
+tbody {
     border-style: solid;
     border-color: var(--s-0);
     border-top-width: 1px;
     border-bottom-width: 1px;
+    border-left-width: 2px;
+    border-right-width: 2px;
     border-spacing: 0;
 }
 
-table.day:first-child {
+tbody:first-child {
     border-top-width: 2px;
 }
 
-table.day:last-child {
+tbody:last-child {
     border-bottom-width: 2px;
 }
 
-
-th.day-label {
+th.time-label {
     text-align: left;
     width: 4rem;
     padding-left: .25rem;
@@ -58,11 +96,21 @@ th.day-label {
     border-right-width: 1px;
 }
 
-tr.day-row {
+tr.time-row {
     height: 2rem;
     width: 100%;
     border-style: dashed;
     border-color: var(--s-0);
+    border-left-width: 0;
+    border-right-width: 0;
     border-top-width: 1px;
     border-bottom-width: 1px;
+}
+
+td.time-cell {
+
+}
+
+td.day-cell {
+
 }

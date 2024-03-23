@@ -74,21 +74,20 @@ class ClientUser(User, Client):
 class BarberUser(User, Barber):
     pass
 
-    def get_schedule(self, start_date: date, interval: str):
+    def get_schedule(self, current_date: date, interval: str):
         if interval == Interval.MONTH:  # If interval is month, set the date to the first of that month
-            start_date = date(start_date.year, start_date.month, 1)
+            current_date = date(current_date.year, current_date.month, 1)
 
-        windows = list_schedule(self.id, start_date, interval)  # List of dates and time slots
+        windows = list_schedule(self.id, current_date, interval)  # List of dates and time slots
         schedule: OrderedDict[str, list[Window]] = OrderedDict()  # Use them to create a dictionary 
 
         for window in windows:  
             schedule_date: str = window["date"]  # Key: date
             if not schedule.get(schedule_date, None):
-                schedule[schedule_date] = []  # Value: list of time slots for that date
-                
+                schedule[schedule_date] = []  # Value: list of time slots for that date    
             schedule_window = Window(
                 start_time=window["start_time"],
                 end_time = window["end_time"]
             )
             schedule[schedule_date].append(schedule_window)
-        return schedule 
+        return schedule
