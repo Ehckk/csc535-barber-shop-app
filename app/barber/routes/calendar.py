@@ -11,6 +11,7 @@ from ...utils.date import (
     date_increments, 
     times_list, 
     date_window,
+    to_time,
     weekdays
 )
 from ...models.user import BarberUser
@@ -26,12 +27,15 @@ def calendar_appointments(barber_id, current_date, interval):
     else:
         start, end = date_window(current_date, interval)
         appointment_data = appointments_between_dates(barber_id, start, end)
-    appointments = OrderedDict()
+    appointments = defaultdict(OrderedDict)
 
     for appointment in appointment_data:
-        if not appointments.get(appointment.booked_date, None):
-            appointments[appointment.booked_date] = []
-        appointments[appointment.booked_date].append(appointment)
+        booked_date: str = appointment.booked_date.strftime("%Y-%m-%d")  # Key: date
+        start_time = to_time(appointment.start_time)
+        time_key = str(time(hour=start_time.hour, minute=(start_time.minute // 30) * 30))
+        if not appointments.get(time_key, None):
+            appointments[booked_date][time_key] = []
+        appointments[booked_date][time_key].append(appointment)
     return appointments
 
 
@@ -53,7 +57,8 @@ def calendar():
     print(schedule, appointments)
     title = date_names[unit](current)
     template = date_templates[unit]
-    times = times_list(unit)
+
+    times = times_list(schedule, appointments)
     dates=dates_list(current, unit)
     return render_template(
         f"barber/{template}", 
@@ -64,6 +69,7 @@ def calendar():
         next={"unit": unit, "d": next_date.strftime("%Y-%m-%d") },
         user=user, 
         schedule=schedule,
+        appointments=appointments,
         times=times,
         dates=dates,
         weekdays=weekdays

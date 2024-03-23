@@ -86,7 +86,7 @@ class BarberUser(User, Barber):
             schedule_date: str = window["date"].strftime("%Y-%m-%d")  # Key: date
             start_time = to_time(window["start_time"])
             time_key = str(time(hour=start_time.hour, minute=(start_time.minute // 30) * 30))
-            if not schedule.get(start_time, None):
+            if not schedule.get(time_key, None):
                 schedule[schedule_date][time_key] = []  # Value: list of time slots for that date  
             schedule[schedule_date][time_key].append(
                 Window(

@@ -58,8 +58,8 @@
     min-height: 5rem;
 }
 
-.calendar-ruler-value:last-child {
-    border-top: 1px dashed var(--s-0);
+.calendar-ruler-value:first-child {
+    border-bottom: 1px dashed var(--s-0);
 }
 
 .calendar-days {
@@ -78,54 +78,4 @@
 .window-text {
     font-size: .875rem;
     overflow-y: hidden;
-}
-
-
-tbody {
-    border-style: solid;
-    border-color: var(--s-0);
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 2px;
-    border-right-width: 2px;
-    border-spacing: 0;
-}
-
-tbody:first-child {
-    border-top-width: 2px;
-}
-
-tbody:last-child {
-    border-bottom-width: 2px;
-}
-
-th.time-label {
-    text-align: left;
-    width: 4rem;
-    padding-left: .25rem;
-    border-style: solid;
-    border-color: var(--s-0);
-    border-top-width: 0;
-    border-left-width: 0;
-    border-bottom-width: 0;
-    border-right-width: 1px;
-}
-
-tr.time-row {
-    height: 2rem;
-    width: 100%;
-    border-style: dashed;
-    border-color: var(--s-0);
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-}
-
-td.time-cell {
-
-}
-
-td.day-cell {
-
 }

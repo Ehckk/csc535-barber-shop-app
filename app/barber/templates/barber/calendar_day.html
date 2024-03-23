@@ -25,9 +25,12 @@
                                 <p class="window-text text-light-2">Available</p>
                             </div>
                         {% endfor %}
+                        {% for appointment in appointments[current][hour_time] %}
+                            <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                                <p class="window-text text-light-2">Unavailable</p>
+                            </div>
+                        {% endfor %}
                     </span>
-                {% endfor %}
-                {% for appointment in appointments %}
                 {% endfor %}
             </div>
         {% endfor %}
