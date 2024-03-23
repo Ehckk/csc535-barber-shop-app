@@ -5,6 +5,7 @@ from .auth import auth
 from .barber import barber
 from .client import client
 
+
 def is_hidden_field(field):
     return isinstance(field, HiddenField)
 
@@ -15,7 +16,6 @@ def create_app():
     print("Starting application...")
     
     app = Flask(__name__)
-
     app.secret_key = "dev"
     app.config.from_mapping(app_config)
 

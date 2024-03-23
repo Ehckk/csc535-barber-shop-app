@@ -2,12 +2,12 @@
 
 {% extends "auth.html" %}
 {% block title %}
-    Login
+    Register
 {% endblock %}
 {% block auth %}
-    {% call render_form(form, name="Login", action="/")%}
+    {% call render_form(form, name="Register", action="/register")%}
         <p>
-            Don't have an account? <a href="{{ url_for('auth.register') }}">Create one</a>
+            Already have an account? <a href="{{ url_for('auth.register') }}">Log in</a>
         </p>
     {% endcall %}
 {% endblock %}

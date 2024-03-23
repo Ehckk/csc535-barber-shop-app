@@ -9,6 +9,8 @@
 {% endblock %}
 
 {% block main_content %}
-    List of Barbers Here 
-    <!-- TBA -->
+    List of Barbers Here
+    {% for barber in barbers %}
+    <p>{{barber.first_name}} {{barber.last_name}}</p>
+    {% endfor %}
 {% endblock %}

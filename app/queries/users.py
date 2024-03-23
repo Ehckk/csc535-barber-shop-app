@@ -94,3 +94,14 @@ def create_user(
         "role": role
     })
     db.commit()
+    result = check_email(email)
+    return result["user_id"]
+
+def verify_email(user_id):
+    query = """
+        UPDATE csc535_barber.user
+        SET verified = 1
+        WHERE user_id = %(user_id)s
+    """
+    db.execute(query, {"user_id": user_id})
+    db.commit()

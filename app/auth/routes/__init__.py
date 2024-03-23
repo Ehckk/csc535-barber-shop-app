@@ -1,5 +1,7 @@
 __all__ = [
     "login",
     "register",
-    "logout"
+    "logout",
+    "confirm_email",
+    "verify"
 ]
