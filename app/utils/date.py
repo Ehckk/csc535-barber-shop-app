@@ -97,12 +97,21 @@ def date_increments(current: date, units):
     )
 
 
-def times_list(units, increment=30):
-    if units == Interval.MONTH:
-        return None
-    
+def times_list(schedule, appointments):
+    all_times = set()
+    for schedule_time in schedule.values():
+        for key in schedule_time.keys():
+            all_times.add(key)
+    for appointment_time in appointments.values():
+        for key in appointment_time.keys():
+            all_times.add(key)
+    print(all_times)
+    if not len(all_times) == 0:
+        min_hour = int(min(all_times).split(":")[0])
+    else:
+        min_hour = 0
     times = []
-    hour = 0
+    hour = min_hour
     while hour < 24:
         hour_times = (str(time(hour=hour, minute=0)), str(time(hour=hour, minute=30)))
         times.append((time(hour=hour, minute=0).strftime("%I %p").lstrip("0"), hour_times))
@@ -118,7 +127,8 @@ def week_dates(start_date: date, month_bound=False):
         if not current.month == start_month and month_bound:
             dates.append(None)
         else:
-            current_str = current.strftime("%Y-%b-%d")
+            current_str = current.strftime("%Y-%m-%d")
+            print(current_str)
             dates.append(current_str)
         current += timedelta(days=1)
     return dates

@@ -15,7 +15,7 @@
     width: 100%;
     height: 100%;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 .calendar {
@@ -31,12 +31,34 @@
     grid-template-columns: 4rem 1fr;
 }
 
+.calendar.week-container {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 4rem 1fr;
+}
+
 .calendar-times, .calendar-days {
     display: flex;
     flex-direction: column;
     background-color: var(--w-0);
     border-top: 1px solid var(--s-0);
     border-bottom: 1px solid var(--s-0);
+}
+
+.calendar-weekdays {
+    grid-row: 1 / 2;
+    grid-column: 2 / -1;
+    display: flex;
+}
+
+.weekday-value {
+    min-width: 8rem;
+    width: 100%;
+}
+
+.calendar-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(8rem, 1fr));
 }
 
 .calendar-ruler {

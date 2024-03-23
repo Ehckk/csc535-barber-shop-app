@@ -1,34 +1,51 @@
 {% extends "barber/calendar.html" %}
 
 {% block calendar_content %}
-<div class="calendar">
-    <div class="calendar">
-        <thead class="calendar-weekdays">
-            <tr class="weekday-row">
-                <th scope="col"></th>
-                {% for weekday in weekdays %}
-                    <th scope="col" class="weekday">
-                        {{ weekday }}
-                    </th>
-                {% endfor %}
-            </tr>
-        </thead>
-        {% for time, hour_times in times %}
-            <tbody>
-                {% for hour_time in hour_times %}
-                    <tr class="time-row">
-                        <th class="time-label" scope="row">
-                            {% if loop.index == 1 %}
-                            {{ hour_time }}
-                            {% endif %}
-                        </th>
-                        <td class="day-cell">
-
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+<div class="calendar week-container">
+    <span></span>
+    <div class="calendar-weekdays">
+        {% for weekday in weekdays %}
+            <span class="weekday-value">
+                {{ weekday }}
+            </span>
         {% endfor %}
+    </div>
+    <div class="calendar-times">
+        {% for hour, hour_times in times %}
+            <div class="calendar-ruler">
+                {% for _ in hour_times %}
+                    <span class="calendar-ruler-value">
+                        {% if loop.index == 1 %}
+                            {{ hour }}
+                        {% endif %}
+                    </span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="calendar-week">
+        {% for day in dates %}
+            <div class="calendar-days">
+                {% for time, hour_times in times %}
+                    <div class="calendar-ruler">
+                        {% for hour_time in hour_times %}
+                            <span class="calendar-ruler-value">
+                                {% for window in schedule[day][hour_time] %}
+                                    <div class="calendar-window success-0" style="{{ window.style() }}">
+                                        <p class="window-text text-light-2">Available</p>
+                                    </div>
+                                {% endfor %}
+                                {% for appointment in appointments[day][hour_time] %}
+                                    <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                                        <p class="window-text text-light-2">Unavailable</p>
+                                    </div>
+                                {% endfor %}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}        
     </div>
 </div>
 {% endblock %}
