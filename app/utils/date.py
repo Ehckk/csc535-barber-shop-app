@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, time, timedelta
 from collections import defaultdict
 
 from ..models.window import Interval
@@ -20,7 +20,8 @@ def format_month_day(start_date: date):
     return start_date.strftime("%B %d")
 
 
-def format_week(start_date: date):
+def format_week(current: date):
+    start_date = current - timedelta(days=current.weekday())
     end_date = start_date + timedelta(days=6)
 
     if not end_date.year == start_date.year:
@@ -83,3 +84,16 @@ def date_increments(current: date, units):
         current - timedelta(days=1),
         current + timedelta(days=1)
     )
+
+
+def times_list(increment=30):
+    times = []
+    hour = 0
+    while hour < 24:
+        times.append((time(hour=hour, minute=0), (
+            time(hour=hour, minute=0).strftime("%I %p").lstrip("0"),
+            time(hour=hour, minute=30).strftime("%I %p").lstrip("0"),
+        )))
+        hour += 1
+    print(times)
+    return times
