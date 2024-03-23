@@ -18,7 +18,7 @@ weekdays = {
 	"Sun": 6
 }
 
-HOUR_HEIGHT = 50
+HOUR_HEIGHT = 162
 
 		
 class Window:
@@ -27,8 +27,12 @@ class Window:
 		self.end_time = end_time
 	
 	def offset(self):
-		return ((self.start_time.hour * 60) + self.start_time.minute) 
+		return self.start_time.minute / HOUR_HEIGHT
 	
 	def length(self):
-		return (((self.end_time.hour * 60) + self.end_time.minute) - self.offset()) * HOUR_HEIGHT / 60
+		start = (self.start_time.hour * 60) + self.start_time.minute
+		end = (self.end_time.hour * 60) + self.end_time.minute
+		return (end - start) * HOUR_HEIGHT / 60 
 	
+	def style(self):
+		return f"top: {self.offset()}px; min-height: {self.length()}px;"

@@ -243,7 +243,7 @@ BEGIN
 	dates_with_appointments AS (
 		SELECT `date`, A.*
 		FROM available_dates -- Only the available dates
-		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
+		JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON `date`= `booked_date` 
 		WHERE `booked_date` IS NOT NULL
 	),
@@ -252,7 +252,7 @@ BEGIN
 		UNION 
 		SELECT `date`, A.*
 		FROM available_dates
-		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
+		JOIN csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
 		WHERE A.`barber_id` = barber
         AND `booked_date` IS NULL AND `date` NOT IN (
@@ -264,6 +264,6 @@ BEGIN
 		`start_time`,
 		`end_time`
 	FROM dates AS D1
-	LEFT JOIN full_schedule D2 USING (`date`);
+	JOIN full_schedule D2 USING (`date`);
 END 
 // DELIMITER ;

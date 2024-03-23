@@ -49,12 +49,13 @@
 }
 
 .calendar-ruler-value {
+    position: relative;
     margin: 0;
-    padding-left: .25rem;
+    padding-top: .25rem;
     display: flex;
-    align-items: center;
-    min-height: 1.5rem;
-    font-weight: bold;
+    justify-content: center;
+    align-items: baseline;
+    min-height: 5rem;
 }
 
 .calendar-ruler-value:last-child {
@@ -62,9 +63,23 @@
 }
 
 .calendar-days {
-    position: relative;
     background-color: var(--s-2);
 }
+
+.calendar-window {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.window-text {
+    font-size: .875rem;
+    overflow-y: hidden;
+}
+
 
 tbody {
     border-style: solid;

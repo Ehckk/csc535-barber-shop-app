@@ -3,12 +3,12 @@
 {% block calendar_content %}
 <div class="calendar day-container">
     <div class="calendar-times">
-        {% for time, hour_times in times %}
+        {% for hour, hour_times in times %}
             <div class="calendar-ruler">
-                {% for hour_time in hour_times %}
+                {% for _ in hour_times %}
                     <span class="calendar-ruler-value">
                         {% if loop.index == 1 %}
-                            {{ hour_time }}
+                            {{ hour }}
                         {% endif %}
                     </span>
                 {% endfor %}
@@ -19,7 +19,13 @@
         {% for time, hour_times in times %}
             <div class="calendar-ruler">
                 {% for hour_time in hour_times %}
-                    <span class="calendar-ruler-value"></span>
+                    <span class="calendar-ruler-value">
+                        {% for window in schedule[current][hour_time] %}
+                            <div class="calendar-window success-0" style="{{ window.style() }}">
+                                <p class="window-text text-light-2">Available</p>
+                            </div>
+                        {% endfor %}
+                    </span>
                 {% endfor %}
                 {% for appointment in appointments %}
                 {% endfor %}

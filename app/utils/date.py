@@ -1,4 +1,4 @@
-from datetime import date, time, timedelta
+from datetime import date, datetime, time, timedelta
 from collections import defaultdict
 
 from ..models.window import Interval
@@ -104,10 +104,8 @@ def times_list(units, increment=30):
     times = []
     hour = 0
     while hour < 24:
-        times.append((time(hour=hour, minute=0), (
-            time(hour=hour, minute=0).strftime("%I %p").lstrip("0"),
-            time(hour=hour, minute=30).strftime("%I %p").lstrip("0"),
-        )))
+        hour_times = (str(time(hour=hour, minute=0)), str(time(hour=hour, minute=30)))
+        times.append((time(hour=hour, minute=0).strftime("%I %p").lstrip("0"), hour_times))
         hour += 1
     return times
 
@@ -151,3 +149,7 @@ def date_window(current: date, units):
         start = current - timedelta(days=current.weekday())
         end = current + timedelta(days=6)
     return start, end
+
+
+def to_time(value: timedelta):
+    return (datetime.min + value).time()

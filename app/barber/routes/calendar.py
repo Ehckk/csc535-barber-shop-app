@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import date, datetime, time
 from flask import render_template, request
 
@@ -27,9 +27,10 @@ def calendar_appointments(barber_id, current_date, interval):
         start, end = date_window(current_date, interval)
         appointment_data = appointments_between_dates(barber_id, start, end)
     appointments = OrderedDict()
+
     for appointment in appointment_data:
         if not appointments.get(appointment.booked_date, None):
-            appointments[appointment.booked_date] = OrderedDict
+            appointments[appointment.booked_date] = []
         appointments[appointment.booked_date].append(appointment)
     return appointments
 
@@ -58,7 +59,7 @@ def calendar():
         f"barber/{template}", 
         title=title,
         unit=unit,
-        current=current,
+        current=current.strftime("%Y-%m-%d"),
         prev={"unit": unit, "d": prev_date.strftime("%Y-%m-%d") },
         next={"unit": unit, "d": next_date.strftime("%Y-%m-%d") },
         user=user, 

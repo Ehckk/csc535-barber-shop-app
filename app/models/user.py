@@ -1,8 +1,9 @@
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import date, time
 from flask import session
 
 from .window import Window, Interval
+from ..utils.date import to_time
 from ..utils.email import send_mail
 from ..queries.schedules import list_schedule
 
@@ -79,15 +80,18 @@ class BarberUser(User, Barber):
             current_date = date(current_date.year, current_date.month, 1)
 
         windows = list_schedule(self.id, current_date, interval)  # List of dates and time slots
-        schedule: OrderedDict[str, list[Window]] = OrderedDict()  # Use them to create a dictionary 
+        schedule = defaultdict(OrderedDict)  # Use them to create a dictionary 
 
-        for window in windows:  
-            schedule_date: str = window["date"]  # Key: date
-            if not schedule.get(schedule_date, None):
-                schedule[schedule_date] = []  # Value: list of time slots for that date    
-            schedule_window = Window(
-                start_time=window["start_time"],
-                end_time = window["end_time"]
+        for window in windows:
+            schedule_date: str = window["date"].strftime("%Y-%m-%d")  # Key: date
+            start_time = to_time(window["start_time"])
+            time_key = str(time(hour=start_time.hour, minute=(start_time.minute // 30) * 30))
+            if not schedule.get(start_time, None):
+                schedule[schedule_date][time_key] = []  # Value: list of time slots for that date  
+            schedule[schedule_date][time_key].append(
+                Window(
+                    start_time=start_time, 
+                    end_time=to_time(window["end_time"])
+                )
             )
-            schedule[schedule_date].append(schedule_window)
         return schedule
