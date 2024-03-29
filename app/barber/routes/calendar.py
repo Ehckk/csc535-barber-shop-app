@@ -54,12 +54,13 @@ def calendar():
     
     schedule = user.get_schedule(current, unit)
     appointments = calendar_appointments(user.id, current, unit)
-    print(schedule, appointments)
     title = date_names[unit](current)
     template = date_templates[unit]
 
     times = times_list(schedule, appointments)
     dates=dates_list(current, unit)
+    print(dates)
+    print(schedule, appointments.keys())
     return render_template(
         f"barber/{template}", 
         title=title,

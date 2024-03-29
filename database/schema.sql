@@ -215,10 +215,17 @@ CREATE PROCEDURE sp_barber_availability_for_range(
 )
 BEGIN
 	DECLARE range_end date;
+    SET range_start = (
+		CASE range_duration
+			WHEN 'M' THEN MAKEDATE(YEAR(range_start), MONTH(range_start))
+			WHEN 'W' THEN DATE_SUB(range_start, INTERVAL WEEKDAY(range_start) DAY)
+			WHEN 'D' THEN range_start
+        END
+    );
     SET range_end = (
 		CASE range_duration
-			WHEN 'M' THEN (range_start + INTERVAL 1 MONTH) - INTERVAL 1 DAY
-            WHEN 'W' THEN (range_start + INTERVAL 1 WEEK) - INTERVAL 1 DAY
+			WHEN 'M' THEN DATE_SUB(DATE_ADD(range_start, INTERVAL 1 MONTH), INTERVAL 1 DAY)
+            WHEN 'W' THEN DATE_ADD(range_start, INTERVAL 6 DAY)
             WHEN 'D' THEN range_start
 		END
     );
