@@ -125,7 +125,7 @@
     display: flex;
     justify-content: center;
     align-items: baseline;
-    min-height: 5rem;
+    min-height: 58px;
 }
 
 .calendar-ruler-value:first-child {
