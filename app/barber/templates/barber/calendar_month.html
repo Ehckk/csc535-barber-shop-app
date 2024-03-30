@@ -21,6 +21,11 @@
                     </div>
                 {% else %}
                     <div class="calendar-month-day"></div>
+                    {% for appointment in appointments[date_key][hour_time] %}
+                        <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                            <p class="window-text text-light-2">Unavailable</p>
+                        </div>
+                    {% endfor %}
                 {% endif %}
             {% endfor %}
         {% endfor %}
