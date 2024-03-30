@@ -8,6 +8,7 @@ DROP VIEW IF EXISTS csc535_barber.`vw_barber_schedule`;
 DROP VIEW IF EXISTS csc535_barber.`vw_barber_availability`;
 
 DROP TABLE IF EXISTS csc535_barber.`appointment_services`;
+DROP TABLE IF EXISTS csc535_barber.`barber_services`;
 DROP TABLE IF EXISTS csc535_barber.`service`;
 DROP TABLE IF EXISTS csc535_barber.`appointment`;
 DROP TABLE IF EXISTS csc535_barber.`unavailable`;
@@ -108,15 +109,28 @@ CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(32) NOT NULL,
     `price` int NOT NULL,
-    PRIMARY KEY (`service_id`),
-    FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
+    PRIMARY KEY (`service_id`)
 );
 
 INSERT INTO csc535_barber.`service` VALUES 
-	(DEFAULT, 'Beard Trim', 30, 1),
-    (DEFAULT, 'Fade', 35, 1),
-    (DEFAULT, 'Hot Towel Shave', 40, 1),
-    (DEFAULT, 'Straight Razor Shave', 35, 1);
+	(DEFAULT, 'Beard Trim', 30),
+    (DEFAULT, 'Fade', 35),
+    (DEFAULT, 'Hot Towel Shave', 40),
+    (DEFAULT, 'Straight Razor Shave', 35);
+
+CREATE TABLE csc535_barber.`barber_services` (
+	`service_id` INT NOT NULL,
+    `barber_id` INT NOT NULL,
+    PRIMARY KEY (`service_id`, `barber_id`),
+    FOREIGN KEY (`service_id`) REFERENCES `service`(`service_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
+);
+
+INSERT INTO csc535_barber.`barber_services` VALUES
+	(1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 1);
 
 CREATE TABLE csc535_barber.`appointment_services` (
 	`service_id` INT NOT NULL,
