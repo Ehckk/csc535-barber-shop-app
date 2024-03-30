@@ -16,7 +16,6 @@ from ...utils.date import (
 )
 from ...models.user import BarberUser
 from ...models.window import Interval
-from ...models.appointment import Appointment
 from ...queries.appointments import appointments_between_dates, appointments_for_date
 from .. import barber
 
@@ -58,9 +57,8 @@ def calendar():
     template = date_templates[unit]
 
     times = times_list(schedule, appointments)
-    dates=dates_list(current, unit)
-    print(dates)
-    print(schedule, appointments.keys())
+    dates = dates_list(current, unit)
+    print(schedule.keys(), dates)
     return render_template(
         f"barber/{template}", 
         title=title,

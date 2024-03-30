@@ -5,13 +5,13 @@ from ..models.window import Interval
 
 
 weekdays = [
-    "Sunday", 
     "Monday", 
     "Tuesday", 
     "Wednesday", 
     "Thursday", 
     "Friday", 
-    "Saturday"
+    "Saturday",
+    "Sunday"
 ]
 
 
@@ -119,17 +119,17 @@ def times_list(schedule, appointments):
     return times
 
 
-def week_dates(start_date: date, month_bound=False):
+def week_dates(start_date: date, month=None):
     dates = []
-    start_month = start_date.month
+    print(start_date)
+    start_month = month or start_date.month
     current = start_date - timedelta(days=start_date.weekday())
+    print(current)
     for _ in range(7):
-        if not current.month == start_month and month_bound:
+        if not current.month == start_month and month:
             dates.append(None)
         else:
-            current_str = current.strftime("%Y-%m-%d")
-            print(current_str)
-            dates.append(current_str)
+            dates.append(current)
         current += timedelta(days=1)
     return dates
     
@@ -137,9 +137,11 @@ def week_dates(start_date: date, month_bound=False):
 def month_dates(month: int, year: int):
     dates = []
     current = date(year=year, month=month, day=1)
-    while current.month == month:
-        dates.append(week_dates(current, month_bound=True))
+    week = week_dates(current, month=month)
+    while any([d.month == month for d in week if d is not None]):
+        dates.append(week)
         current += timedelta(weeks=1)
+        week = week_dates(current, month=month)
     return dates
 
 
