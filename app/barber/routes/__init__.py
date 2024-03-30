@@ -3,5 +3,6 @@ __all__ = [
     "calendar",
     "appointments",
     "view_appointment",
+    "schedule",
     "cancel_appointment"
 ]
