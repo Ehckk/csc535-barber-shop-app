@@ -1,6 +1,9 @@
 from typing import Literal
 
-from ..models.user import BarberUser, ClientUser, User
+
+from ..models.user import User
+from ..models.barber import BarberUser
+from ..models.client import ClientUser
 from .. import db
 
 def check_email(email: str):

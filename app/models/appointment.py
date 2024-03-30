@@ -4,7 +4,7 @@ from ..queries.users import retrieve_user
 from ..utils.date import to_time
 
 
-HOUR_HEIGHT = 162
+HOUR_HEIGHT = 118
 
 
 class Appointment:

@@ -108,7 +108,6 @@ CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(32) NOT NULL,
     `price` int NOT NULL,
-    `barber_id` INT NOT NULL,
     PRIMARY KEY (`service_id`),
     FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );

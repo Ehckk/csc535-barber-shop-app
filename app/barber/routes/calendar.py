@@ -14,7 +14,7 @@ from ...utils.date import (
     to_time,
     weekdays
 )
-from ...models.user import BarberUser
+from ...models.barber import BarberUser
 from ...models.window import Interval
 from ...queries.appointments import appointments_between_dates, appointments_for_date
 from .. import barber
