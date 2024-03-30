@@ -1,21 +1,21 @@
 {% extends "dashboard.html" %}
 
 {% block nav %}
-<li class="side-nav-item">
-    <a class="side-nav-link" href="{{ url_for('client.client_home') }}">
-        Home
-    </a>
-</li>
-<li class="side-nav-item">
-    <a class="side-nav-link" href="{{ url_for('client.appointments') }}">
-        Appointments
-    </a>
-</li>
-<li class="side-nav-item">
-    <a class="side-nav-link" href="{{ url_for('client.browse_barbers') }}">
-        Barbers
-    </a>
-</li>
+{{ nav_link(
+    link_url=url_for('client.client_home'),
+    icon_url=url_for('static', filename='icons/home.svg'),
+    text="Home"
+) }}
+{{ nav_link(
+    link_url=url_for('client.appointments'),
+    icon_url=url_for('static', filename='icons/scissors.svg'),
+    text="Appointments"
+) }}
+{{ nav_link(
+    link_url=url_for('client.browse_barbers'),
+    icon_url=url_for('static', filename='icons/user.svg'),
+    text="Barbers"
+) }}
 {% endblock %}
 
 {% block dashboard %}

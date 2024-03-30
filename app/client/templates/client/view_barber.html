@@ -1,9 +1,9 @@
-{% extends "client/barbers" %}
+{% extends "client/barbers.html" %}
 
 {% block side_text %}
-    Barber Name Here 
+    {{ barber.display_name() }}
 {% endblock %}
 
 {% block side_content %}
-    Barber Details Here
+    
 {% endblock %}
