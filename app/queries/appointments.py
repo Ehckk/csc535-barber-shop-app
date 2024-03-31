@@ -3,7 +3,7 @@ from ..models.appointment import Appointment
 from .. import db
 
 
-def list_appointments(appointments_data):
+def list_appointments(appointments_data) -> list[Appointment]:
     appointments = []
     for appointment_data in appointments_data:
         appointment = Appointment(**appointment_data)
@@ -17,6 +17,7 @@ def appointments_for_date(barber_id: int, target_date: date):
         FROM csc535_barber.`appointment` 
         WHERE `barber_id` = %(barber_id)s
         AND `booked_date` = %(target_date)s
+        AND `is_approved` = 1
         ORDER BY `booked_date`, `start_time`;
     """
     results = db.execute(query, {
@@ -33,6 +34,7 @@ def appointments_between_dates(barber_id: int, start: date, end: date):
         WHERE `barber_id` = %(barber_id)s
         AND `booked_date` >= %(start)s
         AND `booked_date` <= %(end)s
+        AND `is_approved` = 1
         ORDER BY `booked_date`, `start_time`;
     """
     results = db.execute(query, {
@@ -109,7 +111,6 @@ def create_appointment(
     db.commit()
 
 
-
 def approve_appointment(appointment_id: int):
     query = """
         UPDATE csc535_barber.`appointment` 
@@ -149,3 +150,30 @@ def delete_appointment(appointment_id: int):
     """
     db.execute(query, {"appointment_id": appointment_id})
     db.commit()
+
+
+def retrieve_conflicting(appointment: Appointment):
+    booked_date = appointment.booked_date
+    start_time = appointment.start_time
+    end_time = appointment.end_time()
+    query = """
+        SELECT * FROM csc535_barber.`appointment`
+        WHERE `is_approved` = 0 AND `barber_id` = %(barber_id)s
+        AND NOT `appointment_id` = %(appointment_id)s
+        AND `booked_date` = %(booked_date)s
+        AND (
+            (`start_time` >= %(start_time)s AND `start_time` < %(end_time)s) 
+            OR (
+                DATE_ADD(`start_time`, INTERVAL `duration` MINUTE) >= %(start_time)s
+                AND DATE_ADD(`start_time`, INTERVAL `duration` MINUTE) < %(end_time)s
+            )
+        )    
+    """
+    results = db.execute(query, {
+        "appointment_id": appointment.id,
+        "barber_id": appointment.barber.id,
+        "booked_date": booked_date,
+        "start_time": start_time,
+        "end_time": end_time,
+    })
+    return list_appointments(results)

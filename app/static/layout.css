@@ -144,8 +144,19 @@ main.content {
     gap: .5rem;
 }
 
+.side-list {
+    list-style: none;
+}
+
+.side-list-item {
+    margin-left: 1rem;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+
 .side-buttons {
-    margin-top: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-evenly;

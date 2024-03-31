@@ -105,7 +105,6 @@ def times_list(schedule, appointments):
     for appointment_time in appointments.values():
         for key in appointment_time.keys():
             all_times.add(key)
-    print(all_times)
     if not len(all_times) == 0:
         min_hour = int(min(all_times).split(":")[0])
     else:
@@ -121,10 +120,8 @@ def times_list(schedule, appointments):
 
 def week_dates(start_date: date, month=None):
     dates = []
-    print(start_date)
     start_month = month or start_date.month
     current = start_date - timedelta(days=start_date.weekday())
-    print(current)
     for _ in range(7):
         if not current.month == start_month and month:
             dates.append(None)

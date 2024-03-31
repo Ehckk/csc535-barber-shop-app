@@ -58,7 +58,7 @@ button:active, input[type=submit]:active {
 .btn-large {
     padding: 0.5rem 1rem;
     font-size: 1.25rem;
-    min-width: 10rem;
+    min-width: 9rem;
 }
 
 label {

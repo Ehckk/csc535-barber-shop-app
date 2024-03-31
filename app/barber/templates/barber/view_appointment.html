@@ -10,12 +10,22 @@
         <p>Client: {{ appointment.client.display_name() }}</p>
         <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
     </div>
+    {% if not appointment.is_approved and conflicting_appointments %}
     <div class="side-container">
-        {% if not appointment.is_approved %}
-            <h4>Book this appointment?</h3>
-            <p>Any other requests for appointments within this time slot will be declined</p>
-        {% endif %}
+        <h4>Approve this appointment request?</h4>        
+        <p>
+            The following requests will be <b class="text-error-1 bold"> declined</b>:
+        </p>
+        <ul class="side-list">
+            {% for conflicting in conflicting_appointments %}
+                <li class="side-list-item">
+                    <p>{{ conflicting }}</p>
+                    <p>{{ conflicting.client.display_name() }}</p>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
+    {% endif %}
     <div class="side-buttons">
         {% if appointment.is_approved %}
             <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">

@@ -30,7 +30,7 @@ def calendar_appointments(barber_id, current_date, interval):
 
     for appointment in appointment_data:
         booked_date: str = appointment.booked_date.strftime("%Y-%m-%d")  # Key: date
-        start_time = to_time(appointment.start_time)
+        start_time = appointment.start_time
         time_key = str(time(hour=start_time.hour, minute=(start_time.minute // 30) * 30))
         if not appointments.get(time_key, None):
             appointments[booked_date][time_key] = []
@@ -58,7 +58,7 @@ def calendar():
 
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
-    print(schedule.keys(), dates)
+    print(schedule.keys(), appointments, dates)
     return render_template(
         f"barber/{template}", 
         title=title,
