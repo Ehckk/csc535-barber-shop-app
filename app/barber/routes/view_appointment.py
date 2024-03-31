@@ -1,5 +1,4 @@
 from flask import render_template
-
 from ...queries.appointments import list_barber_appointments, retrieve_appointment
 from ...utils.user import current_user
 from .. import barber
