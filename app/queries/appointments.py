@@ -1,5 +1,4 @@
 from datetime import date, time
-
 from ..models.appointment import Appointment
 from .. import db
 

@@ -25,10 +25,10 @@
                 <button class="error-1 text-light-2 btn-large">Cancel</button>
             </a>
         {% else %}
-            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+            <a href="{{ url_for('barber.deny_request', appt_id=appointment.id) }}">
                 <button class="error-1 text-light-2 btn-large">Deny</button>
             </a>
-            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+            <a href="{{ url_for('barber.approve_request', appt_id=appointment.id) }}">
                 <button class="success-1 text-light-2 btn-large">Approve</button>
             </a>
         {% endif %}

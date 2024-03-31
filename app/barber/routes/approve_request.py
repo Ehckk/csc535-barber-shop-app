@@ -1,11 +1,10 @@
 from flask import flash, redirect, url_for
-
-from app.queries.appointments import retrieve_appointment
+from ...queries.appointments import retrieve_appointment, approve_appointment
 from ...utils.user import current_user
 from .. import barber
 
 
-@barber.route("/<int:appt_id>", methods=["GET"])
+@barber.route("approve/<int:appt_id>", methods=["GET"])
 def approve_request(appt_id):
     user = current_user()
     appointment = retrieve_appointment(appt_id)
@@ -14,7 +13,7 @@ def approve_request(appt_id):
         reason = 'You cannot manage this request'
     else:
         if not appointment.is_approved:
-            approve_request(appt_id)
+            approve_appointment(appt_id)
             flash('Appointment Booked!', category="success")
         else:
             reason = 'This appointment is already booked'

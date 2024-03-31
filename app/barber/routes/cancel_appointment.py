@@ -6,5 +6,5 @@ from .. import barber
 @barber.route("/cancel/<int:appt_id>", methods=["POST", "GET"])
 def cancel_appointment(appt_id):
     delete_appointment(appt_id)  
-    flash('Appointment canceled', category="success")
+    flash('Appointment Canceled!', category="success")
     return redirect(url_for('barber.barber_home'))
