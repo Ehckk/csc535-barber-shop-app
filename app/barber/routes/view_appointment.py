@@ -5,15 +5,16 @@ from ...utils.user import current_user
 from .. import barber
 
 
-@barber.route("/appointment/<appt_id>", methods=["GET"])
+@barber.route("/<int:appt_id>", methods=["GET"])
 def appointment_details(appt_id):
     user = current_user()
-    appointments = list_barber_appointments(user.id)
+    booked_appointments = list_barber_appointments(user.id)
+    requested_appointments = list_barber_appointments(user.id, booked=False)
     appointment = retrieve_appointment(appt_id)
-    print(appointments)
     return render_template(
         "barber/view_appointment.html", 
         user=user,
-        appointments=appointments,
+        booked_appointments=booked_appointments,
+        requested_appointments=requested_appointments,
         appointment=appointment
     )

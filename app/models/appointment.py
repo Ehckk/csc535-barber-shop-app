@@ -51,3 +51,6 @@ class Appointment:
 	
 	def style(self):
 		return f"top: {self.offset()}px; min-height: {self.length()}px;"
+
+	def __str__(self):
+		return f"{self.booked_date.strftime('%b %d, %Y')} @ {to_time(self.start_time).strftime('%I:%M %p')}"

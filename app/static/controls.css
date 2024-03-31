@@ -50,7 +50,7 @@ button:active, input[type=submit]:active {
 }
 
 .btn-small {
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     font-size: 1rem;
     min-width: 5rem;
 }

@@ -8,10 +8,11 @@ from .. import barber
 @barber.route("/", methods=["GET", "POST"])
 def barber_home():
     user = current_user()
-    appointments = list_barber_appointments(user.id)
-    print(appointments)
+    booked_appointments = list_barber_appointments(user.id)
+    requested_appointments = list_barber_appointments(user.id, booked=False)
     return render_template(
         'barber/home.html', 
         user=user,
-        appointments=appointments
+        booked_appointments=booked_appointments,
+        requested_appointments=requested_appointments
     )

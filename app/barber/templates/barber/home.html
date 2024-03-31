@@ -12,16 +12,18 @@
 {% endblock %}
 
 {% block main_content %}
-    {% call card_list('Booked Appointments') %}
-        {% for appointment in booked_appointments %}
-            {{ appointment_card(appointment) }}
-        {% endfor %}
-    {% endcall %}
-    {% call card_list('Requested Appointments') %}
-        {% for appointment in requested_appointments %}
-            {{ appointment_card(appointment) }}
-        {% endfor %}
-    {% endcall %}
+    <div class="home">
+        {% call card_list('Booked Appointments') %}
+            {% for appointment in booked_appointments %}
+                {{ appointment_card(appointment) }}
+            {% endfor %}
+        {% endcall %}
+        {% call card_list('Requested Appointments') %}
+            {% for appointment in requested_appointments %}
+                {{ appointment_card(appointment) }}
+            {% endfor %}
+        {% endcall %}
+    </div>
 {% endblock %}
 
 {% block side_text %}

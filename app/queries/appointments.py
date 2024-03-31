@@ -44,13 +44,17 @@ def appointments_between_dates(barber_id: int, start: date, end: date):
     return list_appointments(results)
 
 
-def list_barber_appointments(barber_id: int):
+def list_barber_appointments(barber_id: int, booked=True):
     query = """
         SELECT * 
         FROM csc535_barber.`appointment` 
-        WHERE `barber_id` = %(barber_id)s;
+        WHERE `barber_id` = %(barber_id)s
+        AND `is_approved` = %(booked)s;
     """
-    results = db.execute(query, {"barber_id": barber_id})
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "booked": booked
+    })
     return list_appointments(results)
 
 

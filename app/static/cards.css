@@ -1,0 +1,27 @@
+.card-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.card {
+    padding: .5rem;
+    border-radius: .25rem;
+    background-color: var(--w-2);
+    box-shadow: var(--drop-shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
