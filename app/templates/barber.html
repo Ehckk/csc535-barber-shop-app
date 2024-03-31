@@ -8,16 +8,27 @@
     icon_url=url_for('static', filename='icons/home.svg'),
     text="Home"
 ) }}
-{{ nav_link(
-    link_url=url_for('barber.appointments'),
+{#
+{{ 
+    nav_link( 
+    link_url=url_for('barber.services'),
     icon_url=url_for('static', filename='icons/scissors.svg'),
-    text="Appointments"
+    text="Services"
 ) }}
+#}
 {{ nav_link(
     link_url=url_for('barber.calendar'),
     icon_url=url_for('static', filename='icons/calendar.svg'),
     text="Calendar"
 ) }}
+{#
+{{ 
+    nav_link( 
+    link_url=url_for('barber.history'),
+    icon_url=url_for('static', filename='icons/history.svg'),
+    text="History"
+) }}
+#}
 {% endblock %}
 
 {% block dashboard %}

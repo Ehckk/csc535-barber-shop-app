@@ -7,3 +7,14 @@
         </a>
     </li>
 {% endmacro %}
+
+{% macro card_list(title) %}
+    <div class="card-list">
+        <div class="card-list-header">
+            <h2>{{ title }}</h2>
+        </div>
+        <div class="cards">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro %}

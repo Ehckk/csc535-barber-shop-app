@@ -1,0 +1,9 @@
+{% macro appointment_card(appointment) %}
+    <div class="card">
+        <h3>{{ appointment }}</h3>
+        <p>{{ appointment.client.display_name() }}=</p>
+        <a href="{{ url_for('barber.appointment_details', appt_id=appointment.id) }}">
+            <button>Details</button>
+        </a>
+    </div>
+{% endmacro %} 

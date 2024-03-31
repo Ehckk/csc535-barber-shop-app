@@ -1,3 +1,6 @@
+{% from "_macros.html" import card_list %}
+{% from "_cards.html" import appointment_card %}
+
 {% extends "barber.html" %}
 
 {% block title %}
@@ -9,8 +12,16 @@
 {% endblock %}
 
 {% block main_content %}
-    Home
-    <!-- TBA -->
+    {% call card_list('Booked Appointments') %}
+        {% for appointment in booked_appointments %}
+            {{ appointment_card(appointment) }}
+        {% endfor %}
+    {% endcall %}
+    {% call card_list('Requested Appointments') %}
+        {% for appointment in requested_appointments %}
+            {{ appointment_card(appointment) }}
+        {% endfor %}
+    {% endcall %}
 {% endblock %}
 
 {% block side_text %}
