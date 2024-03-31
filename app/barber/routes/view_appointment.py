@@ -16,5 +16,6 @@ def appointment_details(appt_id):
         user=user,
         booked_appointments=booked_appointments,
         requested_appointments=requested_appointments,
+        appt_id=appt_id,
         appointment=appointment
     )

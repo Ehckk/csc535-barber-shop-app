@@ -107,7 +107,9 @@ INSERT INTO csc535_barber.`appointment` VALUES
 	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, DEFAULT, 1),
     (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, DEFAULT, 1),
 	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT, 1),
-    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1);
+    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1),
+	(DEFAULT, 1, 2, '2024-04-02', '11:30', 30, DEFAULT, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '11:30', 60, DEFAULT, 0);
 
 CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,

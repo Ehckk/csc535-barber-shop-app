@@ -130,8 +130,14 @@ main.content {
     margin-right: auto;
 } 
 
+.side-content {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
 .side-panel {
-    min-width: 32rem;
+    min-width: 24rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -139,6 +145,7 @@ main.content {
 }
 
 .side-buttons {
+    margin-top: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-evenly;

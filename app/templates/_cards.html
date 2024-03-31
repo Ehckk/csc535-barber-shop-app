@@ -1,5 +1,5 @@
-{% macro appointment_card(appointment) %}
-    <div class="card card-row">
+{% macro appointment_card(appointment, current_appt_id) %}
+    <div class="card card-row{% if current_appt_id == appointment.id %} current{% endif %}">
         <p>{{ appointment }}: {{ appointment.client.display_name() }}</p>
         <a href="{{ url_for('barber.appointment_details', appt_id=appointment.id) }}">
             <button class="btn-small dark-2 text-light-2">Details</button>

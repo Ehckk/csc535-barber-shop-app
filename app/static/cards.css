@@ -20,6 +20,12 @@
     flex-direction: column;
 }
 
+.card.current {
+    outline-style: solid;
+    outline-width: 4px;
+    outline-color: var(--i-1);
+}
+
 .card-row {
     flex-direction: row;
     justify-content: space-between;

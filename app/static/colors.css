@@ -71,27 +71,27 @@
 }
 
 .warning-2 {
-    background-color: var(--w-2);
+    background-color: var(--d-2);
 }
 
 .warning-1 {
-    background-color: var(--w-1);
+    background-color: var(--d-1);
 }
 
 .warning-0 {
-    background-color: var(--w-0);
+    background-color: var(--d-0);
 }
 
 .text-warning-2 {
-    color: var(--w-2);
+    color: var(--d-2);
 }
 
 .text-warning-1 {
-    color: var(--w-1);
+    color: var(--d-1);
 }
 
 .text-warning-0 {
-    color: var(--w-0);
+    color: var(--d-0);
 }
 
 .success-2 {

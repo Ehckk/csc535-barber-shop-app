@@ -5,15 +5,32 @@
 {% endblock %}
 
 {% block side_content %}
-    <p>Barber: {{ appointment.barber.display_name() }}</p>
-    <p>Client: {{ appointment.client.display_name() }}</p>
-    <p>{{ appointment.booked_date }}</p>
-    <p>{{ appointment.start_time }}</p>
-    <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
-
+    <div class="side-container">
+        <p>{{ appointment }}</p>
+        <p>Client: {{ appointment.client.display_name() }}</p>
+        <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+    </div>
+    <div class="side-container">
+        {% if not appointment.is_approved %}
+            <h4>Book this appointment?</h3>
+            <p>Any other requests for appointments within this time slot will be declined</p>
+        {% endif %}
+    </div>
     <div class="side-buttons">
-        <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
-            <button class="error-1 text-light-2">Cancel</button>
-        </a>
+        {% if appointment.is_approved %}
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="warning-1 text-light-2 btn-large">Reschedule</button>
+            </a>
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="error-1 text-light-2 btn-large">Cancel</button>
+            </a>
+        {% else %}
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="error-1 text-light-2 btn-large">Deny</button>
+            </a>
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="success-1 text-light-2 btn-large">Approve</button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}
