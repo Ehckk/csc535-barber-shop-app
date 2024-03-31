@@ -138,6 +138,12 @@ main.content {
     gap: .5rem;
 }
 
+.side-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .home {
     margin-top: .5rem;
     display: flex;

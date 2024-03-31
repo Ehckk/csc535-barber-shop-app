@@ -7,4 +7,4 @@ from .. import barber
 def cancel_appointment(appt_id):
     delete_appointment(appt_id)  
     flash('Appointment canceled', category="success")
-    return redirect(url_for('barber.home'))
+    return redirect(url_for('barber.barber_home'))
