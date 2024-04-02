@@ -43,6 +43,28 @@ button:active, input[type=submit]:active {
     transform: translateY(2px);
 }
 
+.btn-square {
+    padding: 0.25rem;
+    min-width: 2rem;
+    min-height: 2rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    min-width: 5rem;
+}
+
+.btn-large {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    min-width: 7rem;
+}
+
 label {
     margin-bottom: .25rem;
+}
+
+.link-btn {
+    text-decoration: none;
 }

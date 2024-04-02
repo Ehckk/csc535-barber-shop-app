@@ -11,6 +11,12 @@
 {% block main_content %}
     List of Barbers Here
     {% for barber in barbers %}
-    <p>{{barber.first_name}} {{barber.last_name}}</p>
+        <div>
+            <h3>{{ barber.first_name }} {{ barber.last_name }}</h3>
+            <a href="{{ url_for('client.barber_details', barber_id=barber.id) }}">
+                <button>Details</button>
+            </a>
+        </div>
+    <p></p>
     {% endfor %}
 {% endblock %}
