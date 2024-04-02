@@ -1,0 +1,19 @@
+{% extends "barber.html" %}
+{% from "_render_form.html" import render_form %}
+
+{% block title %}
+    Set Availability
+{% endblock %}
+
+{% block header_text %}
+    Set Availability
+{% endblock %}
+
+{% block side_text %}
+    Set Availability
+{% endblock %}
+
+{% block side_content %}
+{% call render_form(form, name="Set Availability", action="/barber/availability")%}
+{% endcall %}
+{% endblock %}
