@@ -12,8 +12,5 @@
     <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
 
     <!-- cancel appointment button here -->
-    <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
-        <button>Cancel</button>
-    </a>
     <!-- reschedule appointment button here -->
 {% endblock %}

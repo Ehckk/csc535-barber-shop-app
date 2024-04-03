@@ -15,8 +15,8 @@
     --g-1: hsl(135 65% 40%);
     --g-0: hsl(135 60% 25%);
     --i-2: hsl(200 70% 75%);
-    --i-1: hsl(200 65% 40%);
-    --i-0: hsl(200 60% 25%);
+    --i-1: hsl(200 65% 60%);
+    --i-0: hsl(200 60% 45%);
     --w-2: hsl(0 0% 95%);
     --w-1: hsl(0 0% 90%);
     --w-0: hsl(0 0% 85%);
@@ -45,6 +45,8 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     flex-grow: 1;
     background-color: var(--w-1);
 }

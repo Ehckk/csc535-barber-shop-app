@@ -7,8 +7,6 @@ DROP PROCEDURE IF EXISTS csc535_barber.`sp_barber_availability_for_range`;
 DROP VIEW IF EXISTS csc535_barber.`vw_barber_schedule`;
 DROP VIEW IF EXISTS csc535_barber.`vw_barber_availability`;
 
-DROP TABLE IF EXISTS csc535_barber.`appointment_services`;
-DROP TABLE IF EXISTS csc535_barber.`service`;
 DROP TABLE IF EXISTS csc535_barber.`appointment`;
 DROP TABLE IF EXISTS csc535_barber.`unavailable`;
 DROP TABLE IF EXISTS csc535_barber.`schedule`;
@@ -104,37 +102,6 @@ INSERT INTO csc535_barber.`appointment` VALUES
 	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT, 1),
     (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1);
 
-CREATE TABLE csc535_barber.`service` (
-	`service_id` INT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(32) NOT NULL,
-    `price` int NOT NULL,
-    `barber_id` INT NOT NULL,
-    PRIMARY KEY (`service_id`),
-    FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
-);
-
-INSERT INTO csc535_barber.`service` VALUES 
-	(DEFAULT, 'Beard Trim', 30, 1),
-    (DEFAULT, 'Fade', 35, 1),
-    (DEFAULT, 'Hot Towel Shave', 40, 1),
-    (DEFAULT, 'Straight Razor Shave', 35, 1);
-
-CREATE TABLE csc535_barber.`appointment_services` (
-	`service_id` INT NOT NULL,
-    `appointment_id` INT NOT NULL,
-    PRIMARY KEY (`service_id`, `appointment_id`),
-    FOREIGN KEY (`service_id`) REFERENCES `service`(`service_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`appointment_id`) REFERENCES `appointment`(`appointment_id`) ON DELETE CASCADE
-);
-
-INSERT INTO csc535_barber.`appointment_services` VALUES
-	(1, 1),
-    (2, 1),
-    (1, 2),
-    (3, 3),
-    (4, 3),
-    (3, 4);
-
 CREATE VIEW csc535_barber.`vw_barber_schedule` AS
 SELECT 
 	B.`user_id` AS `barber_id`,
@@ -215,17 +182,10 @@ CREATE PROCEDURE sp_barber_availability_for_range(
 )
 BEGIN
 	DECLARE range_end date;
-    SET range_start = (
-		CASE range_duration
-			WHEN 'M' THEN MAKEDATE(YEAR(range_start), MONTH(range_start))
-			WHEN 'W' THEN DATE_SUB(range_start, INTERVAL WEEKDAY(range_start) DAY)
-			WHEN 'D' THEN range_start
-        END
-    );
     SET range_end = (
 		CASE range_duration
-			WHEN 'M' THEN DATE_SUB(DATE_ADD(range_start, INTERVAL 1 MONTH), INTERVAL 1 DAY)
-            WHEN 'W' THEN DATE_ADD(range_start, INTERVAL 6 DAY)
+			WHEN 'M' THEN (range_start + INTERVAL 1 MONTH) - INTERVAL 1 DAY
+            WHEN 'W' THEN (range_start + INTERVAL 1 WEEK) - INTERVAL 1 DAY
             WHEN 'D' THEN range_start
 		END
     );
@@ -250,7 +210,7 @@ BEGIN
 	dates_with_appointments AS (
 		SELECT `date`, A.*
 		FROM available_dates -- Only the available dates
-		JOIN  csc535_barber.`vw_barber_availability` AS A 
+		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON `date`= `booked_date` 
 		WHERE `booked_date` IS NOT NULL
 	),
@@ -259,7 +219,7 @@ BEGIN
 		UNION 
 		SELECT `date`, A.*
 		FROM available_dates
-		JOIN csc535_barber.`vw_barber_availability` AS A 
+		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
 		WHERE A.`barber_id` = barber
         AND `booked_date` IS NULL AND `date` NOT IN (
@@ -271,6 +231,6 @@ BEGIN
 		`start_time`,
 		`end_time`
 	FROM dates AS D1
-	JOIN full_schedule D2 USING (`date`);
+	LEFT JOIN full_schedule D2 USING (`date`);
 END 
 // DELIMITER ;

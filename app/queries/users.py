@@ -9,10 +9,8 @@ def check_email(email: str):
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
     """    
-    results = db.execute(query, {"email": email})
-    if not results:
-        return None
-    return results[0] 
+    cursor = db.execute(query, {"email": email})
+    return cursor.fetchone()
 
 
 def check_password(email: str, password: str):
@@ -25,11 +23,8 @@ def check_password(email: str, password: str):
         WHERE `email` = %(email)s 
         AND `password` = SHA(%(password)s)
     """
-    results = db.execute(query, {"email": email, "password": password})
-    if not results:
-        return None
-    return results[0] 
-
+    cursor = db.execute(query, {"email": email, "password": password})
+    return cursor.fetchone()
 
 
 def list_barbers() -> list[BarberUser]:
@@ -44,11 +39,9 @@ def list_barbers() -> list[BarberUser]:
         FROM csc535_barber.`user`
         WHERE `role` = 'Barber'
     """
-    results = db.execute(query)
-    if not results:
-        return []
+    cursor = db.execute(query)
     barbers = []
-    for barber_data in results:
+    for barber_data in cursor.fetchall():
         barber = BarberUser(**barber_data)
         barbers.append(barber)
     return barbers
@@ -66,10 +59,10 @@ def retrieve_user(id: int) -> User:
         FROM csc535_barber.`user`
         WHERE `user_id` = %(id)s
     """
-    results = db.execute(query, {"id": id})
-    if results is None:
+    cursor = db.execute(query, {"id": id})
+    user_data = cursor.fetchone()
+    if user_data is None:
         return None
-    user_data = results[0]
     if user_data["role"] == "Barber":
         return BarberUser(**user_data)
     return ClientUser(**user_data)

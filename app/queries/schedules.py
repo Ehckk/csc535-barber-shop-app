@@ -15,12 +15,12 @@ def list_schedule(
             %(interval)s
         );
     """
-    results = db.execute(query, {
-        "barber_id": int(barber_id), 
-        "start_date": str(start_date), 
+    cursor = db.execute(query, {
+        "barber_id": barber_id, 
+        "start_date": start_date, 
         "interval": interval
     })
-    return results
+    return cursor.fetchall()
 
 
 def create_schedule(

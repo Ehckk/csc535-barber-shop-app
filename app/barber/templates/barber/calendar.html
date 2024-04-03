@@ -9,48 +9,5 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="calendar-header">
-    <div class="calendar-controls">
-        <a class="link-btn" href="{{ url_for('barber.calendar', **prev) }}">
-            <button class="btn-square primary-1 text-light-2">
-                <
-            </button>
-        </a>
-        <a class="link-btn" href="{{ url_for('barber.calendar', **next) }}">
-            <button class="btn-square primary-1 text-light-2">
-                >
-            </button>
-        </a>
-    </div>
-    <h3 class="calendar-title">
-        {{ title }}
-    </h3>
-    <div class="calendar-controls">
-    {% if not unit == 'D' %}
-        <a class="link-btn" href="{{ url_for('barber.calendar', unit='D', d=current) }}">
-            <button class="btn-small primary-1 text-light-2">
-                Day
-            </button>
-        </a>
-    {% endif %}
-    {% if not unit == 'W' %}
-        <a class="link-btn" href="{{ url_for('barber.calendar', unit='W', d=current) }}">
-            <button class="btn-small primary-1 text-light-2">
-                Week
-            </button>
-        </a>
-    {% endif %}
-    {% if not unit == 'M' %}
-        <a class="link-btn" href="{{ url_for('barber.calendar', unit='M', d=current) }}">
-            <button class="btn-small primary-1 text-light-2">
-                Month
-            </button>
-        </a>
-    {% endif %}
-    </div>
-</div>
-<div class="calendar-body">
-    {% block calendar_content %}
-    {% endblock %}
-</div>
+    <!-- TBA appointments -->
 {% endblock %}
