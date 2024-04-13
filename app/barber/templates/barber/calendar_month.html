@@ -1,0 +1,34 @@
+{% extends "barber/calendar.html" %}
+
+{% block calendar_content %}
+<div class="calendar month-container">
+    <div class="calendar-weekdays">
+        {% for weekday in weekdays %}
+            <span class="weekday-value">
+                {{ weekday }}
+            </span>
+        {% endfor %}
+    </div>
+    <div class="calendar-month">
+        {% for days in dates %}
+            {% for day in days %}
+                {% if not day == None %}
+                    <div class="calendar-month-day">
+                        <span class="calendar-month-day-value">{{ day.day }}</span>
+                        <div class="calendar-month-day-items">
+
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="calendar-month-day"></div>
+                    {% for appointment in appointments[date_key][hour_time] %}
+                        <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                            <p class="window-text text-light-2">Unavailable</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

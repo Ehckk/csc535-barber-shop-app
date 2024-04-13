@@ -1,0 +1,14 @@
+{% from "_render_form.html" import render_form %}
+
+{% extends "auth.html" %}
+{% block title %}
+    Login
+{% endblock %}
+{% block auth %}
+    <p>Failed to verify email address</p>
+    <a href="{{ url_for('auth.verify', user_id=user.id) }}">
+        <button class="primary-1">
+            Retry
+        </button>
+    </a>
+{% endblock %}

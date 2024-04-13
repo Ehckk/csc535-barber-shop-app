@@ -9,8 +9,10 @@ def check_email(email: str):
         FROM csc535_barber.`user`
         WHERE `email` = %(email)s 
     """    
-    cursor = db.execute(query, {"email": email})
-    return cursor.fetchone()
+    results = db.execute(query, {"email": email})
+    if not results:
+        return None
+    return results[0] 
 
 
 def check_password(email: str, password: str):
@@ -23,8 +25,11 @@ def check_password(email: str, password: str):
         WHERE `email` = %(email)s 
         AND `password` = SHA(%(password)s)
     """
-    cursor = db.execute(query, {"email": email, "password": password})
-    return cursor.fetchone()
+    results = db.execute(query, {"email": email, "password": password})
+    if not results:
+        return None
+    return results[0] 
+
 
 
 def list_barbers() -> list[BarberUser]:
@@ -39,9 +44,11 @@ def list_barbers() -> list[BarberUser]:
         FROM csc535_barber.`user`
         WHERE `role` = 'Barber'
     """
-    cursor = db.execute(query)
+    results = db.execute(query)
+    if not results:
+        return []
     barbers = []
-    for barber_data in cursor.fetchall():
+    for barber_data in results:
         barber = BarberUser(**barber_data)
         barbers.append(barber)
     return barbers
@@ -59,10 +66,10 @@ def retrieve_user(id: int) -> User:
         FROM csc535_barber.`user`
         WHERE `user_id` = %(id)s
     """
-    cursor = db.execute(query, {"id": id})
-    user_data = cursor.fetchone()
-    if user_data is None:
+    results = db.execute(query, {"id": id})
+    if results is None:
         return None
+    user_data = results[0]
     if user_data["role"] == "Barber":
         return BarberUser(**user_data)
     return ClientUser(**user_data)
@@ -93,4 +100,15 @@ def create_user(
         "last_name": last_name, 
         "role": role
     })
+    db.commit()
+    result = check_email(email)
+    return result["user_id"]
+
+def verify_email(user_id):
+    query = """
+        UPDATE csc535_barber.user
+        SET verified = 1
+        WHERE user_id = %(user_id)s
+    """
+    db.execute(query, {"user_id": user_id})
     db.commit()

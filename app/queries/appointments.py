@@ -12,14 +12,46 @@ def list_appointments(appointments_data):
     return appointments
 
 
+def appointments_for_date(barber_id: int, target_date: date):
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment` 
+        WHERE `barber_id` = %(barber_id)s
+        AND `booked_date` = %(target_date)s
+        ORDER BY `booked_date`, `start_time`;
+    """
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "target_date": target_date
+    })
+    return list_appointments(results)
+
+
+def appointments_between_dates(barber_id: int, start: date, end: date):
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment` 
+        WHERE `barber_id` = %(barber_id)s
+        AND `booked_date` >= %(start)s
+        AND `booked_date` <= %(end)s
+        ORDER BY `booked_date`, `start_time`;
+    """
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "start": start,
+        "end": end
+    })
+    return list_appointments(results)
+
+
 def list_barber_appointments(barber_id: int):
     query = """
         SELECT * 
         FROM csc535_barber.`appointment` 
         WHERE `barber_id` = %(barber_id)s;
     """
-    cursor = db.execute(query, {"barber_id": barber_id})
-    return list_appointments(cursor.fetchall())
+    results = db.execute(query, {"barber_id": barber_id})
+    return list_appointments(results)
 
 
 def list_client_appointments(client_id: int):
@@ -28,8 +60,8 @@ def list_client_appointments(client_id: int):
         FROM csc535_barber.`appointment`
         WHERE `client_id` = %(client_id)s;
     """
-    cursor = db.execute(query, {"client_id": client_id})
-    return list_appointments(cursor.fetchall())
+    results = db.execute(query, {"client_id": client_id})
+    return list_appointments(results)
 
 
 def retrieve_appointment(appointment_id: int): 
@@ -38,8 +70,10 @@ def retrieve_appointment(appointment_id: int):
         FROM csc535_barber.`appointment` 
         WHERE `appointment_id` = %(appointment_id)s;
     """
-    cursor = db.execute(query, {"appointment_id": appointment_id})
-    appointment_data = cursor.fetchone()
+    results = db.execute(query, {"appointment_id": appointment_id})
+    if not results:
+        return None
+    appointment_data = results[0] 
     return Appointment(**appointment_data)
 
 
