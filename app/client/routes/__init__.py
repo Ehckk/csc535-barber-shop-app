@@ -4,5 +4,6 @@ __all__ = [
     "view_appointment",
     "browse_barbers",
     "appointments",
-    "appointment_history"
+    "appointment_history",
+    "client_services"
 ]
