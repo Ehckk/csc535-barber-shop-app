@@ -96,7 +96,6 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`appointment` (
     `booked_date` DATE NOT NULL,
     `start_time` TIME NOT NULL,
     `duration` SMALLINT UNSIGNED NOT NULL,
-    `description` TEXT NULL,
     `is_approved` BOOL DEFAULT 0,
     PRIMARY KEY (`appointment_id`),
 	FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE,
@@ -104,15 +103,15 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`appointment` (
 );
 
 INSERT INTO csc535_barber.`appointment` VALUES
-	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, DEFAULT, 1),
-    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, DEFAULT, 1),
-	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT, 1),
-    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1),
-	(DEFAULT, 1, 2, '2024-04-02', '11:30', 60, DEFAULT, 0),
-    (DEFAULT, 1, 3, '2024-04-02', '11:30', 30, DEFAULT, 0),
-    (DEFAULT, 1, 3, '2024-04-02', '12:00', 30, DEFAULT, 0),
-    (DEFAULT, 1, 3, '2024-04-02', '12:30', 30, DEFAULT, 0),
-	(DEFAULT, 1, 3, '2024-04-02', '11:00', 60, DEFAULT, 0);
+	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, 1),
+    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, 1),
+	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, 1),
+    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, 1),
+	(DEFAULT, 1, 2, '2024-04-02', '11:30', 60, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '11:30', 30, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '12:00', 30, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '12:30', 30, 0),
+	(DEFAULT, 1, 3, '2024-04-02', '11:00', 60, 0);
 
 CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,
@@ -130,14 +129,15 @@ CREATE TABLE csc535_barber.`barber_services` (
 	`service_id` INT NOT NULL,
     `barber_id` INT NOT NULL,
     `price` int NOT NULL,
+	`description` varchar(256) DEFAULT '',
     PRIMARY KEY (`service_id`, `barber_id`),
     FOREIGN KEY (`service_id`) REFERENCES `service`(`service_id`) ON DELETE CASCADE,
     FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );
 
 INSERT INTO csc535_barber.`barber_services` VALUES
-	(1, 1, 30), (2, 1, 35), (3, 1, 40), (4, 1, 35),
-    (1, 2, 50), (2, 2, 30), (3, 2, 35), (4, 2, 25);
+	(1, 1, 30, DEFAULT), (2, 1, 35, DEFAULT), (3, 1, 40, DEFAULT), (4, 1, 35, DEFAULT),
+    (1, 2, 50, DEFAULT), (2, 2, 30, DEFAULT), (3, 2, 35, DEFAULT), (4, 2, 25, DEFAULT);
 
 CREATE TABLE csc535_barber.`appointment_services` (
 	`service_id` INT NOT NULL,

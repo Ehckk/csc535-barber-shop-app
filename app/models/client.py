@@ -9,6 +9,5 @@ class ClientUser(User):
         start_date: date,
         start_time: time, 
         duration: int, 
-        description=None
     ):
         pass
