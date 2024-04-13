@@ -7,3 +7,12 @@
     <p>{{ appointment.client.display_name() }}</p>
 </a>
 {% endmacro %} 
+
+{% macro service_card(service, current_service_id) %}
+<a 
+    class="card{% if current_service_id == service.id %} current{% endif %}" 
+    href="{{ url_for('barber.barber_service_details', service_id=service.id) }}"
+>
+    <p>{{ service }}</p>
+</a>
+{% endmacro %} 

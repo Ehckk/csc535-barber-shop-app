@@ -8,11 +8,13 @@
     </li>
 {% endmacro %}
 
-{% macro card_list(title) %}
+{% macro card_list(title=None) %}
     <div class="card-list">
-        <div class="card-list-header">
-            <h3>{{ title }}</h3>
-        </div>
+        {% if title %}
+            <div class="card-list-header">
+                <h3>{{ title }}</h3>
+            </div>
+        {% endif %}
         <div class="cards">
             {{ caller() }}
         </div>

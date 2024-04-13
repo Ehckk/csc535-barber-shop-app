@@ -7,27 +7,23 @@
     icon_url=url_for('static', filename='icons/home.svg'),
     text="Home"
 ) }}
-{#
 {{ 
     nav_link( 
-    link_url=url_for('barber.services'),
+    link_url=url_for('barber.barber_services'),
     icon_url=url_for('static', filename='icons/scissors.svg'),
     text="Services"
 ) }}
-#}
 {{ nav_link(
     link_url=url_for('barber.calendar'),
     icon_url=url_for('static', filename='icons/calendar.svg'),
     text="Calendar"
 ) }}
-{#
 {{ 
     nav_link( 
-    link_url=url_for('barber.history'),
+    link_url=url_for('barber.appointment_history'),
     icon_url=url_for('static', filename='icons/history.svg'),
     text="History"
 ) }}
-#}
 {% endblock %}
 
 {% block dashboard %}

@@ -42,7 +42,7 @@ def list_barber_services(barber_id: int) -> list[BarberService]:
         FROM csc535_barber.`service` AS Services
         JOIN csc535_barber.`barber_services` AS BarberServices
         ON Services.service_id = BarberServices.service_id
-        WHERE Users.`user_id` = %(user_id)s;
+        WHERE BarberServices.`barber_id` = %(user_id)s;
     """
     results = db.execute(query, {'user_id': barber_id})
     return [BarberService(**data) for data in results]
@@ -71,7 +71,7 @@ def retrieve_barber_service(barber_id: int, service_id: int):
         WHERE BarberServices.barber_id = %(barber_id)s
         AND Services.`service_id` = %(service_id)s  
     """
-    results = db.execute(query, {'user_id': barber_id, 'service_id': service_id})
+    results = db.execute(query, {'barber_id': barber_id, 'service_id': service_id})
     if not results:
         return None
     return BarberService(**results[0])

@@ -1,0 +1,32 @@
+{% from "_macros.html" import card_list %}
+{% from "_cards.html" import service_card %}
+
+{% extends "barber.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block header_text %}
+    Hello, {{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="home">
+        {% call card_list() %}
+            {% if not services %}
+                <p class="card-list-text">No services to show</p>
+            {% else %}
+                {% for service in services %}
+                    {{ service_card(service, current_service_id) }}
+                {% endfor %}
+            {% endif %}
+        {% endcall %}
+    </div>
+{% endblock %}
+
+{% block side_text %}
+{% endblock %}
+
+{% block side_content %}
+{% endblock %}
