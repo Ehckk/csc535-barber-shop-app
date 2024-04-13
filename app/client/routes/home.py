@@ -1,6 +1,6 @@
 from flask import flash, redirect, render_template, url_for
 from ...utils.user import current_user
-from ...queries import schedules, users
+from ...queries import schedules, users, appointments
 from .. import client
 from .forms.request import RequestForm
 
@@ -8,6 +8,9 @@ from .forms.request import RequestForm
 @client.route("/", methods=["GET", "POST"])
 def client_home():
     user = current_user()
+    client_appointments = appointments.list_client_appointments(user.id)
+    requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
+    
     form = RequestForm()
     if form.validate_on_submit():
         barber_id = form.barber.data
@@ -27,5 +30,7 @@ def client_home():
     return render_template(
         'client/create_appointment.html',
         user=user,
-        form=form
+        form=form,
+        appointments=client_appointments,
+        requested_appointments=requested_appointments
     )

@@ -59,13 +59,19 @@ def list_barber_appointments(barber_id: int, booked=True):
     return list_appointments(results)
 
 
-def list_client_appointments(client_id: int):
+def list_client_appointments(client_id: int, is_booked: bool=True):
+    is_booked = 1 if is_booked else 0
+    params = {
+        "client_id": client_id,
+        "is_booked": is_booked   
+    }
     query = """
         SELECT * 
         FROM csc535_barber.`appointment`
-        WHERE `client_id` = %(client_id)s;
+        WHERE `client_id` = %(client_id)s
+        AND `is_approved` = %(is_booked)s
     """
-    results = db.execute(query, {"client_id": client_id})
+    results = db.execute(query, params)
     return list_appointments(results)
 
 
