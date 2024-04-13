@@ -167,3 +167,7 @@ main.content {
     display: flex;
     gap: 1rem;
 }
+
+.center-text {
+    padding-left: 2rem;
+}

@@ -42,7 +42,7 @@
             </div>
         {% endif %}
     {% else %}
-        {{ field(class="primary-1 text-light-2")|safe }}
+        {{ field(class="primary-1 text-light-2", formnovalidate=field.name == "cancel")|safe }}
     {% endif %}
 {% endmacro %}
 
@@ -71,6 +71,8 @@
             {% endfor %}
         </div>
         {{ render_buttons(form) }}
-        {{ caller() }}
+        {% if caller %}
+            {{ caller() }}
+        {% endif %}
     </form>
 {% endmacro %}

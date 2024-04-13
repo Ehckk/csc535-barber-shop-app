@@ -1,3 +1,6 @@
+{% from "_macros.html" import card_list %}
+{% from "_cards.html" import appointment_card %}
+
 {% extends "client.html" %}
 
 {% block title %}
@@ -9,14 +12,34 @@
 {% endblock %}
 
 {% block main_content %}
-    Home
-    <!-- TBA -->
+    <div class="home">
+        {% call card_list('Upcoming Appointments') %}
+            {% if not booked_appointments %}
+                <p class="card-list-text">
+                    No upcoming appointments to show
+                </p>
+            {% else %}
+                {% for appointment in booked_appointments %}
+                    {{ appointment_card(appointment, appt_id) }}
+                {% endfor %}
+            {% endif %}
+        {% endcall %}
+        {% call card_list('Requested Appointments') %}
+            {% if not booked_appointments %}
+                <p class="card-list-text">
+                    No requested appointments to show
+                </p>
+            {% else %}
+                {% for appointment in booked_appointments %}
+                    {{ appointment_card(appointment, appt_id) }}
+                {% endfor %}
+            {% endif %}
+        {% endcall %}
+    </div>
 {% endblock %}
 
 {% block side_text %}
-    Requests
 {% endblock %}
 
 {% block side_content %}
-    Any requested appointments will show up here
 {% endblock %}
