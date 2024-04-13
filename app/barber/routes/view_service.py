@@ -15,7 +15,7 @@ def barber_service_details(service_id):
     )
 
     return render_template(
-        "barber/services_edit.html", 
+        "barber/services_details.html", 
         user=user,
         services=barber_services,
         current_service=current_service,
