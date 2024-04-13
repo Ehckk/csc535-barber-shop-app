@@ -11,7 +11,7 @@ def barber_home():
     booked_appointments = list_barber_appointments(user.id)
     requested_appointments = list_barber_appointments(user.id, booked=False)
     return render_template(
-        'barber/home.html', 
+        'barber/appointments.html', 
         user=user,
         booked_appointments=booked_appointments,
         requested_appointments=requested_appointments

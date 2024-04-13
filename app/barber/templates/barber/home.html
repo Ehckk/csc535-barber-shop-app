@@ -13,23 +13,20 @@
 
 {% block main_content %}
     <div class="home">
-        {% call card_list('Booked Appointments') %}
-            {% for appointment in booked_appointments %}
-                {{ appointment_card(appointment, appt_id) }}
-            {% endfor %}
-        {% endcall %}
-        {% call card_list('Requested Appointments') %}
-            {% for appointment in requested_appointments %}
-                {{ appointment_card(appointment, appt_id) }}
-            {% endfor %}
+        {% call card_list('Upcoming Appointments') %}
+            {% if not booked_appointments %}
+        <p class="card-list-text">No upcoming appointments to show</p>
+            {% else %}
+                {% for appointment in booked_appointments %}
+                    {{ appointment_card(appointment, appt_id) }}
+                {% endfor %}
+            {% endif %}
         {% endcall %}
     </div>
 {% endblock %}
 
 {% block side_text %}
-    Requests
 {% endblock %}
 
 {% block side_content %}
-    Any requested appointments will show up here
 {% endblock %}
