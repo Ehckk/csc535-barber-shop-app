@@ -64,7 +64,3 @@ button:active, input[type=submit]:active {
 label {
     margin-bottom: .25rem;
 }
-
-.link-btn {
-    text-decoration: none;
-}

@@ -230,17 +230,10 @@ CREATE PROCEDURE sp_barber_availability_for_range(
 )
 BEGIN
 	DECLARE range_end date;
-    SET range_start = (
-		CASE range_duration
-			WHEN 'M' THEN MAKEDATE(YEAR(range_start), MONTH(range_start))
-			WHEN 'W' THEN DATE_SUB(range_start, INTERVAL WEEKDAY(range_start) DAY)
-			WHEN 'D' THEN range_start
-        END
-    );
     SET range_end = (
 		CASE range_duration
-			WHEN 'M' THEN DATE_SUB(DATE_ADD(range_start, INTERVAL 1 MONTH), INTERVAL 1 DAY)
-            WHEN 'W' THEN DATE_ADD(range_start, INTERVAL 6 DAY)
+			WHEN 'M' THEN (range_start + INTERVAL 1 MONTH) - INTERVAL 1 DAY
+            WHEN 'W' THEN (range_start + INTERVAL 1 WEEK) - INTERVAL 1 DAY
             WHEN 'D' THEN range_start
 		END
     );
@@ -265,7 +258,7 @@ BEGIN
 	dates_with_appointments AS (
 		SELECT `date`, A.*
 		FROM available_dates -- Only the available dates
-		JOIN  csc535_barber.`vw_barber_availability` AS A 
+		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON `date`= `booked_date` 
 		WHERE `booked_date` IS NOT NULL
 	),
@@ -274,7 +267,7 @@ BEGIN
 		UNION 
 		SELECT `date`, A.*
 		FROM available_dates
-		JOIN csc535_barber.`vw_barber_availability` AS A 
+		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
 		WHERE A.`barber_id` = barber
         AND `booked_date` IS NULL AND `date` NOT IN (
@@ -286,6 +279,6 @@ BEGIN
 		`start_time`,
 		`end_time`
 	FROM dates AS D1
-	JOIN full_schedule D2 USING (`date`);
+	LEFT JOIN full_schedule D2 USING (`date`);
 END 
 // DELIMITER ;
