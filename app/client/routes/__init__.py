@@ -3,5 +3,6 @@ __all__ = [
     "view_barber",
     "view_appointment",
     "browse_barbers",
-    "appointments"
+    "appointments",
+    "appointment_history"
 ]
