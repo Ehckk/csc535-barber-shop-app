@@ -232,8 +232,8 @@ BEGIN
 	DECLARE range_end date;
     SET range_end = (
 		CASE range_duration
-			WHEN 'M' THEN (range_start + INTERVAL 1 MONTH) - INTERVAL 1 DAY
-            WHEN 'W' THEN (range_start + INTERVAL 1 WEEK) - INTERVAL 1 DAY
+			WHEN 'M' THEN DATE_SUB(DATE_ADD(range_start, INTERVAL 1 MONTH), INTERVAL 1 DAY)
+            WHEN 'W' THEN DATE_ADD(range_start, INTERVAL 6 DAY)
             WHEN 'D' THEN range_start
 		END
     );
@@ -258,7 +258,7 @@ BEGIN
 	dates_with_appointments AS (
 		SELECT `date`, A.*
 		FROM available_dates -- Only the available dates
-		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
+		JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON `date`= `booked_date` 
 		WHERE `booked_date` IS NOT NULL
 	),
@@ -267,7 +267,7 @@ BEGIN
 		UNION 
 		SELECT `date`, A.*
 		FROM available_dates
-		LEFT JOIN  csc535_barber.`vw_barber_availability` AS A 
+		JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
 		WHERE A.`barber_id` = barber
         AND `booked_date` IS NULL AND `date` NOT IN (
@@ -279,6 +279,6 @@ BEGIN
 		`start_time`,
 		`end_time`
 	FROM dates AS D1
-	LEFT JOIN full_schedule D2 USING (`date`);
+	JOIN full_schedule D2 USING (`date`);
 END 
 // DELIMITER ;

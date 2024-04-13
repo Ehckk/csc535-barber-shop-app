@@ -1,3 +1,5 @@
+{% from "_macros.html" import nav_link %}
+
 {% extends "base.html" %}
 
 {% block body %}
@@ -6,11 +8,11 @@
         <ul class="side-nav-links">
             {% block nav %}
             {% endblock %}
-            <li class="side-nav-item">
-                <a class="side-nav-link" href="{{ url_for('auth.logout') }}">
-                    Logout
-                </a>
-            </li>
+            {{ nav_link(
+                link_url=url_for('auth.logout'),
+                icon_url=url_for('static', filename='icons/logout.svg'),
+                text="Logout"
+            ) }}
         </ul>
     </nav>
     <main class="dashboard-content">

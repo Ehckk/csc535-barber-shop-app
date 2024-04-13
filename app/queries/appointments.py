@@ -65,8 +65,8 @@ def list_client_appointments(client_id: int):
         FROM csc535_barber.`appointment`
         WHERE `client_id` = %(client_id)s;
     """
-    cursor = db.execute(query, {"client_id": client_id})
-    return list_appointments(cursor.fetchall())
+    results = db.execute(query, {"client_id": client_id})
+    return list_appointments(results)
 
 
 def retrieve_appointment(appointment_id: int): 
@@ -75,8 +75,10 @@ def retrieve_appointment(appointment_id: int):
         FROM csc535_barber.`appointment` 
         WHERE `appointment_id` = %(appointment_id)s;
     """
-    cursor = db.execute(query, {"appointment_id": appointment_id})
-    appointment_data = cursor.fetchone()
+    results = db.execute(query, {"appointment_id": appointment_id})
+    if not results:
+        return None
+    appointment_data = results[0] 
     return Appointment(**appointment_data)
 
 

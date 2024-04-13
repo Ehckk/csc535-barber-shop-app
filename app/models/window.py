@@ -26,3 +26,13 @@ class Window:
 		self.start_time = start_time
 		self.end_time = end_time
 	
+	def offset(self):
+		return self.start_time.minute // HOUR_HEIGHT
+	
+	def length(self):
+		start = (self.start_time.hour * 60) + self.start_time.minute
+		end = (self.end_time.hour * 60) + self.end_time.minute
+		return (end - start) * HOUR_HEIGHT // 60 
+	
+	def style(self):
+		return f"top: {self.offset()}px; min-height: {self.length()}px;"
