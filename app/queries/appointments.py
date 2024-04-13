@@ -1,10 +1,9 @@
 from datetime import date, time
-
 from ..models.appointment import Appointment
 from .. import db
 
 
-def list_appointments(appointments_data):
+def list_appointments(appointments_data) -> list[Appointment]:
     appointments = []
     for appointment_data in appointments_data:
         appointment = Appointment(**appointment_data)
@@ -12,14 +11,52 @@ def list_appointments(appointments_data):
     return appointments
 
 
-def list_barber_appointments(barber_id: int):
+def appointments_for_date(barber_id: int, target_date: date):
     query = """
         SELECT * 
         FROM csc535_barber.`appointment` 
-        WHERE `barber_id` = %(barber_id)s;
+        WHERE `barber_id` = %(barber_id)s
+        AND `booked_date` = %(target_date)s
+        AND `is_approved` = 1
+        ORDER BY `booked_date`, `start_time`;
     """
-    cursor = db.execute(query, {"barber_id": barber_id})
-    return list_appointments(cursor.fetchall())
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "target_date": target_date
+    })
+    return list_appointments(results)
+
+
+def appointments_between_dates(barber_id: int, start: date, end: date):
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment` 
+        WHERE `barber_id` = %(barber_id)s
+        AND `booked_date` >= %(start)s
+        AND `booked_date` <= %(end)s
+        AND `is_approved` = 1
+        ORDER BY `booked_date`, `start_time`;
+    """
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "start": start,
+        "end": end
+    })
+    return list_appointments(results)
+
+
+def list_barber_appointments(barber_id: int, booked=True):
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment` 
+        WHERE `barber_id` = %(barber_id)s
+        AND `is_approved` = %(booked)s;
+    """
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "booked": booked
+    })
+    return list_appointments(results)
 
 
 def list_client_appointments(client_id: int):
@@ -28,8 +65,8 @@ def list_client_appointments(client_id: int):
         FROM csc535_barber.`appointment`
         WHERE `client_id` = %(client_id)s;
     """
-    cursor = db.execute(query, {"client_id": client_id})
-    return list_appointments(cursor.fetchall())
+    results = db.execute(query, {"client_id": client_id})
+    return list_appointments(results)
 
 
 def retrieve_appointment(appointment_id: int): 
@@ -38,8 +75,10 @@ def retrieve_appointment(appointment_id: int):
         FROM csc535_barber.`appointment` 
         WHERE `appointment_id` = %(appointment_id)s;
     """
-    cursor = db.execute(query, {"appointment_id": appointment_id})
-    appointment_data = cursor.fetchone()
+    results = db.execute(query, {"appointment_id": appointment_id})
+    if not results:
+        return None
+    appointment_data = results[0] 
     return Appointment(**appointment_data)
 
 
@@ -70,7 +109,6 @@ def create_appointment(
         "duration": duration
     })
     db.commit()
-
 
 
 def approve_appointment(appointment_id: int):
@@ -112,3 +150,30 @@ def delete_appointment(appointment_id: int):
     """
     db.execute(query, {"appointment_id": appointment_id})
     db.commit()
+
+
+def retrieve_conflicting(appointment: Appointment):
+    booked_date = appointment.booked_date
+    start_time = appointment.start_time
+    end_time = appointment.end_time()
+    query = """
+        SELECT * FROM csc535_barber.`appointment`
+        WHERE `is_approved` = 0 AND `barber_id` = %(barber_id)s
+        AND NOT `appointment_id` = %(appointment_id)s
+        AND `booked_date` = %(booked_date)s
+        AND (
+            (`start_time` >= %(start_time)s AND `start_time` < %(end_time)s) 
+            OR (
+                DATE_ADD(`start_time`, INTERVAL `duration` MINUTE) >= %(start_time)s
+                AND DATE_ADD(`start_time`, INTERVAL `duration` MINUTE) < %(end_time)s
+            )
+        )    
+    """
+    results = db.execute(query, {
+        "appointment_id": appointment.id,
+        "barber_id": appointment.barber.id,
+        "booked_date": booked_date,
+        "start_time": start_time,
+        "end_time": end_time,
+    })
+    return list_appointments(results)

@@ -1,12 +1,17 @@
 from flask import render_template
 
-
-from ...models.appointment import Appointment
 from ...utils.user import current_user
-from ...queries.appointments import list_barber_appointments
+from ...queries.services import list_barber_services
 from .. import barber
 
 
 @barber.route("/services", methods=["GET"])
 def barber_services():
-    return "Barber Services"
+    user = current_user()
+    services = list_barber_services(user.id)
+
+    return render_template(
+        "barber/services.html",
+        user=user,
+        services=services
+    )

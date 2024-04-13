@@ -1,7 +1,7 @@
 {% extends "client/barbers" %}
 
 {% block side_text %}
-    Barber Name Here 
+    {{ barber.display_name() }}
 {% endblock %}
 
 {% block side_content %}
