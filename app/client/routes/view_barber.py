@@ -10,7 +10,7 @@ def barber_details(barber_id):
     user = current_user()
     barbers = list_barbers()
     barber = retrieve_user(barber_id)
-    
+
     return render_template(
         "client/view_barber.html", 
         user=user, 

@@ -11,7 +11,7 @@ def appointment_details(appt_id):
     appointments = list_client_appointments(user.id)
     appointment = retrieve_appointment(appt_id)
     return render_template(
-        "client/view_appointment.html", 
+        "barber/view_appointment.html", 
         user=user,
         appointments=appointments,
         appointment=appointment

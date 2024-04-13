@@ -1,23 +1,26 @@
-{% from "_macros.html" import nav_link %}
-
 {% extends "dashboard.html" %}
 
 {% block nav %}
-{{ nav_link(
-    link_url=url_for('barber.barber_home'),
-    icon_url=url_for('static', filename='icons/home.svg'),
-    text="Home"
-) }}
-{{ nav_link(
-    link_url=url_for('barber.appointments'),
-    icon_url=url_for('static', filename='icons/scissors.svg'),
-    text="Appointments"
-) }}
-{{ nav_link(
-    link_url=url_for('barber.calendar'),
-    icon_url=url_for('static', filename='icons/calendar.svg'),
-    text="Calendar"
-) }}
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.barber_home') }}">
+        Home
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.appointments') }}">
+        Appointments
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.calendar') }}">
+        Calendar
+    </a>
+</li>
+<li class="side-nav-item">
+    <a class="side-nav-link" href="{{ url_for('barber.schedule_availability') }}">
+        Set Availability
+    </a>
+</li>
 {% endblock %}
 
 {% block dashboard %}

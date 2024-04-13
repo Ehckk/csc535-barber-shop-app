@@ -15,12 +15,12 @@ def list_schedule(
             %(interval)s
         );
     """
-    results = db.execute(query, {
-        "barber_id": int(barber_id), 
-        "start_date": str(start_date), 
+    cursor = db.execute(query, {
+        "barber_id": barber_id, 
+        "start_date": start_date, 
         "interval": interval
     })
-    return results
+    return cursor.fetchall()
 
 
 def create_schedule(
@@ -39,10 +39,10 @@ def create_schedule(
         );
     """
     db.execute(query, {
-        "barber": barber_id,
+        "barber_id": barber_id,
         "weekday_id": weekday_id,
-        "start_time": start_time.strftime('%H-%M'),
-        "end_time": end_time.strftime('%H-%M')
+        "start_time": start_time.strftime('%H:%M'),
+        "end_time": end_time.strftime('%H:%M')
     })
     db.commit()
     
@@ -60,8 +60,8 @@ def update_schedule(
     """
     db.execute(query, {
         "schedule_id": schedule_id,
-        "start_time": new_start.strftime('%H-%M'),
-        "end_time": new_end.strftime('%H-%M')
+        "start_time": new_start.strftime('%H:%M'),
+        "end_time": new_end.strftime('%H:%M')
     })
     db.commit()
  

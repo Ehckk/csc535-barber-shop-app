@@ -13,9 +13,7 @@
         <div>
             <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
             <p>{{ appointment.barber.display_name() }}</p>
-            <a href="{{ url_for('client.appointment_details', appt_id=appointment.id) }}">
-                <button>Details</button>
-            </a>
+            <button>Details</button>
         </div>
     {% endfor %}
 {% endblock %}
