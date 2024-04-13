@@ -1,7 +1,7 @@
-{% macro appointment_card(appointment, current_appt_id) %}
+{% macro appointment_card(appointment, current_appt_id, url) %}
 <a 
     class="card{% if current_appt_id == appointment.id %} current{% endif %}" 
-    href="{{ url_for('barber.appointment_details', appt_id=appointment.id) }}"
+    href="{{ url_for(url, appt_id=appointment.id) }}"
 >
     <p>{{ appointment }}</p>
     <p>{{ appointment.client.display_name() }}</p>
