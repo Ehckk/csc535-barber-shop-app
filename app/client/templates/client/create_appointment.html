@@ -1,0 +1,24 @@
+{% from "_macros.html" import card_list %}
+{% from "_render_form.html" import render_form %}
+{% from "_cards.html" import appointment_card %}
+
+{% extends "client/home.html" %}
+
+{% block side_text %}
+    Request Appointment
+{% endblock %}
+
+{% block side_content %}
+    {% if barber and booked_date and availability %}
+        <p>Barber: {{ barber.display_name() }}</p>
+        <p>Times available on {{ booked_date }}:</p> 
+        <div class="center-text">
+            {% for window in availability %}
+                <p>{{ window }}</p>
+            {% endfor %}
+        </div>
+        {{ render_form(form) }}
+    {% else %}
+        {{ render_form(form) }}
+    {% endif %}
+{% endblock %}

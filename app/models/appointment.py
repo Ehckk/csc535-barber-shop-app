@@ -13,7 +13,6 @@ class Appointment:
 		appointment_id: int,
 		client_id: int,
 		barber_id: int,
-		description: str,
 		booked_date: date, 
 		start_time: timedelta, 
 		duration: int, 
@@ -22,7 +21,6 @@ class Appointment:
 		self.id = appointment_id
 		self.client = retrieve_user(client_id)
 		self.barber = retrieve_user(barber_id)
-		self.description = description
 		self.booked_date = booked_date
 		self.start_time = to_time(start_time)
 		self.duration = duration

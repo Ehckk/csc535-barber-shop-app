@@ -87,16 +87,17 @@ def create_service(name: str):
     return retrieve_service(name)
 
 
-def add_barber_service(barber_id: int, name: str, price: int):
+def add_barber_service(barber_id: int, name: str, price: int, description: str=None):
     service = retrieve_service(name)
     query = """
-        INSERT INTO csc535_barber.`barber_services` (`service_id`, `barber_id`, `price`) 
-        VALUES (%(service_id)s, %(barber_id)s, %(price)s);
+        INSERT INTO csc535_barber.`barber_services` (`service_id`, `barber_id`, `price`, `description`) 
+        VALUES (%(service_id)s, %(barber_id)s, %(price)s, %(description)s);
     """
     db.execute(query, {
         'barber_id': barber_id, 
         'service': service.id,
-        'price': price
+        'price': price,
+        'description': description or 'DEFAULT'
     })
     db.execute(query, {'name': string.capwords(name)})
     db.commit()
@@ -105,7 +106,7 @@ def add_barber_service(barber_id: int, name: str, price: int):
 
 def update_barber_service(barber_id: int, service_id: int, price: str):
     query = """
-        UPDATE csc535_barber.`service` 
+        UPDATE csc535_barber.`barber_services` 
         SET price = %(price)s
         WHERE barber_id = %(barber_id)s
         AND service_id = %(service_id)s
@@ -121,7 +122,7 @@ def update_barber_service(barber_id: int, service_id: int, price: str):
 
 def remove_barber_service(barber_id: int, service_id: int):
     query = """
-        DELETE FROM csc535_barber.`service` 
+        DELETE FROM csc535_barber.`barber_services` 
         WHERE barber_id = %(barber_id)s
         AND service_id = %(service_id)s
     """

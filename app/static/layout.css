@@ -137,7 +137,7 @@ main.content {
 }
 
 .side-panel {
-    min-width: 24rem;
+    min-width: 20rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -166,4 +166,8 @@ main.content {
     margin-top: .5rem;
     display: flex;
     gap: 1rem;
+}
+
+.center-text {
+    padding-left: 2rem;
 }

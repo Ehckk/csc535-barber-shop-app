@@ -1,19 +1,33 @@
-{% extends "client/appointments.html" %}
+{% extends "client/home.html" %}
 
 {% block side_text %}
     Appointment Details
 {% endblock %}
 
 {% block side_content %}
-    <p>Barber: {{ appointment.barber.display_name() }}</p>
-    <p>Client: {{ appointment.client.display_name() }}</p>
-    <p>{{ appointment.booked_date }}</p>
-    <p>{{ appointment.start_time }}</p>
-    <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
-
-    <!-- cancel appointment button here -->
-    <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
-        <button>Cancel</button>
-    </a>
+    <div class="side-container">
+        {% if not appointment.is_approved %}
+            <h4 class="text-warning-1">Pending</h4>
+            <p>You will be notified when {{ appointment.barber.display_name() }} confirms this appointment</p>
+        {% else %}
+            <h4 class="text-success-1">Booked</h4>
+        {% endif %}
+    </div>
+    <div class="side-container">
+        <p>Barber: {{ appointment.barber.display_name() }}</p>
+        <p>{{ appointment.booked_date }}</p>
+        <p>{{ appointment.start_time }}</p>
+        <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+    </div>
+    <div class="side-buttons">
+        {% if appointment.is_approved %}
+            <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="warning-1 text-light-2 btn-large">Reschedule</button>
+            </a>
+        {% endif %}
+        <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+            <button class="error-1 text-light-2 btn-large">Cancel</button>
+        </a>
+    </div>
     <!-- reschedule appointment button here -->
 {% endblock %}

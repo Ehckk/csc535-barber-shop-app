@@ -59,13 +59,19 @@ def list_barber_appointments(barber_id: int, booked=True):
     return list_appointments(results)
 
 
-def list_client_appointments(client_id: int):
+def list_client_appointments(client_id: int, is_booked: bool=True):
+    is_booked = 1 if is_booked else 0
+    params = {
+        "client_id": client_id,
+        "is_booked": is_booked   
+    }
     query = """
         SELECT * 
         FROM csc535_barber.`appointment`
-        WHERE `client_id` = %(client_id)s;
+        WHERE `client_id` = %(client_id)s
+        AND `is_approved` = %(is_booked)s
     """
-    results = db.execute(query, {"client_id": client_id})
+    results = db.execute(query, params)
     return list_appointments(results)
 
 
@@ -95,7 +101,7 @@ def create_appointment(
             %(barber_id)s, 
             %(client_id)s, 
             %(start_date)s, 
-            %(start_time)s, 
+            %(end_time)s, 
             %(duration)s, 
             DEFAULT, 
             DEFAULT
@@ -105,7 +111,7 @@ def create_appointment(
         "barber_id": barber_id,
         "client_id": client_id,
         "start_date": start_date.strftime('%Y-%m-%d'),
-        "start_time": start_time.strftime('%H-%M'),
+        "end_time": start_time.strftime('%H:%M'),
         "duration": duration
     })
     db.commit()
@@ -152,13 +158,15 @@ def delete_appointment(appointment_id: int):
     db.commit()
 
 
-def retrieve_conflicting(appointment: Appointment):
+def retrieve_conflicting(appointment: Appointment, is_booked=False):
     booked_date = appointment.booked_date
     start_time = appointment.start_time
     end_time = appointment.end_time()
+    is_booked = '1' if is_booked else '0'
     query = """
         SELECT * FROM csc535_barber.`appointment`
-        WHERE `is_approved` = 0 AND `barber_id` = %(barber_id)s
+        WHERE `is_approved` = %(is_booked)s 
+        AND `barber_id` = %(barber_id)s
         AND NOT `appointment_id` = %(appointment_id)s
         AND `booked_date` = %(booked_date)s
         AND (
@@ -170,6 +178,7 @@ def retrieve_conflicting(appointment: Appointment):
         )    
     """
     results = db.execute(query, {
+        "is_booked": is_booked,
         "appointment_id": appointment.id,
         "barber_id": appointment.barber.id,
         "booked_date": booked_date,

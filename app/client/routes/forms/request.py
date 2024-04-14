@@ -1,9 +1,39 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField,  DateField, TimeField, IntegerField
+from wtforms import DateField, SelectMultipleField, TimeField, IntegerField, SelectField, SubmitField
+from wtforms.widgets import CheckboxInput
 from wtforms.validators import DataRequired, NumberRange
+from ....queries import services, users
+from ....utils.form import get_choices
 
-class RescheduleAppointmentForm(FlaskForm):
-    description = TextAreaField('Description', validators=[DataRequired()])
+
+def get_barber_choices():
+    barbers = users.list_barbers()
+    choices = list(map(
+        lambda barber: (barber.id, barber.display_name()), 
+        barbers
+    ))
+    return get_choices(choices)
+
+
+def get_service_choices(barber_id: int):
+    barber_services = services.list_barber_services(barber_id)
+    choices = list(map(
+        lambda service: (service.id, str(service)), 
+        barber_services
+    ))
+    return get_choices(choices)
+
+
+class RequestForm(FlaskForm):
+    barber = SelectField(choices=get_barber_choices())
     date = DateField('Date', validators=[DataRequired()], format='%Y-%m-%d')
+    submit = SubmitField(label="Next")
+
+
+class RequestAppointmentForm(FlaskForm):
+    services = SelectMultipleField(label="Services")
     start_time = TimeField('Start Time', validators=[DataRequired()], format='%H:%M')
     duration = IntegerField('Duration (minutes)', validators=[DataRequired(), NumberRange(min=1)])
+    cancel = SubmitField(label="Back")
+    submit = SubmitField(label="Book")
+    
