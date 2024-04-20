@@ -184,16 +184,18 @@ def remove_appointment_service(appointment_id: int, service_id: int):
     db.commit()
 
 
-def update_appointment_service(appointment_id: int, service_ids: list[int], new_service_ids: list[int]):
+def update_appointment_services(appointment_id: int, service_ids: list[int], new_service_ids: list[int]):
+    print(service_ids, new_service_ids)
     query = """
         DELETE FROM csc535_barber.`appointment_services` 
         WHERE appointment_id = %(appointment_id)s
-        AND service_id NOT IN %(service_ids)s
+        AND service_id NOT IN (%(service_ids)s)
     """
     db.execute(query, {
         'appointment_id': appointment_id, 
-        'service_id': ", ".join(map(str, service_ids))
+        'service_ids': ", ".join(map(str, service_ids))
     })
     db.commit()
     for service_id in new_service_ids:
+
         add_appointment_service(appointment_id, service_id)

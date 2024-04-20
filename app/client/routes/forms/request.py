@@ -38,6 +38,12 @@ class RequestForm(RequestBarberForm, RequestDateForm):
     pass
 
 
+class EditServicesForm(FlaskForm):
+    services = SelectMultipleField(label="Services")
+    cancel = SubmitField(label="Back")
+    submit = SubmitField(label="Save")
+
+
 class RequestAppointmentForm(FlaskForm):
     services = SelectMultipleField(label="Services")
     start_time = TimeField('Start Time', validators=[DataRequired()], format='%H:%M')

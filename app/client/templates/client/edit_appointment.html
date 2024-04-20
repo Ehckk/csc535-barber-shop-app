@@ -1,0 +1,15 @@
+{% from "_macros.html" import card_list %}
+{% from "_render_form.html" import render_form %}
+{% from "_cards.html" import appointment_card %}
+
+{% extends "client/home.html" %}
+
+{% block side_text %}
+    Update Appointment
+{% endblock %}
+
+{% block side_content %}
+    <p>{{ appointment.barber.display_name() }}</p>
+    <p>{{ appointment }}</p> 
+    {{ render_form(form) }}
+{% endblock %}

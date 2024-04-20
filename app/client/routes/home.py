@@ -12,6 +12,7 @@ from .forms.request import RequestForm
 @has_role("Client")
 def client_home():
     user = current_user()
+    
     client_appointments = appointments.list_client_appointments(user.id)
     requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
     

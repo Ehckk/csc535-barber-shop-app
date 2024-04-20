@@ -37,7 +37,7 @@ def request_appointment(barber_id, booked_date):
                 start_date=booked_date,
                 start_time=start_time,
                 duration=duration,
-                service_ids=services
+                services=services
             )
             flash("Appointment requested", category="success")
             return redirect(url_for("client.client_home"))
