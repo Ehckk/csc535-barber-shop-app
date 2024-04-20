@@ -1,10 +1,12 @@
 from flask import flash, redirect, url_for
+from ...utils.decorators import has_role
 from ...queries.appointments import retrieve_appointment, delete_appointment
 from ...utils.user import current_user
 from .. import barber
 
 
 @barber.route("deny/<int:appt_id>", methods=["GET"])
+@has_role("Barber")
 def deny_request(appt_id):
     user = current_user()
     appointment = retrieve_appointment(appt_id)

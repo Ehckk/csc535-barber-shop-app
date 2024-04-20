@@ -1,6 +1,6 @@
-from collections import OrderedDict, defaultdict
-from datetime import date, datetime, time
+from datetime import date, datetime
 from flask import render_template, request
+from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...utils.calendar import calendar_appointments
 from ...utils.date import (
@@ -18,6 +18,7 @@ from .. import barber
 
 
 @barber.route("/calendar", methods=["GET", "POST"])
+@has_role("Barber")
 def calendar():
     user: BarberUser = current_user()
     unit = request.args.get("unit", default=Interval.DAY, type=str)

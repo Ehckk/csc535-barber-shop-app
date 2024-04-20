@@ -1,10 +1,12 @@
 from flask import render_template
+from ...utils.decorators import has_role
 from ...queries import appointments
 from ...utils.user import current_user
 from .. import barber
 
 
-@barber.route("/<int:appt_id>", methods=["GET"])
+@barber.route("/<int:appt_id>", methods=["GET"])\
+@has_role("Barber")
 def appointment_details(appt_id):
     user = current_user()
 
