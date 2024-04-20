@@ -1,3 +1,5 @@
+{% from "_tables.html" import table %}
+
 {% extends "barber/home.html" %}
 
 {% block side_text %}
@@ -26,21 +28,34 @@
         </ul>
     </div>
     {% endif %}
-    <div class="side-buttons">
-        {% if appointment.is_approved %}
+    {{ 
+        table(
+            caption="Services",
+            data=services_data
+        ) 
+    }}
+    {% if appointment.is_approved %}
+        <div class="side-buttons">
+            <a href="">
+                <button class="info-1 text-light-2 btn-large">Edit</button>
+            </a>     
+        </div>
+        <div class="side-buttons"> 
             <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
                 <button class="warning-1 text-light-2 btn-large">Reschedule</button>
             </a>
             <a href="">
                 <button class="error-1 text-light-2 btn-large">Cancel</button>
             </a>
-        {% else %}
+        </div>
+    {% else %}
+        <div class="side-buttons">
             <a href="{{ url_for('barber.deny_request', appt_id=appointment.id) }}">
                 <button class="error-1 text-light-2 btn-large">Deny</button>
             </a>
             <a href="{{ url_for('barber.approve_request', appt_id=appointment.id) }}">
                 <button class="success-1 text-light-2 btn-large">Approve</button>
             </a>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 {% endblock %}

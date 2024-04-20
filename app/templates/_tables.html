@@ -39,8 +39,8 @@
         <table class="table">
             {% if columns or caption %}
             <thead>
-                {% if caption %}
-                    {{ table_caption(caption, data|length) }}
+                {% if caption and data %}
+                    {{ table_caption(caption, data[0]|length) }}
                 {% endif %}
                 {% if columns %}
                     {{ table_head(columns) }}

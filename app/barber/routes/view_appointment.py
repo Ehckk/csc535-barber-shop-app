@@ -1,7 +1,8 @@
 from flask import render_template
 from ...utils.decorators import has_role
-from ...queries import appointments
+from ...queries import appointments, services
 from ...utils.user import current_user
+from ...utils.table import get_services_table
 from .. import barber
 
 
@@ -14,6 +15,8 @@ def appointment_details(appt_id):
     requested_appointments = appointments.list_barber_appointments(user.id, booked=False)
     
     appointment = appointments.retrieve_appointment(appt_id)
+    appointment_services = services.retrieve_appointment_services(appt_id)
+    services_data = get_services_table(appointment_services)
 
     conflicting_appointments = None
     if not appointment.is_approved:
@@ -26,5 +29,6 @@ def appointment_details(appt_id):
         requested_appointments=requested_appointments,
         appt_id=appt_id,
         appointment=appointment,
-        conflicting_appointments=conflicting_appointments
+        conflicting_appointments=conflicting_appointments,
+        services_data=services_data
     )
