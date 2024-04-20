@@ -1,4 +1,6 @@
+{% from "_render_form.html" import render_form %}
 {% from "_tables.html" import table %}
+
 {% extends "client/barbers.html" %}
 
 {% block side_text %}
@@ -19,4 +21,6 @@
             columns=services_columns
         ) 
     }}
+    <h3>Request Appointnment</h3>
+    {{ render_form(form) }}
 {% endblock %}

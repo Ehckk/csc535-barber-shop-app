@@ -60,7 +60,7 @@
 {% macro render_form(form, name=None, action=None, cols="1") %}
     <form {% if action != None %} action="{{ action }}" {% endif %} method="post">
         {% if name %}
-            <h2 class="form-title">{{ name }}</h2>
+            <h3 class="form-title">{{ name }}</h3>
         {% endif %}
         {{ form.hidden_tag() }}
         <div class="form-fields">

@@ -1,0 +1,18 @@
+{% from "_tables.html" import table %}
+
+{% extends "client/barbers.html" %}
+
+{% block side_text %}
+    Request Appointment
+{% endblock %}
+
+{% block side_content %}
+    <p>Barber: {{ barber.display_name() }}</p>
+    <p>Times available on {{ booked_date }}:</p> 
+    <div class="center-text">
+        {% for window in availability %}
+            <p>{{ window }}</p>
+        {% endfor %}
+    </div>
+    {{ render_form(form) }}
+{% endblock %}

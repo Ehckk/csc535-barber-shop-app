@@ -22,10 +22,13 @@ main.content {
     margin: auto;
     min-width: 20rem;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 2rem;
     border-radius: .5rem;
     background-color: var(--w-2);
     box-shadow: var(--drop-shadow);
+}
+.auth p {
+    text-align: center;
 }
 
 .dashboard {
