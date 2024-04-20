@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta
 
 from ..models.barber import BarberUser
 from ..models.appointment import Appointment
-from ..queries import appointments
+from ..queries import appointments, services
 from ..utils.date import to_time
 
 
@@ -12,7 +12,7 @@ def create_if_valid(
     start_date: date, 
     start_time: timedelta, 
     duration: int, 
-    services: list[int]
+    service_ids: list[int]
 ):
     start_datetime = datetime.combine(start_date, to_time(start_time))
     if start_datetime < datetime.now():
@@ -23,7 +23,7 @@ def create_if_valid(
         start_date=start_date,
         start_time=start_time,
         duration=duration,
-        services=services
+        services=service_ids
     )
     appointment = appointments.create_appointment(
         barber_id=barber.id,
@@ -32,4 +32,9 @@ def create_if_valid(
         start_time=to_time(start_time),
         duration=duration
     )
+    for service_id in appointment:
+        services.add_appointment_service(
+            appointment_id=appointment.id,
+            service_id=service_id
+        )
     # TODO services

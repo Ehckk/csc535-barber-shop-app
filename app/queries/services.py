@@ -159,40 +159,43 @@ def remove_barber_service(barber_id: int, service_id: int):
     db.commit()
 
 
-def add_appointment_service(name: str):
+def add_appointment_service(appointment_id: int, service_id: int):
     query = """
-        INSERT INTO csc535_barber.`service` (`service_id`, `name`) 
-        VALUES (DEFAULT, %(name)s);      
+        INSERT INTO csc535_barber.`appointment_services` (`service_id`, `appointment_id`) 
+        VALUES (%(service_id)s, %(appointment_id)s);      
     """
-    db.execute(query, {'name': string.capwords(name)})
+    params = {
+        "appointment_id": appointment_id,
+        "service_id": service_id
+    }
+    db.execute(query, params)
     db.commit()
-    return retrieve_service(name)
 
 
-def update_barber_service(barber_id: int, service_id: int, price: str):
+def remove_appointment_service(appointment_id: int, service_id: int):
     query = """
-        UPDATE csc535_barber.`barber_services` 
-        SET price = %(price)s
-        WHERE barber_id = %(barber_id)s
+        DELETE FROM csc535_barber.`appointment_services` 
+        WHERE appointment_id = %(appointment_id)s
         AND service_id = %(service_id)s
     """
-    db.execute(query, {
-        'barber_id': barber_id, 
-        'service': service_id,
-        'price': price
-    })
+    params = {
+        "appointment_id": appointment_id,
+        "service_id": service_id
+    }
+    db.execute(query, params)
     db.commit()
-    return retrieve_barber_service(barber_id, service_id)
 
 
-def remove_barber_service(barber_id: int, service_id: int):
+def update_appointment_service(appointment_id: int, service_ids: list[int], new_service_ids: list[int]):
     query = """
-        DELETE FROM csc535_barber.`barber_services` 
-        WHERE barber_id = %(barber_id)s
-        AND service_id = %(service_id)s
+        DELETE FROM csc535_barber.`appointment_services` 
+        WHERE appointment_id = %(appointment_id)s
+        AND service_id NOT IN %(service_ids)s
     """
     db.execute(query, {
-        'barber_id': barber_id, 
-        'service': service_id
+        'appointment_id': appointment_id, 
+        'service_id': ", ".join(map(str, service_ids))
     })
     db.commit()
+    for service_id in new_service_ids:
+        add_appointment_service(appointment_id, service_id)
