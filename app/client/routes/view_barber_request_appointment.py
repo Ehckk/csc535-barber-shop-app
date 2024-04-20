@@ -24,6 +24,7 @@ def barber_details_request_appointment(barber_id, booked_date):
         return redirect(url_for("client.view_barber", barber_id=barber_id))
     if form.validate_on_submit():
         services = form.services.data
+        print(services)
         start_time = datetime.combine(datetime.min, form.start_time.data) - datetime.min
         duration = form.duration.data
         try:
