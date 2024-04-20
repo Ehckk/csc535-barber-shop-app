@@ -9,7 +9,7 @@ from .forms.request import RequestAppointmentForm, get_service_choices
 
 
 @client.route("barber/<int:barber_id>/<booked_date>", methods=["GET", "POST"])
-def barber_details_request_appointment(barber_id):
+def barber_details_request_appointment(barber_id, booked_date):
     user = current_user()
 
     barbers = users.list_barbers()
@@ -39,7 +39,7 @@ def barber_details_request_appointment(barber_id):
             return redirect(url_for("client.client_home"))
         except AssertionError as error:
             print(error)
-            flash("Select at least one service!", category="error")    
+            flash(error, category="error")    
     return render_template(
         "client/view_barber_create_appointment.html", 
         user=user, 
@@ -47,5 +47,6 @@ def barber_details_request_appointment(barber_id):
         current_barber_id=int(barber_id),
         barber=barber,
         booked_date=booked_date,
-        availability=availability
+        availability=availability,
+        form=form
     )

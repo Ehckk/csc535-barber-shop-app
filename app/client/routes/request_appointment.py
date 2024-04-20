@@ -25,6 +25,7 @@ def request_appointment(barber_id, booked_date):
         return redirect(url_for("client.client_home"))
     if form.validate_on_submit():
         services = form.services.data
+        print(form.services.data)
         start_time = datetime.combine(datetime.min, form.start_time.data) - datetime.min
         duration = form.duration.data
         try:
@@ -39,8 +40,7 @@ def request_appointment(barber_id, booked_date):
             flash("Appointment requested", category="success")
             return redirect(url_for("client.client_home"))
         except AssertionError as error:
-            print(error)
-            flash("Select at least one service!", category="error")
+            flash(error, category="error")
     return render_template(
         'client/create_appointment.html',
         user=user,
