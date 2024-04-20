@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from ..models.barber import BarberUser
 from ..models.appointment import Appointment
@@ -14,6 +14,9 @@ def create_if_valid(
     duration: int, 
     services: list[int]
 ):
+    start_datetime = datetime.combine(start_date, to_time(start_time))
+    if start_datetime < datetime.now():
+        raise AssertionError("Appointment must be in the future!") 
     Appointment.validate_appointnment(
         barber_name=barber.display_name(),
         barber_id=barber.id,
