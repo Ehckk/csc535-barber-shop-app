@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash
-from datetime import datetime
+from datetime import datetime, date
 
+from ...utils.decorators import has_role
 from ...queries import users, schedules
 from ...utils.user import current_user
 from ...utils.appointment import create_if_valid
@@ -9,13 +10,17 @@ from .forms.request import RequestAppointmentForm, get_service_choices
 
 
 @client.route("barber/<int:barber_id>/<booked_date>", methods=["GET", "POST"])
-def barber_details_request_appointment(barber_id):
+@has_role("Client")
+def barber_details_request_appointment(barber_id, booked_date):
     user = current_user()
 
     barbers = users.list_barbers()
 
     barber = users.retrieve_user(barber_id)
     booked_date = datetime.strptime(booked_date, "%Y%m%d").date()
+    if booked_date < date.today():
+        flash("Date cannot be in the past!", category="error")
+        return redirect(url_for("client.view_barber", barber_id=barber_id))
     availability = schedules.schedule_for_date(barber_id, booked_date)
 
     form = RequestAppointmentForm()
@@ -33,13 +38,13 @@ def barber_details_request_appointment(barber_id):
                 start_date=booked_date,
                 start_time=start_time,
                 duration=duration,
-                services=services
+                service_ids=services
             )
             flash("Appointment requested", category="success")
             return redirect(url_for("client.client_home"))
         except AssertionError as error:
             print(error)
-            flash("Select at least one service!", category="error")    
+            flash(error, category="error")    
     return render_template(
         "client/view_barber_create_appointment.html", 
         user=user, 
@@ -47,5 +52,6 @@ def barber_details_request_appointment(barber_id):
         current_barber_id=int(barber_id),
         barber=barber,
         booked_date=booked_date,
-        availability=availability
+        availability=availability,
+        form=form
     )

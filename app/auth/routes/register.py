@@ -1,6 +1,4 @@
-from flask import redirect, render_template, render_template, url_for, current_app
-from itsdangerous import URLSafeTimedSerializer
-
+from flask import redirect, render_template, render_template, url_for
 
 from .. import auth
 from .forms.register import Registration

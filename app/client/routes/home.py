@@ -1,4 +1,7 @@
+from datetime import date
 from flask import flash, redirect, render_template, url_for
+
+from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...queries import schedules, users, appointments
 from .. import client
@@ -6,8 +9,10 @@ from .forms.request import RequestForm
 
 
 @client.route("/", methods=["GET", "POST"])
+@has_role("Client")
 def client_home():
     user = current_user()
+    
     client_appointments = appointments.list_client_appointments(user.id)
     requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
     
@@ -17,6 +22,8 @@ def client_home():
         booked_date = form.date.data
         if not barber_id:        
             flash("Select a barber!", category="error")
+        elif booked_date < date.today():
+            flash("Date cannot be in the past!", category="error")
         else:
             barber = users.retrieve_user(barber_id)
             if schedules.is_available_for_date(barber_id, booked_date):

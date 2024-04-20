@@ -8,5 +8,6 @@ __all__ = [
     "barber_services",
     "view_service",
     "approve_request",
+    # "update_appointment",
     "deny_request"
 ]

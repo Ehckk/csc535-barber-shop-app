@@ -1,10 +1,12 @@
 from flask import flash, redirect, url_for
+from ...utils.decorators import has_role
 from ...queries import appointments
 from ...utils.user import current_user
 from .. import barber
 
 
 @barber.route("approve/<int:appt_id>", methods=["GET"])
+@has_role("Barber")
 def approve_request(appt_id):
     user = current_user()
     appointment = appointments.retrieve_appointment(appt_id)

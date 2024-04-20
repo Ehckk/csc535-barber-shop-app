@@ -1,5 +1,7 @@
+from datetime import date
 from flask import flash, redirect, render_template, url_for
 
+from ...utils.decorators import has_role
 from ...queries import users, services, schedules
 from ...utils.user import current_user
 from ...utils.table import get_services_table, get_schedule_table
@@ -8,6 +10,7 @@ from .forms.request import RequestDateForm
 
 
 @client.route("/barber/<barber_id>", methods=["GET", "POST"])
+@has_role("Client")
 def barber_details(barber_id):
     user = current_user()
     barbers = users.list_barbers()
@@ -22,14 +25,18 @@ def barber_details(barber_id):
     form = RequestDateForm()
     if form.validate_on_submit():
         booked_date = form.date.data
-        if schedules.is_available_for_date(barber_id, booked_date):
+        if booked_date < date.today():
+            flash("Date cannot be in the past!", category="error")
+        elif not schedules.is_available_for_date(barber_id, booked_date):
+            message = f"{barber.display_name()} is unavailable on {booked_date}"
+            flash(message, category="error")
+        else:
             return redirect(url_for(
-                "client.view_barber_request_appointment", 
+                "client.barber_details_request_appointment", 
                 barber_id=barber.id,
                 booked_date=booked_date.strftime("%Y%m%d")
             ))
-        message = f"{barber.display_name()} is unavailable on {booked_date}"
-        flash(message, category="error")
+
 
     return render_template(
         "client/view_barber.html", 

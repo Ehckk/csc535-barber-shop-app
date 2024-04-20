@@ -1,3 +1,4 @@
+from datetime import date
 from flask_wtf import FlaskForm
 from wtforms import DateField, SelectMultipleField, TimeField, IntegerField, SelectField, SubmitField
 from wtforms.widgets import CheckboxInput
@@ -35,6 +36,12 @@ class RequestDateForm(FlaskForm):
 
 class RequestForm(RequestBarberForm, RequestDateForm):
     pass
+
+
+class EditServicesForm(FlaskForm):
+    services = SelectMultipleField(label="Services")
+    cancel = SubmitField(label="Back")
+    submit = SubmitField(label="Save")
 
 
 class RequestAppointmentForm(FlaskForm):

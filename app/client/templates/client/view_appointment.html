@@ -1,3 +1,5 @@
+{% from "_tables.html" import table %}
+
 {% extends "client/home.html" %}
 
 {% block side_text %}
@@ -19,15 +21,31 @@
         <p>{{ appointment.start_time }}</p>
         <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
     </div>
-    <div class="side-buttons">
-        {% if appointment.is_approved %}
+    {{ 
+        table(
+            caption="Services",
+            data=services_data
+        ) 
+    }}
+    {% if appointment.is_approved %}
+        <div class="side-buttons">
+            <a href="{{ url_for('client.edit_appointment', appt_id=appointment.id) }}">
+                <button class="info-1 text-light-2 btn-large">Edit</button>
+            </a>     
+        </div>
+        <div class="side-buttons"> 
             <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
                 <button class="warning-1 text-light-2 btn-large">Reschedule</button>
             </a>
-        {% endif %}
-        <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
-            <button class="error-1 text-light-2 btn-large">Cancel</button>
-        </a>
-    </div>
-    <!-- reschedule appointment button here -->
+            <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="error-1 text-light-2 btn-large">Cancel</button>
+            </a>
+        </div>
+    {% else %}
+        <div class="side-buttons"> 
+            <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="error-1 text-light-2 btn-large">Cancel</button>
+            </a>
+        </div>
+    {% endif %}
 {% endblock %}

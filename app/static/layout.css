@@ -56,6 +56,7 @@ main.content {
     margin: .25rem 0;
     min-width: 2.5rem;
     height: 2.5rem;
+    border-radius: 50%;
     position: relative;
     width: min-content;
     text-decoration: none;
@@ -70,7 +71,7 @@ main.content {
     padding: .5rem;
     background-color: var(--w-2);
     box-shadow: var(--drop-shadow);
-    border-radius: 1.25rem;
+    border-radius: 50%;
     transition-property: all;
     transition-duration: .3s; 
     transition-timing-function: ease-in-out;
@@ -140,7 +141,7 @@ main.content {
 }
 
 .side-panel {
-    min-width: 20rem;
+    min-width: 24rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
