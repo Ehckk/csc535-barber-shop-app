@@ -54,7 +54,7 @@ def list_barber_appointments(barber_id: int):
     return list_appointments(results)
 
 
-def list_barber_appointments(barber_id: int):
+def list_barber_history(barber_id: int):
     current_date = date.today().isoformat()
     
     query = """
