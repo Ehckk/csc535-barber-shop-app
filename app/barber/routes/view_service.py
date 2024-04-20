@@ -15,7 +15,7 @@ def barber_service_details(service_id):
         barber_id=user.id, 
         service_id=service_id
     )
-
+    print(current_service)
     return render_template(
         "barber/services_details.html", 
         user=user,

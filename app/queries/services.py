@@ -2,6 +2,7 @@ import string
 from ..models.barber import BarberUser
 from ..models.barber_service import BarberService
 from ..models.service import Service
+from ..models.appointment_service import AppointmentService
 from .. import db
 
 
@@ -69,12 +70,37 @@ def retrieve_barber_service(barber_id: int, service_id: int):
         JOIN csc535_barber.`barber_services` AS BarberServices
         ON Services.service_id = BarberServices.service_id
         WHERE BarberServices.barber_id = %(barber_id)s
-        AND Services.`service_id` = %(service_id)s  
+        AND BarberServices.`service_id` = %(service_id)s  
     """
     results = db.execute(query, {'barber_id': barber_id, 'service_id': service_id})
     if not results:
         return None
     return BarberService(**results[0])
+
+
+def retrieve_appointment_service(appointment_id: int, service_id: int):
+    query = """
+        SELECT 
+            Services.*,
+            BarberServices.`price`
+        FROM csc535_barber.`appointment` AS Appointment
+        JOIN csc535_barber.`appointment_services` AS AppointmentServices 
+        USING (appointment_id)
+        JOIN csc535_barber.`barber_services` AS BarberServices 
+        USING (barber_id, service_id)
+        JOIN csc535_barber.`service` AS Services
+        USING (service_id)
+        WHERE Appointment.appointment_id = %(appointment_id)s
+        AND Services.`service_id` = %(service_id)s  
+    """
+    params = {
+        'appointment_id': appointment_id, 
+        'service_id': service_id
+    }
+    results = db.execute(query, params)
+    if not results:
+        return None
+    return AppointmentService(**results[0])
 
 
 def create_service(name: str):
@@ -102,6 +128,45 @@ def add_barber_service(barber_id: int, name: str, price: int, description: str=N
     db.execute(query, {'name': string.capwords(name)})
     db.commit()
     return retrieve_barber_service(barber_id, service.id)
+
+
+def update_barber_service(barber_id: int, service_id: int, price: str):
+    query = """
+        UPDATE csc535_barber.`barber_services` 
+        SET price = %(price)s
+        WHERE barber_id = %(barber_id)s
+        AND service_id = %(service_id)s
+    """
+    db.execute(query, {
+        'barber_id': barber_id, 
+        'service': service_id,
+        'price': price
+    })
+    db.commit()
+    return retrieve_barber_service(barber_id, service_id)
+
+
+def remove_barber_service(barber_id: int, service_id: int):
+    query = """
+        DELETE FROM csc535_barber.`barber_services` 
+        WHERE barber_id = %(barber_id)s
+        AND service_id = %(service_id)s
+    """
+    db.execute(query, {
+        'barber_id': barber_id, 
+        'service': service_id
+    })
+    db.commit()
+
+
+def add_appointment_service(name: str):
+    query = """
+        INSERT INTO csc535_barber.`service` (`service_id`, `name`) 
+        VALUES (DEFAULT, %(name)s);      
+    """
+    db.execute(query, {'name': string.capwords(name)})
+    db.commit()
+    return retrieve_service(name)
 
 
 def update_barber_service(barber_id: int, service_id: int, price: str):
