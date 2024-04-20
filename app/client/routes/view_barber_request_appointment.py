@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash
-from datetime import datetime
+from datetime import datetime, date
 
 from ...utils.decorators import has_role
 from ...queries import users, schedules
@@ -18,6 +18,9 @@ def barber_details_request_appointment(barber_id, booked_date):
 
     barber = users.retrieve_user(barber_id)
     booked_date = datetime.strptime(booked_date, "%Y%m%d").date()
+    if booked_date < date.today():
+        flash("Date cannot be in the past!", category="error")
+        return redirect(url_for("client.view_barber", barber_id=barber_id))
     availability = schedules.schedule_for_date(barber_id, booked_date)
 
     form = RequestAppointmentForm()

@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, url_for
-from datetime import datetime
+from datetime import date, datetime
 
 from ...queries import users, appointments, schedules
 from ...utils.decorators import has_role
@@ -13,12 +13,12 @@ from .forms.request import RequestAppointmentForm, get_service_choices
 @has_role("Client")
 def request_appointment(barber_id, booked_date):
     user = current_user()
-    
-    client_appointments = appointments.list_client_appointments(user.id)
-    requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
-    
+
     barber = users.retrieve_user(barber_id)
     booked_date = datetime.strptime(booked_date, "%Y%m%d").date()
+    if booked_date < date.today():
+        flash("Date cannot be in the past!", category="error")
+        return redirect(url_for("client.client_home"))
     availability = schedules.schedule_for_date(barber_id, booked_date)
     
     form = RequestAppointmentForm()
@@ -43,6 +43,9 @@ def request_appointment(barber_id, booked_date):
             return redirect(url_for("client.client_home"))
         except AssertionError as error:
             flash(error, category="error")
+    
+    client_appointments = appointments.list_client_appointments(user.id)
+    requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
     return render_template(
         'client/create_appointment.html',
         user=user,

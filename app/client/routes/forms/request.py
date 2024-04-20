@@ -1,3 +1,4 @@
+from datetime import date
 from flask_wtf import FlaskForm
 from wtforms import DateField, SelectMultipleField, TimeField, IntegerField, SelectField, SubmitField
 from wtforms.widgets import CheckboxInput
