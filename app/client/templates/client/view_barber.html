@@ -8,9 +8,15 @@
 {% block side_content %}
     {{ 
         table(
+            caption="Weekly Schedule",
+            data=schedule_data
+        ) 
+    }}
+    {{ 
+        table(
             caption="Services Offered",
-            columns=services_columns,
             data=services_data,
+            columns=services_columns
         ) 
     }}
 {% endblock %}

@@ -8,7 +8,7 @@
 
 {% macro table_body(data) %}
     {% for row in data %}
-        <tr>
+        <tr class="table-body-row">
             {% for values in row %}
                 {{ table_cell(values) }}
             {% endfor %}
@@ -26,15 +26,27 @@
     </tr>
 {% endmacro %}
 
-{% macro table(caption, columns, data) %}
-    <div class="table-container">
-        <h3 class="table-caption">
+{% macro table_caption(caption, column_count) %}
+    <tr>
+        <th scope="col" colspan="{{ column_count }}" class="table-caption-cell">
             {{ caption }}
-        </h3>
+        </th>
+    </tr>
+{% endmacro %}
+
+{% macro table(data, caption=None, columns=None) %}
+    <div class="table-container">
         <table class="table">
+            {% if columns or caption %}
             <thead>
-                {{ table_head(columns) }}
+                {% if caption %}
+                    {{ table_caption(caption, data|length) }}
+                {% endif %}
+                {% if columns %}
+                    {{ table_head(columns) }}
+                {% endif %}
             </thead>
+            {% endif %}
             <tbody>
                 {{ table_body(data) }}
             </tbody>
