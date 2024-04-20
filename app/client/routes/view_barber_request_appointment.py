@@ -9,7 +9,7 @@ from .forms.request import RequestAppointmentForm, get_service_choices
 
 
 @client.route("barber/<int:barber_id>/<booked_date>", methods=["GET", "POST"])
-def barber_details_request_appointment(barber_id):
+def barber_details_request_appointment(barber_id, booked_date):
     user = current_user()
 
     barbers = users.list_barbers()
@@ -24,6 +24,7 @@ def barber_details_request_appointment(barber_id):
         return redirect(url_for("client.view_barber", barber_id=barber_id))
     if form.validate_on_submit():
         services = form.services.data
+        print(services)
         start_time = datetime.combine(datetime.min, form.start_time.data) - datetime.min
         duration = form.duration.data
         try:
@@ -47,5 +48,6 @@ def barber_details_request_appointment(barber_id):
         current_barber_id=int(barber_id),
         barber=barber,
         booked_date=booked_date,
-        availability=availability
+        availability=availability,
+        form = form
     )

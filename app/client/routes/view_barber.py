@@ -24,7 +24,7 @@ def barber_details(barber_id):
         booked_date = form.date.data
         if schedules.is_available_for_date(barber_id, booked_date):
             return redirect(url_for(
-                "client.view_barber_request_appointment", 
+                "client.barber_details_request_appointment", 
                 barber_id=barber.id,
                 booked_date=booked_date.strftime("%Y%m%d")
             ))
