@@ -1,0 +1,29 @@
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.table-caption {
+    font-weight: bold;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+}
+
+.table-cell, .table-header-cell {
+    padding: .5rem;
+    border-top-width: 1px;
+    border-top-color: var(--s-2);
+    border-top-style: solid;
+}
+
+.table-header-cell {
+    color: var(--w-2);
+    background-color: var(--p-0);
+    vertical-align: bottom;
+    text-align: left;
+}

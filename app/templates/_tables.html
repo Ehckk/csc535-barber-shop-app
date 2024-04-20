@@ -8,7 +8,7 @@
 
 {% macro table_body(data) %}
     {% for row in data %}
-        <tr class="table-body-row">
+        <tr>
             {% for values in row %}
                 {{ table_cell(values) }}
             {% endfor %}
@@ -17,23 +17,25 @@
 {% endmacro %}
 
 {% macro table_head(columns) %}
-    <tr class="table-head-row">
+    <tr>
         {% for column in columns %}
-            <th class="table-header-cell">{{ column }}</th>
+            <th scope="col" class="table-header-cell">
+                {{ column }}
+            </th>
         {% endfor %}
     </tr>
 {% endmacro %}
 
 {% macro table(caption, columns, data) %}
     <div class="table-container">
-        <caption class="table-caption">
+        <h3 class="table-caption">
             {{ caption }}
-        </caption>
+        </h3>
         <table class="table">
-            <thead class="table-head">
+            <thead>
                 {{ table_head(columns) }}
             </thead>
-            <tbody class="table-body">
+            <tbody>
                 {{ table_body(data) }}
             </tbody>
         </table>

@@ -6,9 +6,11 @@
 {% endblock %}
 
 {% block side_content %}
-    {{ table(
-        caption="Services",
-        columns=services_columns,
-        data=services_data,
-    ) }}
+    {{ 
+        table(
+            caption="Services Offered",
+            columns=services_columns,
+            data=services_data,
+        ) 
+    }}
 {% endblock %}
