@@ -78,7 +78,7 @@ def retrieve_barber_service(barber_id: int, service_id: int):
     return BarberService(**results[0])
 
 
-def retrieve_appointment_service(appointment_id: int, service_id: int):
+def retrieve_appointment_services(appointment_id: int):
     query = """
         SELECT 
             Services.*,
@@ -91,16 +91,14 @@ def retrieve_appointment_service(appointment_id: int, service_id: int):
         JOIN csc535_barber.`service` AS Services
         USING (service_id)
         WHERE Appointment.appointment_id = %(appointment_id)s
-        AND Services.`service_id` = %(service_id)s  
     """
     params = {
-        'appointment_id': appointment_id, 
-        'service_id': service_id
+        'appointment_id': appointment_id
     }
     results = db.execute(query, params)
     if not results:
-        return None
-    return AppointmentService(**results[0])
+        return []
+    return [AppointmentService(**data) for data in results]
 
 
 def create_service(name: str):

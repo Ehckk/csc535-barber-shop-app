@@ -138,8 +138,14 @@ CREATE TABLE csc535_barber.`barber_services` (
 );
 
 INSERT INTO csc535_barber.`barber_services` VALUES
-	(1, 1, 30, DEFAULT), (2, 1, 35, DEFAULT), (3, 1, 40, DEFAULT), (4, 1, 35, DEFAULT),
-    (1, 4, 50, DEFAULT), (2, 4, 30, DEFAULT), (3, 4, 35, DEFAULT), (4, 4, 25, DEFAULT);
+	(1, 1, 30, DEFAULT), 
+    (2, 1, 35, DEFAULT), 
+    (3, 1, 40, DEFAULT), 
+    (4, 1, 35, DEFAULT),
+    (1, 4, 50, DEFAULT), 
+    (2, 4, 30, DEFAULT), 
+    (3, 4, 35, DEFAULT), 
+    (4, 4, 25, DEFAULT);
 
 CREATE TABLE csc535_barber.`appointment_services` (
 	`service_id` INT NOT NULL,
@@ -150,7 +156,19 @@ CREATE TABLE csc535_barber.`appointment_services` (
 );
 
 INSERT INTO csc535_barber.`appointment_services` VALUES
-	(1, 1), (2, 1), (1, 2), (3, 3), (4, 3), (3, 4);
+	(1, 1), 
+    (2, 1), 
+    (1, 2), 
+    (3, 3), 
+    (4, 3), 
+    (3, 4),
+    (3, 5), 
+    (4, 6), 
+    (3, 7),
+	(3, 8), 
+    (4, 9), 
+    (3, 10),
+	(3, 11);
 
 CREATE VIEW csc535_barber.`vw_barber_schedule` AS
 SELECT 
