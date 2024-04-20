@@ -1,7 +1,6 @@
 from collections import defaultdict, OrderedDict
-from datetime import time, timedelta
+from datetime import time
 
-from ..models.window import Window 
 from .date import (
     date_window,
     Interval,
@@ -26,13 +25,3 @@ def calendar_appointments(barber_id, current_date, interval):
         appointments[booked_date][time_key].append(appointment)
     return appointments
 
-
-def validate_appointment_time(
-    availability: list[Window], 
-    start_time: timedelta, 
-    duration: int
-):
-    for window in availability:
-        if window.is_between(start_time, duration):
-            return True
-    return False

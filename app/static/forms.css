@@ -1,5 +1,4 @@
 form {
-    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: .25rem;
@@ -17,8 +16,6 @@ form {
 }
 
 .form-buttons {
-    margin-top: 1rem;
-    margin-bottom: .5rem;
     padding: .5rem;
     display: flex;
     justify-content: space-evenly;

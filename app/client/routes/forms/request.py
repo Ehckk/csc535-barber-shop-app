@@ -21,13 +21,20 @@ def get_service_choices(barber_id: int):
         lambda service: (service.id, str(service)), 
         barber_services
     ))
-    return get_choices(choices)
+    return choices
 
 
-class RequestForm(FlaskForm):
-    barber = SelectField(choices=get_barber_choices())
+class RequestBarberForm(FlaskForm):
+    barber = SelectField(choices=get_barber_choices(), validators=[DataRequired()])
+
+
+class RequestDateForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()], format='%Y-%m-%d')
     submit = SubmitField(label="Next")
+
+
+class RequestForm(RequestBarberForm, RequestDateForm):
+    pass
 
 
 class RequestAppointmentForm(FlaskForm):

@@ -101,9 +101,8 @@ def create_appointment(
             %(barber_id)s, 
             %(client_id)s, 
             %(start_date)s, 
-            %(end_time)s, 
+            %(start_time)s, 
             %(duration)s, 
-            DEFAULT, 
             DEFAULT
         );
     """
@@ -111,10 +110,27 @@ def create_appointment(
         "barber_id": barber_id,
         "client_id": client_id,
         "start_date": start_date.strftime('%Y-%m-%d'),
-        "end_time": start_time.strftime('%H:%M'),
+        "start_time": start_time.strftime('%H:%M'),
         "duration": duration
     })
     db.commit()
+    query = """
+        SELECT * FROM csc535_barber.`appointment`
+        WHERE barber_id = %(barber_id)s
+        AND client_id = %(client_id)s
+        AND booked_date = %(start_date)s 
+        AND start_time = %(start_time)s
+        AND duration = %(duration)s
+        AND is_approved = 0
+    """
+    results = db.execute(query, {
+        "barber_id": barber_id,
+        "client_id": client_id,
+        "start_date": start_date.strftime('%Y-%m-%d'),
+        "start_time": start_time.strftime('%H:%M'),
+        "duration": duration
+    })
+    return Appointment(**results[0])
 
 
 def approve_appointment(appointment_id: int):

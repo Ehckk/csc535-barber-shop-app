@@ -3,7 +3,8 @@ from datetime import date, time
 
 from .user import User
 from .window import Interval, Window
-from ..queries.schedules import list_schedule
+from ..queries.schedules import list_schedule, schedule_for_date
+# from ..queries.appointments import create_appointment
 from ..utils.date import to_time
 
 
@@ -31,3 +32,7 @@ class BarberUser(User):
                 )
             )
         return schedule
+        
+
+    def __str__(self) -> str:
+        return self.display_name()

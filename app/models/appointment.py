@@ -1,7 +1,20 @@
-from datetime import date, time, timedelta
+from datetime import date, timedelta, time
 
+from .window import Window
+from ..queries.schedules import schedule_for_date
 from ..queries.users import retrieve_user
 from ..utils.date import to_time
+
+
+def validate_appointment_time(
+    availability: list[Window], 
+    start_time: timedelta, 
+    duration: int
+):
+    for window in availability:
+        if window.is_between(start_time, duration):
+            return True
+    return False
 
 
 HOUR_HEIGHT = 118
@@ -52,6 +65,23 @@ class Appointment:
 		start = self.start_time.strftime('%I:%M %p')
 		end = end_time.strftime('%I:%M %p')
 		return f"{start} - {end}"
+	
+	@staticmethod
+	def validate_appointnment(
+			barber_name: str,
+			barber_id: int,
+			start_date: date, 
+			start_time: timedelta, 
+			duration: int, 
+			services: list[int]
+		):
+		availability = schedule_for_date(barber_id, start_date)
+		if len(services) == 0:
+			message = "Select at least one service!"
+			raise AssertionError(message) 
+		if not validate_appointment_time(availability, start_time, duration):
+			message = f"{barber_name} is unavailable during this time"
+			raise AssertionError(message) 
 
 	def __str__(self):
 		return f"{self.booked_date.strftime('%b %d, %Y')} @ {self.time_range()}"
