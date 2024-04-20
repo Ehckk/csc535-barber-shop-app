@@ -1,5 +1,6 @@
 from flask import flash, redirect, render_template, url_for
 
+from ...utils.decorators import has_role
 from ...queries import users, services, schedules
 from ...utils.user import current_user
 from ...utils.table import get_services_table, get_schedule_table
@@ -8,6 +9,7 @@ from .forms.request import RequestDateForm
 
 
 @client.route("/barber/<barber_id>", methods=["GET", "POST"])
+@has_role("Client")
 def barber_details(barber_id):
     user = current_user()
     barbers = users.list_barbers()

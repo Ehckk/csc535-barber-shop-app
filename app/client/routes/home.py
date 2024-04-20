@@ -1,4 +1,6 @@
 from flask import flash, redirect, render_template, url_for
+
+from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...queries import schedules, users, appointments
 from .. import client
@@ -6,6 +8,7 @@ from .forms.request import RequestForm
 
 
 @client.route("/", methods=["GET", "POST"])
+@has_role("Client")
 def client_home():
     user = current_user()
     client_appointments = appointments.list_client_appointments(user.id)

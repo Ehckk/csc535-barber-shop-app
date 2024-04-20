@@ -2,6 +2,7 @@ from flask import flash, redirect, render_template, url_for
 from datetime import datetime
 
 from ...queries import users, appointments, schedules
+from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...utils.appointment import create_if_valid
 from .. import client
@@ -9,6 +10,7 @@ from .forms.request import RequestAppointmentForm, get_service_choices
 
 
 @client.route("/<int:barber_id>/<booked_date>", methods=["GET", "POST"])
+@has_role("Client")
 def request_appointment(barber_id, booked_date):
     user = current_user()
     
