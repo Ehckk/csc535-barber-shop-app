@@ -93,7 +93,6 @@ def list_client_appointments(client_id: int, is_booked: bool=True, prev: bool=Fa
   
 
 def list_client_history(client_id: int):
- 
     current_date = date.today().isoformat()   
     query = """
         SELECT * 
