@@ -1,0 +1,39 @@
+{% macro table_cell(values) %}
+    <td class="cell">
+        {% for value in values %}
+            <p>{{ value }}</p>
+        {% endfor %}
+    </td>
+{% endmacro %}
+
+{% macro table_body(columns, data) %}
+    {% for column in columns %}
+        <tr class="table-body-row">
+            {% for values in data[column] %}
+                {{ table_cell(values) }}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+{% endmacro %}
+
+{% macro table_head(columns) %}
+    <tr class="table-head-row">
+        {% for column in columns %}
+            <th class="cell">{{ column }}</th>
+        {% endfor %}
+    </tr>
+{% endmacro %}
+
+{% macro table(caption, columns, data) %}
+    <div>
+        <caption>{{ caption }}</caption>
+        <table class="table">
+            <thead class="table-head">
+                {{ table_head(columns) }}
+            </thead>
+            <tbody class="table-body">
+                {{ table_body(columns, data) }}
+            </tbody>
+        </table>
+    </div>
+{% endmacro %}
