@@ -22,20 +22,21 @@ def edit_appointment(appt_id: int):
     form = EditServicesForm()
     form.services.choices = get_service_choices(appointment.barber.id)
     if form.validate_on_submit():
-        new_appointment_services = form.services.data
-        if len(appointment_services) == 0:
-            message = "Select at least one service!"
-            flash(message, category="error")
-        else:
-            new_appointment_service_ids = list(map(int, new_appointment_services))
-            new_service_ids = list(set(new_appointment_service_ids) - set(appointment_service_ids))
-            services.update_appointment_services(
-                appointment.id, 
-                service_ids=new_appointment_service_ids,
-                new_service_ids=new_service_ids
-            )
-            flash("Your changes have been saved!", category="success")
-            return redirect(url_for("client.appointment_details", appt_id=appt_id))
+        if not form.cancel.data:
+            new_appointment_services = form.services.data
+            if len(appointment_services) == 0:
+                message = "Select at least one service!"
+                flash(message, category="error")
+            else:
+                new_appointment_service_ids = list(map(int, new_appointment_services))
+                new_service_ids = list(set(new_appointment_service_ids) - set(appointment_service_ids))
+                services.update_appointment_services(
+                    appointment.id, 
+                    service_ids=new_appointment_service_ids,
+                    new_service_ids=new_service_ids
+                )
+                flash("Your changes have been saved!", category="success")
+        return redirect(url_for("client.appointment_details", appt_id=appt_id))
 
     form.services.data = list(map(str, appointment_service_ids))
 
@@ -44,6 +45,7 @@ def edit_appointment(appt_id: int):
         user=user,
         form=form,
         appointment=appointment,
+        appt_id=appt_id,
         appointments=client_appointments,
         requested_appointments=requested_appointments
     )
