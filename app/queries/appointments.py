@@ -61,6 +61,18 @@ def list_barber_appointments(barber_id: int, booked: bool=True, prev: bool=False
     return list_appointments(results)
 
 
+def list_barber_history(barber_id: int):
+    current_date = date.today().isoformat()
+    
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment` 
+        WHERE `barber_id` = %(barber_id)s AND `booked_date` < %(current_date)s;
+    """
+    cursor = db.execute(query, {"barber_id": barber_id, "today": current_date})
+    return list_appointments(cursor.fetchall())
+
+
 def list_client_appointments(client_id: int, is_booked: bool=True, prev: bool=False):
     is_booked = 1 if is_booked else 0
     is_prev = 1 if prev else 0
@@ -78,6 +90,18 @@ def list_client_appointments(client_id: int, is_booked: bool=True, prev: bool=Fa
     """
     results = db.execute(query, params)
     return list_appointments(results)
+  
+
+def list_client_history(client_id: int):
+ 
+    current_date = date.today().isoformat()   
+    query = """
+        SELECT * 
+        FROM csc535_barber.`appointment`
+        WHERE `client_id` = %(client_id)s AND `booked_date` < %(current_date)s;
+    """
+    cursor = db.execute(query, {"client_id": client_id, "current_date":current_date})
+    return list_appointments(cursor.fetchall())
 
 
 def retrieve_appointment(appointment_id: int): 
