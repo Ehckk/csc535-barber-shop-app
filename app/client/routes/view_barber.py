@@ -14,8 +14,8 @@ def barber_details(barber_id):
 
     barber_services = services.list_barber_services(barber.id)
     service_columns, services_data = get_services_table(barber_services)
+    print(service_columns, services_data)
 
-    
 
     return render_template(
         "client/view_barber.html", 
@@ -23,6 +23,6 @@ def barber_details(barber_id):
         barbers=barbers,
         barber=barber,
         current_barber_id=int(barber_id),
-        service_columns=service_columns,
+        services_columns=service_columns,
         services_data=services_data
     )

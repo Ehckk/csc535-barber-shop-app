@@ -1,3 +1,4 @@
+{% from "_tables.html" import table %}
 {% extends "client/barbers.html" %}
 
 {% block side_text %}
@@ -5,7 +6,9 @@
 {% endblock %}
 
 {% block side_content %}
-    <div>
-
-    </div>
+    {{ table(
+        caption="Services",
+        columns=services_columns,
+        data=services_data,
+    ) }}
 {% endblock %}

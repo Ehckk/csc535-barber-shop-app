@@ -1,15 +1,15 @@
 {% macro table_cell(values) %}
-    <td class="cell">
+    <td class="table-cell">
         {% for value in values %}
             <p>{{ value }}</p>
         {% endfor %}
     </td>
 {% endmacro %}
 
-{% macro table_body(columns, data) %}
-    {% for column in columns %}
+{% macro table_body(data) %}
+    {% for row in data %}
         <tr class="table-body-row">
-            {% for values in data[column] %}
+            {% for values in row %}
                 {{ table_cell(values) }}
             {% endfor %}
         </tr>
@@ -19,20 +19,22 @@
 {% macro table_head(columns) %}
     <tr class="table-head-row">
         {% for column in columns %}
-            <th class="cell">{{ column }}</th>
+            <th class="table-header-cell">{{ column }}</th>
         {% endfor %}
     </tr>
 {% endmacro %}
 
-{% macro table(caption, data) %}
-    <div>
-        <caption>{{ caption }}</caption>
+{% macro table(caption, columns, data) %}
+    <div class="table-container">
+        <caption class="table-caption">
+            {{ caption }}
+        </caption>
         <table class="table">
             <thead class="table-head">
                 {{ table_head(columns) }}
             </thead>
             <tbody class="table-body">
-                {{ table_body(columns, data) }}
+                {{ table_body(data) }}
             </tbody>
         </table>
     </div>
