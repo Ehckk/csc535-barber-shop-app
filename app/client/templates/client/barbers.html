@@ -1,3 +1,6 @@
+{% from "_macros.html" import card_list %}
+{% from "_cards.html" import barber_card %}
+
 {% extends "client.html" %}
 
 {% block title %}
@@ -9,14 +12,15 @@
 {% endblock %}
 
 {% block main_content %}
-    List of Barbers Here
-    {% for barber in barbers %}
-        <div>
-            <h3>{{ barber.first_name }} {{ barber.last_name }}</h3>
-            <a href="{{ url_for('client.barber_details', barber_id=barber.id) }}">
-                <button>Details</button>
-            </a>
-        </div>
-    <p></p>
-    {% endfor %}
+    {% call card_list('Available Barbers') %}
+    {% if not barbers %}
+        <p class="card-list-text">
+            No barbers to show
+        </p>
+    {% else %}
+        {% for barber in barbers %}
+            {{ barber_card(barber, current_barber_id) }}
+        {% endfor %}
+    {% endif %}
+    {% endcall %}
 {% endblock %}

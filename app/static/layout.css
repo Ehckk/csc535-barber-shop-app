@@ -22,10 +22,13 @@ main.content {
     margin: auto;
     min-width: 20rem;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 2rem;
     border-radius: .5rem;
     background-color: var(--w-2);
     box-shadow: var(--drop-shadow);
+}
+.auth p {
+    text-align: center;
 }
 
 .dashboard {
@@ -115,8 +118,8 @@ main.content {
 }
 
 .dashboard-content {
-    flex-grow: 1;
     width: 100%;
+    flex-grow: 1;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -130,10 +133,44 @@ main.content {
     margin-right: auto;
 } 
 
+.side-content {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
 .side-panel {
-    min-width: 32rem;
+    min-width: 20rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: .5rem;
+}
+
+.side-list {
+    list-style: none;
+}
+
+.side-list-item {
+    margin-left: 1rem;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.home {
+    margin-top: .5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.center-text {
+    padding-left: 2rem;
 }

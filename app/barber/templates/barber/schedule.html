@@ -1,31 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Barber Schedule Form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Schedule Your Appointment</h2>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.weekday.label(class="form-control-label") }}
-            {{ form.weekday(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.start_time.label(class="form-control-label") }}
-            {{ form.start_time(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.end_time.label(class="form-control-label") }}
-            {{ form.end_time(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </form>
-</div>
-</body>
-</html>
+{% extends "barber.html" %}
+{% from "_render_form.html" import render_form %}
+
+{% block title %}
+    Set Availability
+{% endblock %}
+
+{% block header_text %}
+    Set Availability
+{% endblock %}
+
+{% block side_text %}
+    Set Availability
+{% endblock %}
+
+{% block side_content %}
+{% call render_form(form, name="Set Availability", action="/barber/availability")%}
+{% endcall %}
+{% endblock %}

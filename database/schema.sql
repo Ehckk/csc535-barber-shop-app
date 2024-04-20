@@ -8,6 +8,7 @@ DROP VIEW IF EXISTS csc535_barber.`vw_barber_schedule`;
 DROP VIEW IF EXISTS csc535_barber.`vw_barber_availability`;
 
 DROP TABLE IF EXISTS csc535_barber.`appointment_services`;
+DROP TABLE IF EXISTS csc535_barber.`barber_services`;
 DROP TABLE IF EXISTS csc535_barber.`service`;
 DROP TABLE IF EXISTS csc535_barber.`appointment`;
 DROP TABLE IF EXISTS csc535_barber.`unavailable`;
@@ -30,7 +31,8 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`user` (
 INSERT INTO csc535_barber.`user` VALUES 
 	(DEFAULT, 'test@test.com', SHA('test'), 'Test', 'Test', 'Barber', 1),
     (DEFAULT, 'test1@test.com', SHA('client1'), 'Test1', 'Client1', 'Client', 1),
-    (DEFAULT, 'test2@test.com', SHA('client2'), 'Test2', 'Client2', 'Client', 1);
+    (DEFAULT, 'test2@test.com', SHA('client2'), 'Test2', 'Client2', 'Client', 1),
+    (DEFAULT, 'test3@test.com', SHA('test2'), 'Test2', 'Test2', 'Barber', 1);
     
 
 CREATE TABLE IF NOT EXISTS csc535_barber.`weekday` (
@@ -62,13 +64,16 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`schedule` (
 );
 
 INSERT INTO csc535_barber.`schedule` VALUES 
-	(1, 1, 0, '09:30', '12:30'),
-    (2, 1, 0, '13:30', '16:30'),
-    (3, 1, 1, '10:30', '15:30'),
-    (4, 1, 2, '09:30', '12:30'),
-    (5, 1, 2, '13:30', '16:30'),
-    (6, 1, 4, '09:30', '12:30'),
-    (7, 1, 4, '13:30', '16:30');
+	(DEFAULT, 1, 0, '09:30', '12:30'),
+    (DEFAULT, 1, 0, '13:30', '16:30'),
+    (DEFAULT, 1, 1, '10:30', '15:30'),
+    (DEFAULT, 1, 2, '09:30', '12:30'),
+    (DEFAULT, 1, 2, '13:30', '16:30'),
+    (DEFAULT, 1, 4, '09:30', '12:30'),
+    (DEFAULT, 1, 4, '13:30', '16:30'),
+    (DEFAULT, 2, 1, '08:30', '15:30'),
+    (DEFAULT, 2, 3, '08:30', '15:30'),
+    (DEFAULT, 2, 5, '08:30', '15:30');
 
 CREATE TABLE IF NOT EXISTS csc535_barber.`unavailable` (
     `unavailable_id` INT NOT NULL AUTO_INCREMENT,
@@ -91,7 +96,6 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`appointment` (
     `booked_date` DATE NOT NULL,
     `start_time` TIME NOT NULL,
     `duration` SMALLINT UNSIGNED NOT NULL,
-    `description` TEXT NULL,
     `is_approved` BOOL DEFAULT 0,
     PRIMARY KEY (`appointment_id`),
 	FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE,
@@ -99,25 +103,41 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`appointment` (
 );
 
 INSERT INTO csc535_barber.`appointment` VALUES
-	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, DEFAULT, 1),
-    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, DEFAULT, 1),
-	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, DEFAULT, 1),
-    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, DEFAULT, 1);
+	(DEFAULT, 1, 2, '2024-02-13', '11:00', 60, 1),
+    (DEFAULT, 1, 3, '2024-02-13', '13:30', 60, 1),
+	(DEFAULT, 1, 2, '2024-02-16', '10:00', 60, 1),
+    (DEFAULT, 1, 3, '2024-02-16', '11:30', 30, 1),
+	(DEFAULT, 1, 2, '2024-04-02', '11:30', 60, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '11:30', 30, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '12:00', 30, 0),
+    (DEFAULT, 1, 3, '2024-04-02', '12:30', 30, 0),
+	(DEFAULT, 1, 3, '2024-04-02', '11:00', 60, 0);
 
 CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(32) NOT NULL,
-    `price` int NOT NULL,
-    `barber_id` INT NOT NULL,
-    PRIMARY KEY (`service_id`),
-    FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
+    PRIMARY KEY (`service_id`)
 );
 
 INSERT INTO csc535_barber.`service` VALUES 
-	(DEFAULT, 'Beard Trim', 30, 1),
-    (DEFAULT, 'Fade', 35, 1),
-    (DEFAULT, 'Hot Towel Shave', 40, 1),
-    (DEFAULT, 'Straight Razor Shave', 35, 1);
+	(DEFAULT, 'Beard Trim'),
+    (DEFAULT, 'Fade'),
+    (DEFAULT, 'Hot Towel Shave'),
+    (DEFAULT, 'Straight Razor Shave');
+
+CREATE TABLE csc535_barber.`barber_services` (
+	`service_id` INT NOT NULL,
+    `barber_id` INT NOT NULL,
+    `price` int NOT NULL,
+	`description` varchar(256) DEFAULT '',
+    PRIMARY KEY (`service_id`, `barber_id`),
+    FOREIGN KEY (`service_id`) REFERENCES `service`(`service_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
+);
+
+INSERT INTO csc535_barber.`barber_services` VALUES
+	(1, 1, 30, DEFAULT), (2, 1, 35, DEFAULT), (3, 1, 40, DEFAULT), (4, 1, 35, DEFAULT),
+    (1, 2, 50, DEFAULT), (2, 2, 30, DEFAULT), (3, 2, 35, DEFAULT), (4, 2, 25, DEFAULT);
 
 CREATE TABLE csc535_barber.`appointment_services` (
 	`service_id` INT NOT NULL,
@@ -128,12 +148,7 @@ CREATE TABLE csc535_barber.`appointment_services` (
 );
 
 INSERT INTO csc535_barber.`appointment_services` VALUES
-	(1, 1),
-    (2, 1),
-    (1, 2),
-    (3, 3),
-    (4, 3),
-    (3, 4);
+	(1, 1), (2, 1), (1, 2), (3, 3), (4, 3), (3, 4);
 
 CREATE VIEW csc535_barber.`vw_barber_schedule` AS
 SELECT 
@@ -215,13 +230,6 @@ CREATE PROCEDURE sp_barber_availability_for_range(
 )
 BEGIN
 	DECLARE range_end date;
-    SET range_start = (
-		CASE range_duration
-			WHEN 'M' THEN MAKEDATE(YEAR(range_start), MONTH(range_start))
-			WHEN 'W' THEN DATE_SUB(range_start, INTERVAL WEEKDAY(range_start) DAY)
-			WHEN 'D' THEN range_start
-        END
-    );
     SET range_end = (
 		CASE range_duration
 			WHEN 'M' THEN DATE_SUB(DATE_ADD(range_start, INTERVAL 1 MONTH), INTERVAL 1 DAY)
@@ -259,7 +267,7 @@ BEGIN
 		UNION 
 		SELECT `date`, A.*
 		FROM available_dates
-		JOIN csc535_barber.`vw_barber_availability` AS A 
+		JOIN  csc535_barber.`vw_barber_availability` AS A 
 		ON WEEKDAY(`date`) = A.`weekday_id` 
 		WHERE A.`barber_id` = barber
         AND `booked_date` IS NULL AND `date` NOT IN (

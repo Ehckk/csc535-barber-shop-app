@@ -1,4 +1,4 @@
-input {
+input, select, textarea {
     padding: 0.5rem;
     background-color: var(--w-1);
     border-radius: .25rem;
@@ -12,7 +12,7 @@ input {
     transition-timing-function: ease-in-out;
 }
 
-input:focus {
+input:focus, select:focus, textarea:focus {
     opacity: 1;
 }
 
@@ -22,7 +22,7 @@ button, input[type=submit] {
     border-radius: .25rem;
     box-shadow: var(--drop-shadow);
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 700;
     opacity: .85;
     transition-property: opacity, transform;
@@ -50,15 +50,15 @@ button:active, input[type=submit]:active {
 }
 
 .btn-small {
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     font-size: 1rem;
     min-width: 5rem;
 }
 
 .btn-large {
-    padding: 0.5rem 1rem;
-    font-size: 1.25rem;
-    min-width: 7rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 1.125rem;
+    min-width: 8rem;
 }
 
 label {

@@ -1,19 +1,46 @@
-{% extends "barber/appointments.html" %}
+{% extends "barber/home.html" %}
 
 {% block side_text %}
     Appointment Details
 {% endblock %}
 
 {% block side_content %}
-    <p>Barber: {{ appointment.barber.display_name() }}</p>
-    <p>Client: {{ appointment.client.display_name() }}</p>
-    <p>{{ appointment.booked_date }}</p>
-    <p>{{ appointment.start_time }}</p>
-    <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
-
-    <!-- cancel appointment button here -->
-    <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
-        <button>Cancel</button>
-    </a>
-    <!-- reschedule appointment button here -->
+    <div class="side-container">
+        <p>{{ appointment }}</p>
+        <p>Client: {{ appointment.client.display_name() }}</p>
+        <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+    </div>
+    {% if not appointment.is_approved and conflicting_appointments %}
+    <div class="side-container">
+        <h4>Approve this appointment request?</h4>        
+        <p>
+            The following requests will be <b class="text-error-1 bold"> declined</b>:
+        </p>
+        <ul class="side-list">
+            {% for conflicting in conflicting_appointments %}
+                <li class="side-list-item">
+                    <p>{{ conflicting }}</p>
+                    <p>{{ conflicting.client.display_name() }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="side-buttons">
+        {% if appointment.is_approved %}
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+                <button class="warning-1 text-light-2 btn-large">Reschedule</button>
+            </a>
+            <a href="">
+                <button class="error-1 text-light-2 btn-large">Cancel</button>
+            </a>
+        {% else %}
+            <a href="{{ url_for('barber.deny_request', appt_id=appointment.id) }}">
+                <button class="error-1 text-light-2 btn-large">Deny</button>
+            </a>
+            <a href="{{ url_for('barber.approve_request', appt_id=appointment.id) }}">
+                <button class="success-1 text-light-2 btn-large">Approve</button>
+            </a>
+        {% endif %}
+    </div>
 {% endblock %}

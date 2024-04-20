@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time, timedelta
 from enum import StrEnum
 
 
@@ -18,7 +18,7 @@ weekdays = {
 	"Sun": 6
 }
 
-HOUR_HEIGHT = 59
+HOUR_HEIGHT = 118
 
 		
 class Window:
@@ -36,3 +36,13 @@ class Window:
 	
 	def style(self):
 		return f"top: {self.offset()}px; min-height: {self.length()}px;"
+
+	def is_between(self, target_start: timedelta, duration: int):
+		target_end = (datetime.min + (target_start + timedelta(minutes=duration))).time()
+		target_start = (datetime.min + target_start).time()
+		return self.start_time <= target_start and self.end_time >= target_end
+	
+	def __str__(self) -> str:
+		start = self.start_time.strftime("%I:%M %p")
+		end = self.end_time.strftime("%I:%M %p")
+		return f"{start} - {end}"

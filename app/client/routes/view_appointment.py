@@ -1,18 +1,22 @@
 from flask import render_template
 
-from ...queries.appointments import list_client_appointments, retrieve_appointment
+from ...queries import appointments 
 from ...utils.user import current_user
 from .. import client
 
 
-@client.route("/appointment/<appt_id>", methods=["GET"])
+@client.route("/<int:appt_id>", methods=["GET"])
 def appointment_details(appt_id):
     user = current_user()
-    appointments = list_client_appointments(user.id)
-    appointment = retrieve_appointment(appt_id)
+    client_appointments = appointments.list_client_appointments(user.id)
+    requested_appointments = appointments.list_client_appointments(user.id, is_booked=False)
+    appointment = appointments.retrieve_appointment(appt_id)
+
     return render_template(
         "client/view_appointment.html", 
         user=user,
-        appointments=appointments,
-        appointment=appointment
+        appointments=client_appointments,
+        requested_appointments=requested_appointments,
+        appointment=appointment,
+        appt_id=appt_id
     )

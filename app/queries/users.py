@@ -1,6 +1,9 @@
 from typing import Literal
 
-from ..models.user import BarberUser, ClientUser, User
+
+from ..models.user import User
+from ..models.barber import BarberUser
+from ..models.client import ClientUser
 from .. import db
 
 def check_email(email: str):
@@ -29,7 +32,6 @@ def check_password(email: str, password: str):
     if not results:
         return None
     return results[0] 
-
 
 
 def list_barbers() -> list[BarberUser]:

@@ -1,6 +1,24 @@
 from datetime import date, time
 from typing import Literal
+
+from ..utils.date import to_time
+from ..models.window import Window
 from .. import db
+
+
+def barber_weekly_schedule(barber_id: int):
+    query = """
+        SELECT 
+            W.*,
+            S.`start_time`,
+            S.`end_time`
+        FROM csc535_barber.`schedule` AS S
+        JOIN csc535_barber.`weekday` AS W
+        USING (`weekday_id`)
+        WHERE `barber_id` = %(barber_id)s
+        ORDER BY S.`weekday_id`, S.`start_time`, S.`end_time`
+    """
+    return db.execute(query, {"barber_id": barber_id})
 
 
 def list_schedule(
@@ -39,10 +57,10 @@ def create_schedule(
         );
     """
     db.execute(query, {
-        "barber": barber_id,
+        "barber_id": barber_id,
         "weekday_id": weekday_id,
-        "start_time": start_time.strftime('%H-%M'),
-        "end_time": end_time.strftime('%H-%M')
+        "start_time": start_time.strftime('%H:%M'),
+        "end_time": end_time.strftime('%H:%M')
     })
     db.commit()
     
@@ -60,8 +78,8 @@ def update_schedule(
     """
     db.execute(query, {
         "schedule_id": schedule_id,
-        "start_time": new_start.strftime('%H-%M'),
-        "end_time": new_end.strftime('%H-%M')
+        "start_time": new_start.strftime('%H:%M'),
+        "end_time": new_end.strftime('%H:%M')
     })
     db.commit()
  
@@ -75,3 +93,48 @@ def delete_schedule(
     """
     db.execute(query, {"schedule_id": schedule_id})
     db.commit()
+
+
+def is_available_for_date(barber_id: int, target_date=date):
+    query = """
+        CALL sp_barber_availability_for_range(
+            %(barber_id)s,
+            %(target_date)s,
+            'D'
+        )
+    """
+    result = db.execute(query, {
+        "barber_id": barber_id,
+        "target_date": target_date.strftime("%Y-%m-%d")
+    })
+    return len(result) > 0
+
+
+def schedule_for_date(barber_id: int, target_date=date):
+    params = {
+        "barber_id": barber_id,
+        "target_date": target_date.strftime("%Y-%m-%d")
+    }
+    query = """
+        SELECT * 
+        FROM csc535_barber.`vw_barber_availability`
+        WHERE `booked_date` = %(target_date)s
+        AND `barber_id` = %(barber_id)s
+    """
+    results = db.execute(query, params)
+    if not results:
+        query = """
+            SELECT * 
+            FROM csc535_barber.`vw_barber_availability`
+            WHERE weekday_id = WEEKDAY(%(target_date)s)
+            AND `barber_id` = %(barber_id)s
+            AND `booked_date` IS NULL
+        """
+        results = db.execute(query, params)
+    availability = []
+    for row in results:
+        start_time = to_time(row["start_time"])
+        end_time = to_time(row["end_time"])
+        window = Window(start_time, end_time)
+        availability.append(window) 
+    return availability

@@ -42,7 +42,7 @@
             </div>
         {% endif %}
     {% else %}
-        {{ field(class="primary-1 text-light-2")|safe }}
+        {{ field(class="primary-1 text-light-2", formnovalidate=field.name == "cancel")|safe }}
     {% endif %}
 {% endmacro %}
 
@@ -60,7 +60,7 @@
 {% macro render_form(form, name=None, action=None, cols="1") %}
     <form {% if action != None %} action="{{ action }}" {% endif %} method="post">
         {% if name %}
-            <h2 class="form-title">{{ name }}</h2>
+            <h3 class="form-title">{{ name }}</h3>
         {% endif %}
         {{ form.hidden_tag() }}
         <div class="form-fields">
@@ -71,6 +71,8 @@
             {% endfor %}
         </div>
         {{ render_buttons(form) }}
-        {{ caller() }}
+        {% if caller %}
+            {{ caller() }}
+        {% endif %}
     </form>
 {% endmacro %}

@@ -16,6 +16,7 @@ class Database:
             for result in result_set:
                 results.append(result)
         return results
+
         
     def commit(self):
         self.connection.commit()

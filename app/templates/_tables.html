@@ -1,0 +1,55 @@
+{% macro table_cell(values) %}
+    <td class="table-cell">
+        {% for value in values %}
+            <p>{{ value }}</p>
+        {% endfor %}
+    </td>
+{% endmacro %}
+
+{% macro table_body(data) %}
+    {% for row in data %}
+        <tr class="table-body-row">
+            {% for values in row %}
+                {{ table_cell(values) }}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+{% endmacro %}
+
+{% macro table_head(columns) %}
+    <tr>
+        {% for column in columns %}
+            <th scope="col" class="table-header-cell">
+                {{ column }}
+            </th>
+        {% endfor %}
+    </tr>
+{% endmacro %}
+
+{% macro table_caption(caption, column_count) %}
+    <tr>
+        <th scope="col" colspan="{{ column_count }}" class="table-caption-cell">
+            {{ caption }}
+        </th>
+    </tr>
+{% endmacro %}
+
+{% macro table(data, caption=None, columns=None) %}
+    <div class="table-container">
+        <table class="table">
+            {% if columns or caption %}
+            <thead>
+                {% if caption %}
+                    {{ table_caption(caption, data|length) }}
+                {% endif %}
+                {% if columns %}
+                    {{ table_head(columns) }}
+                {% endif %}
+            </thead>
+            {% endif %}
+            <tbody>
+                {{ table_body(data) }}
+            </tbody>
+        </table>
+    </div>
+{% endmacro %}

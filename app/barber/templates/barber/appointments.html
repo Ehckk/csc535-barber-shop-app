@@ -1,21 +1,16 @@
-{% extends "barber.html" %}
+{% extends "barber/home.html" %}
 
-{% block title %}
-    Appointments
+{% block side_text %}
 {% endblock %}
 
-{% block header_text %}
-    Booked Appointments
-{% endblock %}
-
-{% block main_content %}
-    {% for appointment in appointments %}
-        <div>
-            <h3>{{ appointment.booked_date }} at {{ appointment.start_time }}</h3>
-            <p>{{ appointment.client.display_name() }}</p>
-            <a href="{{ url_for('barber.appointment_details', appt_id=appointment.id) }}">
-                <button>Details</button>
-            </a>
-        </div>
-    {% endfor %}
+{% block side_content %}
+{% call card_list('Requested Appointments') %}
+    {% if not requested_appointments %}
+        <p class="card-list-text">No requested appointments to show</p>
+    {% else %}
+        {% for appointment in requested_appointments %}
+            {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
+        {% endfor %}
+    {% endif %}
+{% endcall %}
 {% endblock %}
