@@ -112,3 +112,12 @@ def verify_email(user_id):
     """
     db.execute(query, {"user_id": user_id})
     db.commit()
+
+def update_password(email: str, new_password: str):
+    query = """
+        UPDATE csc535_barber.`user`
+        SET `password` = SHA(%(new_password)s)
+        WHERE `email` = %(email)s
+    """
+    db.execute(query, {"email": email, "new_password": new_password})
+    db.commit()
