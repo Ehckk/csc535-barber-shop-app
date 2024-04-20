@@ -56,7 +56,7 @@ def list_barber_appointments(barber_id: int, booked: bool=True, prev: bool=False
     results = db.execute(query, {
         "barber_id": barber_id,
         "booked": booked,
-        "prev": 1 if prev else 0
+        "is_prev": 1 if prev else 0
     })
     return list_appointments(results)
 
