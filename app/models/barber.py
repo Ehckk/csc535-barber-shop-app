@@ -31,3 +31,6 @@ class BarberUser(User):
                 )
             )
         return schedule
+    
+    def __str__(self) -> str:
+        return self.display_name()

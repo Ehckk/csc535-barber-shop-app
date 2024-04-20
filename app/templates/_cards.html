@@ -20,7 +20,7 @@
 {% macro barber_card(barber, current_barber_id) %}
 <a 
     class="card{% if current_barber_id == barber.id %} current{% endif %}" 
-    href="{{ url_for('barber.barber_details', barber_id=barber.id) }}"
+    href="{{ url_for('client.barber_details', barber_id=barber.id) }}"
 >
     <p>{{ barber }}</p>
 </a>

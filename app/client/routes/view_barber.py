@@ -15,5 +15,6 @@ def barber_details(barber_id):
         "client/view_barber.html", 
         user=user, 
         barbers=barbers,
-        barber=barber
+        barber=barber,
+        current_barber_id=int(barber_id)
     )
