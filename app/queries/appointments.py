@@ -45,31 +45,36 @@ def appointments_between_dates(barber_id: int, start: date, end: date):
     return list_appointments(results)
 
 
-def list_barber_appointments(barber_id: int, booked=True):
+def list_barber_appointments(barber_id: int, booked: bool=True, prev: bool=False):
     query = """
         SELECT * 
         FROM csc535_barber.`appointment` 
         WHERE `barber_id` = %(barber_id)s
-        AND `is_approved` = %(booked)s;
+        AND `is_approved` = %(booked)s
+        AND (NOW() > TIMESTAMP(`booked_date`, `start_time`)) = %(is_prev)s;
     """
     results = db.execute(query, {
         "barber_id": barber_id,
-        "booked": booked
+        "booked": booked,
+        "prev": 1 if prev else 0
     })
     return list_appointments(results)
 
 
-def list_client_appointments(client_id: int, is_booked: bool=True):
+def list_client_appointments(client_id: int, is_booked: bool=True, prev: bool=False):
     is_booked = 1 if is_booked else 0
+    is_prev = 1 if prev else 0
     params = {
         "client_id": client_id,
-        "is_booked": is_booked   
+        "is_booked": is_booked,
+        "is_prev": is_prev
     }
     query = """
-        SELECT * 
+        SELECT *
         FROM csc535_barber.`appointment`
         WHERE `client_id` = %(client_id)s
         AND `is_approved` = %(is_booked)s
+        AND (NOW() > TIMESTAMP(`booked_date`, `start_time`)) = %(is_prev)s
     """
     results = db.execute(query, params)
     return list_appointments(results)
