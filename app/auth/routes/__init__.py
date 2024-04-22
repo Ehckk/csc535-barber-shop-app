@@ -3,5 +3,6 @@ __all__ = [
     "register",
     "logout",
     "confirm_email",
-    "verify"
+    "verify",
+    "request_reset"
 ]
