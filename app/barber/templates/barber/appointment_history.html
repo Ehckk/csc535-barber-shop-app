@@ -1,0 +1,36 @@
+{% from "_macros.html" import card_list %}
+{% from "_cards.html" import appointment_card %}
+
+{% extends "barber.html" %}
+
+{% block title %}
+    Appointment History
+{% endblock %}
+
+{% block header_text %}
+    Your Appointment History, {{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="history">
+        {% call card_list('Complete Appointment History') %}
+            {% if not historical_appointments %}
+                <p class="card-list-text">
+                    No appointment history to show
+                </p>
+            {% else %}
+                {% for appointment in historical_appointments %}
+                    {{ appointment_card(appointment, appointment.id, url='barber.appointment_details') }}
+                {% endfor %}
+            {% endif %}
+        {% endcall %}
+    </div>
+{% endblock %}
+
+{% block side_text %}
+    Details
+{% endblock %}
+
+{% block side_content %}
+    <p>Click on an appointment to view details.</p>
+{% endblock %}
