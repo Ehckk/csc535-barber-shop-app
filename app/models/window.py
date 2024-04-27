@@ -18,7 +18,7 @@ weekdays = {
 	"Sun": 6
 }
 
-HOUR_HEIGHT = 118
+HOUR_HEIGHT = 58
 
 		
 class Window:

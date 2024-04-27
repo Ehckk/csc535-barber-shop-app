@@ -1,0 +1,9 @@
+{% extends "barber/calendar_day.html" %}
+
+{% block side_text %}
+    Weekly Availablility
+{% endblock %}
+
+{% block side_content %}
+    {{ table(caption="Weekly Schedule", data=schedule_data) }}
+{% endblock %}

@@ -17,7 +17,7 @@ def validate_appointment_time(
     return False
 
 
-HOUR_HEIGHT = 118
+HOUR_HEIGHT = 60
 
 
 class Appointment:

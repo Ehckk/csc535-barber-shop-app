@@ -1,6 +1,5 @@
 from flask import render_template
 from ...utils.decorators import has_role
-from ...models.appointment import Appointment
 from ...utils.user import current_user
 from ...queries.appointments import list_client_history
 from .. import  client

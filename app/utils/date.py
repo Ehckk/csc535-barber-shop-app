@@ -24,7 +24,7 @@ def month_start(current: date):
 
 
 def format_day(start_date: date):
-    return start_date.strftime("%B %d, %Y")
+    return start_date.strftime("%A, %B %d, %Y")
 
 
 def format_month_day(start_date: date):
@@ -61,9 +61,9 @@ date_names = defaultdict(format_day, {
 
 
 date_templates = {
-    Interval.DAY: "calendar_day.html",
-    Interval.WEEK: "calendar_week.html",
-    Interval.MONTH: "calendar_month.html"  
+    Interval.DAY: "calendar_day_{}.html",
+    Interval.WEEK: "calendar_week_{}.html",
+    Interval.MONTH: "calendar_month_{}.html"  
 }
 
 def prev_month_date(current: date):
@@ -154,9 +154,12 @@ def date_window(current: date, units):
     if units == Interval.MONTH:
         start = date(current.year, current.month, 1)
         end = next_month_date(current) - timedelta(days=1)
-    else:
+    elif units == Interval.WEEK:
         start = current - timedelta(days=current.weekday())
         end = current + timedelta(days=6)
+    else:
+        start = current
+        end = None
     return start, end
 
 
