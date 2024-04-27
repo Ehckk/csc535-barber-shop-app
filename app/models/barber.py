@@ -5,7 +5,7 @@ from .user import User
 from .window import Interval, Window
 from ..queries.schedules import list_schedule, schedule_for_date
 # from ..queries.appointments import create_appointment
-from ..utils.date import to_time
+from ..utils.date import to_time, date_window
 
 
 class BarberUser(User):
@@ -13,9 +13,7 @@ class BarberUser(User):
         pass
     
     def get_schedule(self, current_date: date, interval: str):
-        if interval == Interval.MONTH:  # If interval is month, set the date to the first of that month
-            current_date = date(current_date.year, current_date.month, 1)
-
+        current_date, _ = date_window(current_date, interval)
         windows = list_schedule(self.id, current_date, interval)  # List of dates and time slots
         schedule = defaultdict(OrderedDict)  # Use them to create a dictionary 
 

@@ -15,9 +15,7 @@
     <div class="home">
         {% call card_list('Upcoming Appointments') %}
             {% if not booked_appointments %}
-                <p class="card-list-text">
-                    No upcoming appointments to show
-                </p>
+                <p class="card-list-text">No upcoming appointments to show</p>
             {% else %}
                 {% for appointment in booked_appointments %}
                     {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}

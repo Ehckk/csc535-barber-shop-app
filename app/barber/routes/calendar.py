@@ -38,7 +38,7 @@ def calendar():
 
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
-    print(schedule.keys(), appointments, dates)
+    print(schedule.keys(), appointments.keys())
     return render_template(
         f"barber/{template}", 
         title=title,
