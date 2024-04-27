@@ -4,9 +4,9 @@
 {% extends "barber/calendar_month.html" %}
 
 {% block side_text %}
-    Days Unavailable
+    {{ selected }}
 {% endblock %}
 
 {% block side_content %}
-    {% comment %} {{ table(caption="Weekly Schedule", data=schedule_data) }} {% endcomment %}
+
 {% endblock %}

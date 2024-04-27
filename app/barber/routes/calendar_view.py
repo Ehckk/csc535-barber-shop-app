@@ -25,14 +25,15 @@ from .. import barber
 DATE_FORMAT = "%Y-%m-%d"
 
 
-@barber.route("/calendar", methods=["GET", "POST"])
+@barber.route("/calendar/<selected>", methods=["GET", "POST"])
 @has_role("Barber")
-def calendar():
+def calendar_view(selected):
     user: BarberUser = current_user()
 
     today = date.today().strftime(DATE_FORMAT)
     current = request.args.get("d", default=None, type=str) or today
     current = datetime.strptime(current, DATE_FORMAT).date()
+    selected = datetime.strptime(selected, DATE_FORMAT) 
 
     unit = request.args.get("unit", default=Interval.DAY, type=str)
     if unit not in interval_values:
@@ -80,7 +81,7 @@ def calendar():
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
 
-    template_key = "view"
+    template_key = "edit"
     print(unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
@@ -99,5 +100,6 @@ def calendar():
         schedule_data=schedule_data,
         unavailable_dates_data=unavailable_dates_data,
         unavailable_ranges_data=unavailable_ranges_data,
-        form=form
+        form=form,
+        selected=selected.strftime("%B %d, %Y")
     )

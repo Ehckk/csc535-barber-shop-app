@@ -1,6 +1,7 @@
 __all__ = [
     "home",
     "calendar",
+    "calendar_view",
     "view_appointment",
     "input_availability",
     "cancel_appointment",

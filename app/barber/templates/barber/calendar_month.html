@@ -14,12 +14,15 @@
             {% for day in days %}
                 {% if not day == None %}
                     {% set is_unavailable = day|string in unavailable %}
-                    <div class="calendar-month-day{% if is_unavailable %} unavailable{% endif %}">
+                    <a 
+                        href="{{ url_for('barber.calendar_view', selected=day|string, unit=unit, d=current) }}"
+                        class="calendar-month-day{% if is_unavailable %} unavailable{% endif %}"
+                    >
                         <span class="calendar-month-day-value">{{ day.day }}</span>
                         <div class="calendar-month-day-items">
 
                         </div>
-                    </div>
+                    </a>
                 {% else %}
                     <div class="calendar-month-day"></div>
                 {% endif %}
