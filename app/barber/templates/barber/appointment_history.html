@@ -8,19 +8,17 @@
 {% endblock %}
 
 {% block header_text %}
-    Your Appointment History, {{ user.first_name }} {{ user.last_name }}
+    Appointment History
 {% endblock %}
 
 {% block main_content %}
     <div class="history">
-        {% call card_list('Complete Appointment History') %}
+        {% call card_list() %}
             {% if not historical_appointments %}
-                <p class="card-list-text">
-                    No appointment history to show
-                </p>
+                <p class="card-list-text">No appointment history to show</p>
             {% else %}
                 {% for appointment in historical_appointments %}
-                    {{ appointment_card(appointment, appointment.id, url='barber.appointment_details') }}
+                    {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
                 {% endfor %}
             {% endif %}
         {% endcall %}

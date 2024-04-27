@@ -121,13 +121,14 @@ main.content {
 .dashboard-content {
     width: 100%;
     flex-grow: 1;
-    padding: 1rem;
+    padding: .5rem;
     display: flex;
     flex-direction: column;
 }
 
 .dashboard-header {
     display: flex;
+    margin-bottom: .25rem;
 }
 
 .dashboard-header-title {
@@ -142,7 +143,7 @@ main.content {
 
 .side-panel {
     min-width: 24rem;
-    padding: 1rem;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -169,7 +170,7 @@ main.content {
 .home {
     margin-top: .5rem;
     display: flex;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .center-text {
