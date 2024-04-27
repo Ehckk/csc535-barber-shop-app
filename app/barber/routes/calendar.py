@@ -16,7 +16,7 @@ from ...utils.date import (
     times_list, 
     weekdays
 )
-from ...utils.table import get_schedule_table
+from ...utils.table import get_schedule_table, get_unavailable_table
 from ...models.barber import BarberUser
 from ...models.window import Interval
 from .. import barber
@@ -55,8 +55,10 @@ def calendar():
     schedule_data = get_schedule_table(barber_schedule)
 
     barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
-    unavailable_data = {}
-    print(barber_unavailable_dates)
+    unavailable_dates_data = get_unavailable_table(barber_unavailable_dates, ranges=False)
+
+    barber_unavailable_ranges = availability.list_barber_unavailible_ranges(user.id, current, unit)
+    unavailable_ranges_data = get_unavailable_table(barber_unavailable_ranges)
 
     schedule = user.get_schedule(current, unit)
     appointments = calendar_appointments(user.id, current, unit)
@@ -78,6 +80,7 @@ def calendar():
         dates=dates,
         weekdays=weekdays,
         schedule_data=schedule_data,
-        unavailable_data=unavailable_data,
+        unavailable_dates_data=unavailable_dates_data,
+        unavailable_ranges_data=unavailable_ranges_data,
         form=form
     )

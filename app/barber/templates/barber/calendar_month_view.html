@@ -4,16 +4,16 @@
 {% extends "barber/calendar_month.html" %}
 
 {% block side_text %}
-    Days Unavailable
+    Availability
 {% endblock %}
 
 {% block side_content %}
-    {{ 
-        table(
-            caption="Unavailable",
-            data=unavailable_data
-        ) 
-    }}
+    {% if unavailable_dates_data|length > 0 %}
+        {{ table(caption="Dates Unavailable", data=unavailable_dates_data) }}
+    {% endif %}
+    {% if unavailable_ranges_data|length > 0 %}
+        {{ table(caption="Date Ranges Unavailable", data=unavailable_ranges_data) }}
+    {% endif %}
     <h3>Mark Days as Unavailable</h3>
     {{ render_form(form) }}
 {% endblock %}

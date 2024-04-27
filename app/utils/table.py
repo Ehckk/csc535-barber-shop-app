@@ -1,3 +1,5 @@
+from datetime import date
+
 from ..models.barber_service import BarberService
 from ..models.window import Window
 from .date import to_time
@@ -30,4 +32,13 @@ def get_schedule_table(barber_schedule: list[dict]):
         day_availability.append(window)
     availability_windows.append(day_availability)
     data = list(zip(day_names, availability_windows))
+    return data
+
+
+def get_unavailable_table(unavailable_dates: list[dict[str, date]], ranges=True):
+    start_dates = list(map(lambda s: [s['start_date']], unavailable_dates))
+    if not ranges:
+        return list(zip(start_dates))
+    end_dates = list(map(lambda s: [s['end_date']], unavailable_dates))
+    data = list(zip(start_dates, end_dates))
     return data

@@ -2,22 +2,27 @@
 {% extends "dashboard.html" %}
 
 {% block nav %}
-{{ nav_link(
-    link_url=url_for('client.client_home'),
-    icon_url=url_for('static', filename='icons/home.svg'),
-    text="Home"
-) }}
-{{ nav_link(
-    link_url=url_for('client.browse_barbers'),
-    icon_url=url_for('static', filename='icons/user.svg'),
-    text="Barbers"
-) }}
+{{ 
+    nav_link(
+        link_url=url_for('client.client_home'),
+        icon_url=url_for('static', filename='icons/home.svg'),
+        text="Home"
+    ) 
+}}
+{{ 
+    nav_link(
+        link_url=url_for('client.browse_barbers'),
+        icon_url=url_for('static', filename='icons/user.svg'),
+        text="Barbers"
+    ) 
+}}
 {{ 
     nav_link( 
-    link_url=url_for('client.client_appointment_history'),
-    icon_url=url_for('static', filename='icons/history.svg'),
-    text="History"
-) }}
+        link_url=url_for('client.client_appointment_history'),
+        icon_url=url_for('static', filename='icons/history.svg'),
+        text="History"
+    ) 
+}}
 {% endblock %}
 
 {% block dashboard %}
