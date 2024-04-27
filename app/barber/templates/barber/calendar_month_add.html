@@ -8,12 +8,5 @@
 {% endblock %}
 
 {% block side_content %}
-    {{ 
-        table(
-            caption="Unavailable",
-            data=unavailable_data
-        ) 
-    }}
-    <h3>Mark Days as Unavailable</h3>
-    {{ render_form(form) }}
+    {% comment %} {{ table(caption="Weekly Schedule", data=schedule_data) }} {% endcomment %}
 {% endblock %}

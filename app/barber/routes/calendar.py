@@ -1,6 +1,9 @@
-from datetime import date, datetime
-from flask import render_template, request
-from ...queries import schedules
+from datetime import date, datetime, timedelta
+from flask import flash, render_template, request
+
+from .forms.unavailable import UnavailableForm
+from .forms.schedule import ScheduleForm
+from ...queries import schedules, availability
 from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...utils.calendar import calendar_appointments
@@ -18,38 +21,52 @@ from ...models.barber import BarberUser
 from ...models.window import Interval
 from .. import barber
 
+DATE_FORMAT = "%Y-%m-%d"
+
 
 @barber.route("/calendar", methods=["GET", "POST"])
 @has_role("Barber")
 def calendar():
     user: BarberUser = current_user()
-    barber_schedule = schedules.barber_weekly_schedule(user.id)
-    schedule_data = get_schedule_table(barber_schedule)
 
-    has_availability = len(schedule_data) == 0
-    
+    today = date.today().strftime(DATE_FORMAT)
+    current = request.args.get("d", default=None, type=str) or today
+    current = datetime.strptime(current, DATE_FORMAT).date()
+
     unit = request.args.get("unit", default=Interval.DAY, type=str)
     if unit not in interval_values:
         unit = Interval.DAY
-    current = request.args.get("d", default=None, type=str)
-    if not current:
-        current = date.today()
-    else:
-        current = datetime.strptime(current, "%Y-%m-%d").date()
     prev_date, next_date = date_increments(current, unit)
-    
-    schedule = user.get_schedule(current, unit)
-        
-    appointments = calendar_appointments(user.id, current, unit)
-    title = date_names[unit](current)
-    template = date_templates[unit].format("view")
 
+    if unit == Interval.MONTH:
+        form = UnavailableForm()
+        date_field_kw = {"min": current, "max": next_date - timedelta(days=1)}
+        form.start_date.render_kw = date_field_kw
+        form.end_date.render_kw = date_field_kw
+        if form.validate_on_submit():
+            if form.start_date.data > form.end_date.data:
+                flash("End date cannot be before start date!", category="error")
+                # 
+    else:
+        form = ScheduleForm()
+        # if form.validate_on_submit():
+    
+    barber_schedule = schedules.barber_weekly_schedule(user.id)
+    schedule_data = get_schedule_table(barber_schedule)
+
+    barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
+    unavailable_data = {}
+    print(barber_unavailable_dates)
+
+    schedule = user.get_schedule(current, unit)
+    appointments = calendar_appointments(user.id, current, unit)
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
 
+    template_key = "view"
     return render_template(
-        f"barber/{template}", 
-        title=title,
+        f"barber/{date_templates[unit].format(template_key)}", 
+        title=date_names[unit](current),
         unit=unit,
         current=current.strftime("%Y-%m-%d"),
         prev={"unit": unit, "d": prev_date.strftime("%Y-%m-%d") },
@@ -60,5 +77,7 @@ def calendar():
         times=times,
         dates=dates,
         weekdays=weekdays,
-        schedule_data=schedule_data
+        schedule_data=schedule_data,
+        unavailable_data=unavailable_data,
+        form=form
     )
