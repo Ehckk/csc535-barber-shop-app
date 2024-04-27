@@ -6,7 +6,7 @@ from .forms.schedule import ScheduleForm
 from ...queries import schedules, availability
 from ...utils.decorators import has_role
 from ...utils.user import current_user
-from ...utils.calendar import calendar_appointments
+from ...utils.calendar import calendar_appointments, get_unavailable
 from ...utils.date import (
     date_names, 
     dates_list, 
@@ -72,10 +72,13 @@ def calendar():
 
     schedule = user.get_schedule(current, unit)
     appointments = calendar_appointments(user.id, current, unit)
+    unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
+
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
 
     template_key = "view"
+    print(unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
@@ -86,6 +89,7 @@ def calendar():
         user=user, 
         schedule=schedule,
         appointments=appointments,
+        unavailable=unavailable,
         times=times,
         dates=dates,
         weekdays=weekdays,
