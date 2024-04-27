@@ -9,4 +9,6 @@
 
 {% block side_content %}
     {{ table(caption="Weekly Schedule", data=schedule_data) }}
+    <h3>Add Availability</h3>
+    {{ render_form(form) }}
 {% endblock %}

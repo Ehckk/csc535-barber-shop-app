@@ -50,16 +50,14 @@ def calendar():
     else:
         form = ScheduleForm()
         if form.validate_on_submit():
-            weekday_id = int(form.weekday.data)
             start_time = form.start_time.data
             end_time = form.end_time.data
-            if not start_time < end_time:
-                flash("End time must be after start time!", category="error")
-            elif schedules.check_existing(weekday_id, user.id, start_time, end_time):
-                flash("This availability is already set!", category="error")
-            else:
+            if start_time < end_time:
+                weekday_id = int(form.weekday.data)
                 schedules.create_schedule(weekday_id, user.id, start_time, end_time)
                 flash("Availability updated!", category="success")
+            else:
+                flash("End time must be after start time!", category="error")
     
     barber_schedule = schedules.barber_weekly_schedule(user.id)
     schedule_data = get_schedule_table(barber_schedule)

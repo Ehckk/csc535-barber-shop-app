@@ -5,6 +5,8 @@ from ..utils.date import to_time
 from ..models.window import Window
 from .. import db
 
+TIME_FORMAT = '%H:%M:%S'
+
 
 def barber_weekly_schedule(barber_id: int):
     query = """
@@ -41,12 +43,81 @@ def list_schedule(
     return results
 
 
+def check_existing(
+    weekday_id: int,
+    barber_id: int,
+    start_time: time,
+    end_time: time
+):
+    query = """
+        SELECT schedule_id
+        FROM csc535_barber.schedule
+        WHERE barber_id = %(barber_id)s
+        AND weekday_id = %(weekday_id)s
+        AND %(start_time)s BETWEEN start_time AND end_time 
+        AND %(end_time)s BETWEEN start_time AND end_time
+    """
+    results = db.execute(query, {
+        "barber_id": int(barber_id), 
+        "weekday_id": int(weekday_id),
+        "start_time": start_time.strftime(TIME_FORMAT),
+        "end_time": end_time.strftime(TIME_FORMAT)
+    }) or []
+    exists = len(results) > 0
+    print(query, results, exists)
+    return exists
+
+
+def check_overlapping(
+    weekday_id: int,
+    barber_id: int,
+    start_time: time,
+    end_time: time
+):
+    query = """
+        SELECT 
+            *,
+            MIN(start_time) OVER () AS min_start_time,
+            MAX(end_time) OVER () AS max_end_time
+        FROM csc535_barber.schedule
+        WHERE barber_id = %(barber_id)s AND weekday_id = %(weekday_id)s
+        AND (
+            start_time BETWEEN %(start_time)s AND %(end_time)s OR
+            end_time BETWEEN %(start_time)s AND %(end_time)s
+        )
+        ORDER BY schedule_id
+    """
+
+    overlapping = db.execute(query, {
+        "barber_id": int(barber_id), 
+        "weekday_id": int(weekday_id),
+        "start_time": start_time.strftime(TIME_FORMAT),
+        "end_time": end_time.strftime(TIME_FORMAT)
+    })
+    if len(overlapping) > 1:
+        first_overlapping = overlapping[0]
+        update_schedule(
+            schedule_id=first_overlapping["schedule_id"],
+            new_start=min(to_time(first_overlapping["min_start_time"]), start_time),
+            new_end=max(to_time(first_overlapping["max_end_time"]), end_time)
+        )
+        if len(overlapping) > 1:
+            remaining_ids = list(map(lambda s: s["schedule_id"], overlapping[1:]))
+            for schedule_id in remaining_ids:
+                delete_schedule(schedule_id)
+        return False
+    return True
+
+
 def create_schedule(
     weekday_id: int,
     barber_id: int,
     start_time: time,
     end_time: time
 ):
+    if not check_overlapping(weekday_id, barber_id, start_time, end_time):
+        return
+    
     query = """
         INSERT INTO csc535_barber.`schedule` VALUES (
             DEFAULT, 
@@ -59,8 +130,8 @@ def create_schedule(
     db.execute(query, {
         "barber_id": barber_id,
         "weekday_id": weekday_id,
-        "start_time": start_time.strftime('%H:%M'),
-        "end_time": end_time.strftime('%H:%M')
+        "start_time": start_time.strftime(TIME_FORMAT),
+        "end_time": end_time.strftime(TIME_FORMAT)
     })
     db.commit()
     
@@ -78,8 +149,8 @@ def update_schedule(
     """
     db.execute(query, {
         "schedule_id": schedule_id,
-        "start_time": new_start.strftime('%H:%M'),
-        "end_time": new_end.strftime('%H:%M')
+        "start_time": new_start.strftime(TIME_FORMAT),
+        "end_time": new_end.strftime(TIME_FORMAT)
     })
     db.commit()
  
