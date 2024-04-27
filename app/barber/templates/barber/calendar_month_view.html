@@ -1,0 +1,12 @@
+{% from "_render_form.html" import render_form %}
+{% from "_tables.html" import table %}
+
+{% extends "barber/calendar_month.html" %}
+
+{% block side_text %}
+    Weekly Availablility
+{% endblock %}
+
+{% block side_content %}
+    {{ table(caption="Weekly Schedule", data=schedule_data) }}
+{% endblock %}
