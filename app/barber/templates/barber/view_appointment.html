@@ -41,10 +41,10 @@
             </a>     
         </div>
         <div class="side-buttons"> 
-            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
+            <a href="{{ url_for('barber.reschedule_appointment', appt_id=appointment.id) }}">
                 <button class="warning-1 text-light-2 btn-large">Reschedule</button>
             </a>
-            <a href="">
+            <a href="{{ url_for('barber.cancel_appointment', appt_id=appointment.id) }}">
                 <button class="error-1 text-light-2 btn-large">Cancel</button>
             </a>
         </div>
