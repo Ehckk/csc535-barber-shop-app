@@ -9,5 +9,8 @@
         <p>
             Don't have an account? <a href="{{ url_for('auth.register') }}">Create one</a>
         </p>
+        <p>
+            Forgot your password? <a href="{{ url_for('auth.request_reset') }}">Reset Here</a>
+        </p>
     {% endcall %}
 {% endblock %}
