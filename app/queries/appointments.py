@@ -193,6 +193,7 @@ def update_appointment(
         "appointment_id": appointment_id
     })
     db.commit()
+    return retrieve_appointment(appointment_id)
 
 
 def delete_appointment(appointment_id: int):

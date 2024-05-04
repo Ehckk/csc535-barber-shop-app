@@ -34,7 +34,7 @@
             </a>     
         </div>
         <div class="side-buttons"> 
-            <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+            <a href="{{ url_for('client.reschedule_appointment', appt_id=appointment.id) }}">
                 <button class="warning-1 text-light-2 btn-large">Reschedule</button>
             </a>
             <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
