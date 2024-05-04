@@ -32,8 +32,9 @@ def create_if_valid(
         start_time=to_time(start_time),
         duration=duration
     )
-    for service_id in appointment:
+    for service_id in service_ids:
         services.add_appointment_service(
             appointment_id=appointment.id,
             service_id=service_id
         )
+
