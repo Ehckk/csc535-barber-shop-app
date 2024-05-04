@@ -47,7 +47,10 @@ class EditServicesForm(FlaskForm):
 class RequestAppointmentForm(FlaskForm):
     services = SelectMultipleField(label="Services")
     start_time = TimeField('Start Time', validators=[DataRequired()], format='%H:%M')
-    duration = IntegerField('Duration (minutes)', validators=[DataRequired(), NumberRange(min=1)])
+    duration = IntegerField('Duration (minutes)', validators=[
+        DataRequired(),
+        NumberRange(min=15, message="Duration must be at least 15 minutes.")
+    ])
     cancel = SubmitField(label="Back")
     submit = SubmitField(label="Book")
     
