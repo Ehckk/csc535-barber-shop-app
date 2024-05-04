@@ -1,4 +1,6 @@
 from flask import flash, redirect, url_for
+
+from ...utils.email import send_mail
 from ...utils.decorators import has_role
 from ...queries import appointments
 from ...utils.user import current_user
@@ -17,11 +19,37 @@ def approve_request(appt_id):
     else:
         if not appointment.is_approved:
             appointments.approve_appointment(appt_id)
-            # TODO email
+
+            message = """
+                A requested appointment has been approved.
+
+                Appointment: {appt}
+            """.format(appt=str(appointment))
+            send_mail(
+                subject="Appointment Request Approved",
+                recipients=[
+                    appointment.barber.email,
+                    appointment.client.email
+                ],
+                body=message
+            )
+
             flash('Appointment Booked!', category="success")
             for conflicting_appointment in conflicting_appointments:
                 appointments.delete_appointment(conflicting_appointment.id)
-                # TODO email
+                message = """
+                    A requested appointment has been declined.
+
+                    Appointment: {appt}
+                """.format(appt=str(conflicting_appointment))
+                send_mail(
+                    subject="Appointment Request Declined",
+                    recipients=[
+                        conflicting_appointment.barber.email,
+                        conflicting_appointment.client.email
+                    ],
+                    body=message
+                )
         else:
             reason = 'This appointment is already booked'
     if reason:

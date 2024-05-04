@@ -2,6 +2,7 @@ from flask import flash, redirect, url_for
 from ...utils.decorators import has_role
 from ...queries.appointments import retrieve_appointment, delete_appointment
 from ...utils.user import current_user
+from ...utils.email import send_mail
 from .. import barber
 
 
@@ -17,7 +18,22 @@ def deny_request(appt_id):
     else:
         if not appointment.is_approved:
             delete_appointment(appt_id)
-            flash('Appointment Denied!', category="success")
+
+            message = """
+                A requested appointment has been declined.
+
+                Appointment: {appt}
+            """.format(appt=str(appointment))
+            send_mail(
+                subject="Appointment Request Declined",
+                recipients=[
+                    appointment.barber.email,
+                    appointment.client.email
+                ],
+                body=message
+            )
+
+            flash('Appointment Declied!', category="success")
             return redirect(url_for("barber.barber_home"))
         else:
             reason = 'This appointment is already booked'
