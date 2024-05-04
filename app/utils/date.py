@@ -67,6 +67,8 @@ date_templates = {
 }
 
 def prev_month_date(current: date):
+    if current.month == date.today().month:
+        return None
     prev_month = current.month - 1
     if prev_month == 0:
         return date(current.year - 1, 12, 1)
@@ -86,15 +88,18 @@ def date_increments(current: date, units):
             prev_month_date(current),
             next_month_date(current)
         )
+    today = date.today()
     if units == Interval.WEEK:
-        return (
-            current - timedelta(weeks=1),
-            current + timedelta(weeks=1)
-        )
-    return (
-        current - timedelta(days=1),
-        current + timedelta(days=1)
-    )
+        prev_week = current - timedelta(weeks=1)
+        next_week = current + timedelta(weeks=1)
+        if prev_week < today - timedelta(days=today.weekday()):
+            prev_week = None
+        return prev_week, next_week 
+    prev_day = current - timedelta(days=1)
+    next_day = current + timedelta(days=1)
+    if prev_day < date.today():
+        prev_day = None
+    return prev_day, next_day
 
 
 def times_list(schedule, appointments):

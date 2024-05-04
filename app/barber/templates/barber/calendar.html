@@ -11,11 +11,13 @@
 {% block main_content %}
 <div class="calendar-header">
     <div class="calendar-controls">
-        <a class="link-btn" href="{{ url_for('barber.calendar', **prev) }}">
-            <button class="btn-square primary-1 text-light-2">
-                <
-            </button>
-        </a>
+        {% if prev["d"] %}
+            <a class="link-btn" href="{{ url_for('barber.calendar', **prev) }}">
+                <button class="btn-square primary-1 text-light-2">
+                    <
+                </button>
+            </a>
+        {% endif %}
         <a class="link-btn" href="{{ url_for('barber.calendar', **next) }}">
             <button class="btn-square primary-1 text-light-2">
                 >

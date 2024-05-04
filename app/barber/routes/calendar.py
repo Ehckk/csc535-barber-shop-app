@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from flask import flash, render_template, request
+from flask import flash, redirect, render_template, request, url_for
 
 from .forms.unavailable import UnavailableForm
 from .forms.schedule import ScheduleForm
@@ -30,13 +30,22 @@ DATE_FORMAT = "%Y-%m-%d"
 def calendar():
     user: BarberUser = current_user()
 
-    today = date.today().strftime(DATE_FORMAT)
-    current = request.args.get("d", default=None, type=str) or today
+    today = date.today()
+    current = request.args.get("d", default=None, type=str) or today.strftime(DATE_FORMAT)
     current = datetime.strptime(current, DATE_FORMAT).date()
-
     unit = request.args.get("unit", default=Interval.DAY, type=str)
     if unit not in interval_values:
         unit = Interval.DAY
+    if unit == Interval.MONTH:
+        today_month = date(today.year, today.month, 1)
+        if current < today_month:
+            return redirect(url_for("barber.calendar", unit=Interval.MONTH, d=today))
+    elif unit == Interval.WEEK:
+        if current < today - timedelta(days=today.weekday()):
+            return redirect(url_for("barber.calendar", unit=Interval.WEEK, d=today))     
+    elif current < today:
+        return redirect(url_for("barber.calendar", unit=Interval.DAY, d=today))     
+        
     prev_date, next_date = date_increments(current, unit)
 
     if unit == Interval.MONTH:
@@ -87,8 +96,8 @@ def calendar():
         title=date_names[unit](current),
         unit=unit,
         current=current.strftime("%Y-%m-%d"),
-        prev={"unit": unit, "d": prev_date.strftime("%Y-%m-%d")},
-        next={"unit": unit, "d": next_date.strftime("%Y-%m-%d")},
+        prev={"unit": unit, "d": prev_date},
+        next={"unit": unit, "d": next_date},
         user=user, 
         schedule=schedule,
         appointments=appointments,
@@ -99,5 +108,6 @@ def calendar():
         schedule_data=schedule_data,
         unavailable_dates_data=unavailable_dates_data,
         unavailable_ranges_data=unavailable_ranges_data,
-        form=form
+        form=form,
+        today=today
     )
