@@ -232,3 +232,13 @@ def retrieve_conflicting(appointment: Appointment, is_booked=False):
         "end_time": end_time,
     })
     return list_appointments(results)
+
+
+def cancel_prev_unbooked():
+    query = """
+        DELETE FROM csc535_barber.`appointment` 
+        WHERE `is_approved` = 0
+        AND NOW() < TIMESTAMP(`booked_date`, `start_time`);
+    """
+    db.execute(query)
+    db.commit()
