@@ -10,5 +10,6 @@ __all__ = [
     "view_service",
     "approve_request",
     # "update_appointment",
-    "deny_request"
+    "deny_request",
+    'reschedule_appointment'
 ]

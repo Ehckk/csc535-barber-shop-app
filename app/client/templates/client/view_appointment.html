@@ -42,7 +42,10 @@
             </a>
         </div>
     {% else %}
-        <div class="side-buttons"> 
+        <div class="side-buttons">
+            <a href="{{ url_for('client.reschedule_appointment', appt_id=appointment.id) }}">
+                <button class="warning-1 text-light-2 btn-large">Reschedule</button>
+            </a>
             <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
                 <button class="error-1 text-light-2 btn-large">Cancel</button>
             </a>

@@ -29,4 +29,13 @@
 {% endblock %}
 
 {% block side_content %}
+{% call card_list('Requested Appointments') %}
+    {% if not requested_appointments %}
+        <p class="card-list-text">No requested appointments to show</p>
+    {% else %}
+        {% for appointment in requested_appointments %}
+            {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
+        {% endfor %}
+    {% endif %}
+{% endcall %}
 {% endblock %}

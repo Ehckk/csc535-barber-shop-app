@@ -37,3 +37,4 @@ def create_if_valid(
             appointment_id=appointment.id,
             service_id=service_id
         )
+
