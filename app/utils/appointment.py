@@ -4,6 +4,7 @@ from ..models.barber import BarberUser
 from ..models.appointment import Appointment
 from ..queries import appointments, services
 from ..utils.date import to_time
+from ..utils.email import send_mail
 
 
 def create_if_valid(
@@ -32,6 +33,20 @@ def create_if_valid(
         start_time=to_time(start_time),
         duration=duration
     )
+    message = """
+        An appointment has been requested.
+
+        Appointment: {appt}
+    """.format(appt=str(appointment))
+    send_mail(
+        subject="Appointment Requested",
+        recipients=[
+            appointment.barber.email,
+            appointment.client.email
+        ],
+        body=message
+    )
+    
     for service_id in service_ids:
         services.add_appointment_service(
             appointment_id=appointment.id,
