@@ -188,7 +188,7 @@ def update_appointment(
     """
     db.execute(query, {
         "new_date": new_date.strftime('%Y-%m-%d'),
-        "new_time": new_time.strftime('%H-%M'),
+        "new_time": new_time.strftime('%H:%M'),
         "new_duration": new_duration,
         "appointment_id": appointment_id
     })
