@@ -20,7 +20,7 @@
                 </p>
             {% else %}
                 {% for appointment in historical_appointments %}
-                    {{ appointment_card(appointment, appt_id, url='client.appointment_details') }}
+                    {{ appointment_card(appointment, appt_id, url='client.history_details') }}
                 {% endfor %}
             {% endif %}
         {% endcall %}

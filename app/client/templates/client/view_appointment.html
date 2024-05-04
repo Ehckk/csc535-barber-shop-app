@@ -17,7 +17,7 @@
     </div>
     <div class="side-container">
         <p>Barber: {{ appointment.barber.display_name() }}</p>
-        <p>{{ appointment.booked_date }}</p>
+        <p>{{ appointment.booked_date|display_date }}</p>
         <p>{{ appointment.start_time }}</p>
         <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
     </div>

@@ -18,7 +18,7 @@
                 <p class="card-list-text">No appointment history to show</p>
             {% else %}
                 {% for appointment in historical_appointments %}
-                    {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
+                    {{ appointment_card(appointment, appt_id, url='barber.history_details') }}
                 {% endfor %}
             {% endif %}
         {% endcall %}
