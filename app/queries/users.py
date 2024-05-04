@@ -123,3 +123,12 @@ def update_password(email: str, new_password: str):
     """
     db.execute(query, {"email": email, "new_password": new_password})
     db.commit()
+
+def email_exists(email: str) -> bool:
+    query = """
+        SELECT 1 
+        FROM csc535_barber.`user` 
+        WHERE `email` = %(email)s;
+    """
+    results = db.execute(query, {"email": email})
+    return len(results) > 0  

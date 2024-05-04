@@ -20,8 +20,6 @@ def request_reset():
             serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
             token = serializer.dumps(email)
             reset_url = url_for('auth.reset_password', token=token, _external=True)
-            
-            # Send the password reset email
             send_password_reset_email(email, reset_url)
             
             flash('Please check your email for the password reset link.')
@@ -32,15 +30,14 @@ def request_reset():
 def reset_password(token):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
-        email = serializer.loads(token, max_age=3600)  # Token expires after 1 hour
+        email = serializer.loads(token, max_age=3600)
     except SignatureExpired:
         flash("Invalid Token", category="error")
         return redirect(url_for("auth.login")) 
 
     if request.method == "POST":
         new_password = request.form['new_password']
-        hashed_password = generate_password_hash(new_password)
-        update_user_password(email, hashed_password)
+        update_user_password(email, new_password)
         flash('Your password has been updated.')
         return redirect(url_for('auth.login'))
 
