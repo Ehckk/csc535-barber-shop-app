@@ -17,7 +17,7 @@
                 </p>
             {% else %}
                 {% for appointment in appointments %}
-                    {{ appointment_card(appointment, appt_id, url='client.appointment_details') }}
+                    {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
                 {% endfor %}
             {% endif %}
         {% endcall %}
@@ -28,7 +28,7 @@
                 </p>
             {% else %}
                 {% for appointment in requested_appointments %}
-                    {{ appointment_card(appointment, appt_id, url='client.appointment_details') }}
+                    {{ appointment_card(appointment, appt_id, url='barber.appointment_details') }}
                 {% endfor %}
             {% endif %}
         {% endcall %}
