@@ -94,7 +94,8 @@ def check_overlapping(
         "start_time": start_time.strftime(TIME_FORMAT),
         "end_time": end_time.strftime(TIME_FORMAT)
     })
-    if len(overlapping) > 1:
+    print(overlapping)
+    if len(overlapping) > 0:
         first_overlapping = overlapping[0]
         update_schedule(
             schedule_id=first_overlapping["schedule_id"],

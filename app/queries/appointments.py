@@ -42,6 +42,7 @@ def appointments_between_dates(barber_id: int, start: date, end: date):
         "start": start,
         "end": end
     })
+    print(results)
     return list_appointments(results)
 
 

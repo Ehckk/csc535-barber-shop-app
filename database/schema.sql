@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`schedule` (
 INSERT INTO csc535_barber.`schedule` VALUES 
 	(DEFAULT, 1, 0, '09:30', '12:30'),
     (DEFAULT, 1, 0, '13:30', '16:30'),
-    (DEFAULT, 1, 1, '10:30', '15:30'),
+    (DEFAULT, 1, 1, '10:00', '15:30'),
     (DEFAULT, 1, 2, '08:00', '09:00'),
     (DEFAULT, 1, 2, '09:30', '12:30'),
     (DEFAULT, 1, 2, '13:30', '16:30'),
@@ -221,30 +221,36 @@ overlapping_appointments AS (
 		) AS `next_appt_start` -- When does the next appointment begin
 	FROM appointments
 	WHERE `appointment_id` IS NOT NULL
+    AND `booked_date` = '2024-05-07'
+),
+availability AS (
+	SELECT 
+		`barber_id`,
+		`weekday_id`,
+		IF(`last_appt_end` IS NULL, `start_time`, `last_appt_end`) AS `start_time`,
+		`appt_start` AS `end_time`,
+		`booked_date`
+	FROM overlapping_appointments
+	UNION
+	SELECT 
+		`barber_id`, 
+		`weekday_id`,
+		`appt_end` AS `start_time`,
+		IF(`next_appt_start` IS NULL, `end_time`, `next_appt_start`) AS `end_time`,
+		`booked_date`
+	FROM overlapping_appointments
+	UNION 
+	SELECT
+		`barber_id`,
+		`weekday_id`,
+		`start_time`,
+		`end_time`,
+		NULL AS `booked_date`
+	FROM csc535_barber.`vw_barber_schedule`
 )
-SELECT 
-    `barber_id`,
-    `weekday_id`,
-    IF(`last_appt_end` IS NULL, `start_time`, `last_appt_end`) AS `start_time`,
-    `appt_start` AS `end_time`,
-    `booked_date`
-FROM overlapping_appointments
-UNION
-SELECT 
-	`barber_id`, 
-	`weekday_id`,
-	`appt_end` AS `start_time`,
-    IF(`next_appt_start` IS NULL, `end_time`, `next_appt_start`) AS `end_time`,
-    `booked_date`
-FROM overlapping_appointments
-UNION 
-SELECT
-    `barber_id`,
-    `weekday_id`,
-    `start_time`,
-    `end_time`,
-    NULL AS `booked_date`
-FROM csc535_barber.`vw_barber_schedule`
+SELECT *
+FROM availability
+WHERE TIMEDIFF(`end_time`, `start_time`) > 0
 ORDER BY `barber_id`, `weekday_id`, `start_time`, `end_time`;
 
 DELIMITER //

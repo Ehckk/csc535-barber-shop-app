@@ -29,6 +29,7 @@ class BarberUser(User):
                     end_time=to_time(window["end_time"])
                 )
             )
+        print(list(map(str, schedule.get('2024-05-07', {}).get('12:00:00', []))))
         return schedule
         
 
