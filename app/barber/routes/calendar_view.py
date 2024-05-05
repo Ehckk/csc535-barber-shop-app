@@ -92,7 +92,8 @@ def calendar_view(selected):
     dates = dates_list(current, unit)
 
     template_key = "edit"
-    print(unavailable)
+    is_unavailable = availability.has_unavailability_for_date(user.id, selected)
+    print(selected, is_unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),

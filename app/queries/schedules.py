@@ -64,7 +64,6 @@ def check_existing(
         "end_time": end_time.strftime(TIME_FORMAT)
     }) or []
     exists = len(results) > 0
-    print(query, results, exists)
     return exists
 
 
@@ -94,7 +93,6 @@ def check_overlapping(
         "start_time": start_time.strftime(TIME_FORMAT),
         "end_time": end_time.strftime(TIME_FORMAT)
     })
-    print(overlapping)
     if len(overlapping) > 0:
         first_overlapping = overlapping[0]
         update_schedule(

@@ -8,5 +8,16 @@
 {% endblock %}
 
 {% block side_content %}
-
+    {% set day_text = 'unavailable' if is_available else 'available' %}
+    <p>You are <b>{{ day_text }}</b></p>
+    {% if not is_available %}
+        <div class="side-buttons">
+            <button class="error-1 text-light-1">Mark as Unavailable</button>
+        </div>
+        <p>This will <b class="text-error-1">cancel</b> any appointments on this day</p>
+    {% else %}
+        <div class="side-buttons">
+            <button class="info-1 text-light-1">Mark as Available</button>
+        </div>
+    {% endif %}
 {% endblock %}

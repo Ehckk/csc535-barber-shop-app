@@ -50,15 +50,23 @@ def calendar():
 
     if unit == Interval.MONTH:
         form = UnavailableForm()
-        date_field_kw = {"min": current, "max": next_date - timedelta(days=1)}
-        form.start_date.render_kw = date_field_kw
-        form.end_date.render_kw = date_field_kw
+        form.start_date.render_kw = {"min": today, "max": next_date - timedelta(days=1)}
+        form.end_date.render_kw = {"min": today}
         if form.validate_on_submit():
-            if form.start_date.data > form.end_date.data:
+            start_date = form.start_date.data 
+            end_date = form.end_date.data
+            if end_date == start_date:
+                end_date = None
+
+            if end_date and start_date > end_date:
                 flash("End date cannot be before start date!", category="error")
+            elif end_date and availability.has_unavailability_for_range(user.id, start_date, end_date):
+                flash("These dates have already been marked as unavailable!", category="error")
+            elif not end_date and availability.has_unavailability_for_date(user.id, start_date):
+                flash("These dates have already been marked as unavailable!", category="error")
             else:
-                availability.update_availability(weekday_id, user.id, start_time, end_time)
-                flash("Unavailable days updated!", category="success")               
+                availability.create_unavailable_range(user.id, start_date, end_date)
+                flash("Availability updated!", category="success")               
     else:
         form = ScheduleForm()
         if form.validate_on_submit():
@@ -90,7 +98,6 @@ def calendar():
     dates = dates_list(current, unit)
 
     template_key = "view"
-    print(unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
