@@ -41,7 +41,6 @@ def calendar_view(selected):
     prev_date, next_date = date_increments(current, unit)
 
     barber_schedule = schedules.barber_weekly_schedule(user.id, unit, selected)
-    print(barber_schedule)
     schedule_data = get_schedule_table(barber_schedule)
 
     booked_date = selected
@@ -57,7 +56,6 @@ def calendar_view(selected):
     schedule = user.get_schedule(selected, unit)
     barber_appointments = calendar_appointments(user.id, selected, unit)
     unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
-    print(schedule[str(selected)], barber_appointments[str(selected)])
 
     times = times_list(schedule, barber_appointments)
     dates = dates_list(current, unit)
@@ -98,7 +96,9 @@ def calendar_unavailable(selected: str):
     selected = datetime.strptime(selected, DATE_FORMAT).date()
     current = request.args.get("d", default=None, type=str) or today.strftime(DATE_FORMAT)
     current = datetime.strptime(current, DATE_FORMAT).date()
-    unit = Interval.MONTH
+    unit = request.args.get("unit", default=Interval.DAY, type=str)
+    if unit not in interval_values - {Interval.WEEK}:
+        unit = Interval.DAY
 
     if availability.has_unavailability_for_date(user.id, selected):
         selected_fmt = selected.format("%B %d, %Y")
@@ -106,6 +106,8 @@ def calendar_unavailable(selected: str):
     else:
         availability.insert_unavailable_range(user.id, selected, None)
         flash("Availability updated", category="success")
+    if unit == Interval.DAY:
+        return redirect(url_for("barber.calendar", unit=unit, d=current))
     return redirect(url_for("barber.calendar_view", selected=selected, unit=unit, d=current))
 
 
@@ -118,7 +120,9 @@ def calendar_available(selected: str):
     selected = datetime.strptime(selected, DATE_FORMAT).date()
     current = request.args.get("d", default=None, type=str) or today.strftime(DATE_FORMAT)
     current = datetime.strptime(current, DATE_FORMAT).date()
-    unit = Interval.MONTH
+    unit = request.args.get("unit", default=Interval.DAY, type=str)
+    if unit not in interval_values - {Interval.WEEK}:
+        unit = Interval.DAY
 
     if not availability.has_unavailability_for_date(user.id, selected):
         selected_fmt = selected.format("%B %d, %Y")
@@ -126,6 +130,8 @@ def calendar_available(selected: str):
     else:
         availability.mark_available(user.id, selected)
         flash("Availability updated", category="success")
+    if unit == Interval.DAY:
+        return redirect(url_for("barber.calendar", unit=unit, d=current))
     return redirect(url_for("barber.calendar_view", selected=selected, unit=unit, d=current))
 
 

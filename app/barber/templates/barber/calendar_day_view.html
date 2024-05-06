@@ -13,7 +13,7 @@
     {% set btn_text = 'available' if is_unavailable else 'unavailable' %}
     {% set btn_class = 'info-1' if is_unavailable else 'error-1' %}
     {% set btn_url_name = "barber.calendar_available" if is_unavailable else "barber.calendar_unavailable" %}
-    {% set btn_url = url_for(btn_url_name, selected=selected, unit=unit, d=current) %}
+    {% set btn_url = url_for(btn_url_name, selected=current, unit=unit, d=current) %}
     <div class="side-content">
         <p>You are <b class="{{ day_class }}">{{ day_text }}</b></p>
         <div class="side-content">

@@ -91,6 +91,7 @@ def calendar():
 
     barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
     unavailable_dates_data = get_unavailable_table(barber_unavailable_dates, ranges=False)
+    print(barber_unavailable_dates)
 
     barber_unavailable_ranges = availability.list_barber_unavailible_ranges(user.id, current, unit)
     unavailable_ranges_data = get_unavailable_table(barber_unavailable_ranges)

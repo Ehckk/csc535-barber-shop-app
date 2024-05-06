@@ -118,7 +118,9 @@ INSERT INTO csc535_barber.`appointment` VALUES
     (DEFAULT, 1, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '11:30', 30, 0),
     (DEFAULT, 1, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '12:00', 30, 0),
     (DEFAULT, 1, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '12:30', 30, 0),
-	(DEFAULT, 1, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '11:00', 60, 0);
+	(DEFAULT, 1, 3, DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '11:00', 60, 0),
+	(DEFAULT, 1, 2, DATE_SUB(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 3 WEEK), '11:00', 60, 1),
+    (DEFAULT, 1, 3, DATE_SUB(DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) + 1 DAY), INTERVAL 2 WEEK), '13:30', 60, 1);
 
 CREATE TABLE csc535_barber.`service` (
 	`service_id` INT NOT NULL AUTO_INCREMENT,
@@ -151,6 +153,7 @@ INSERT INTO csc535_barber.`barber_services` VALUES
     (2, 4, 30, DEFAULT), 
     (3, 4, 35, DEFAULT), 
     (4, 4, 25, DEFAULT);
+;
 
 CREATE TABLE csc535_barber.`appointment_services` (
 	`service_id` INT NOT NULL,
@@ -173,7 +176,9 @@ INSERT INTO csc535_barber.`appointment_services` VALUES
 	(3, 8), 
     (4, 9), 
     (3, 10),
-	(3, 11);
+	(3, 11),
+    (3, 12),
+    (3, 13);
 
 CREATE VIEW csc535_barber.`vw_barber_schedule` AS
 SELECT 
@@ -221,7 +226,6 @@ overlapping_appointments AS (
 		) AS `next_appt_start` -- When does the next appointment begin
 	FROM appointments
 	WHERE `appointment_id` IS NOT NULL
-    AND `booked_date` = '2024-05-07'
 ),
 availability AS (
 	SELECT 

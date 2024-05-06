@@ -41,6 +41,7 @@ def list_barber_unavailible_ranges(barber_id: int, current: date, units: str):
 
 def list_barber_unavailible_dates(barber_id: int, current: date, units: str):
     start_date, end_date = date_window(current, units)
+    print(start_date, end_date)
     query = """
         SELECT start_date, end_date 
         FROM csc535_barber.unavailable
@@ -51,7 +52,7 @@ def list_barber_unavailible_dates(barber_id: int, current: date, units: str):
     results = db.execute(query, {
         "barber_id": int(barber_id), 
         "start_date": str(start_date), 
-        "end_date": str(end_date), 
+        "end_date": str(end_date or start_date), 
     })
     if not results:
         return []
@@ -152,7 +153,7 @@ def get_unavailability_for_date(barber_id: int, target_date: date):
         WHERE barber_id = %(barber_id)s
         AND start_date = %(target_date)s
         AND end_date IS NULL
-        UNION
+        UNION ALL
         SELECT * FROM csc535_barber.unavailable
         WHERE barber_id = %(barber_id)s
         AND %(target_date)s BETWEEN start_date AND end_date
