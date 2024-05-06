@@ -13,6 +13,7 @@ def barber_daily_schedule_for_time(barber_id: int, current: date, start_time: ti
     query = """
         SELECT 
             W.*,
+            S.schedule_id,
             S.`start_time`,
             S.`end_time`
         FROM csc535_barber.`schedule` AS S

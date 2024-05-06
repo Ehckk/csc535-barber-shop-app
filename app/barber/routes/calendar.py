@@ -148,6 +148,7 @@ def calendar_window(start: str):
         url_name = "barber.calendar"
         return redirect(url_for(url_name, unit=unit, d=current))
     current_window = windows[0]
+    schedule_id = current_window["schedule_id"]
     start_time = to_time(current_window["start_time"])
     end_time = to_time(current_window["end_time"])
     weekday_id = current_window["weekday_id"]
@@ -160,11 +161,11 @@ def calendar_window(start: str):
         new_end_time = form.end_time.data
         if not new_start_time < new_end_time:
             flash("End time must be after start time!", category="error")
-        elif schedules.check_existing(weekday_id, user.id, new_start_time, new_end_time):
-            flash("This availability is already set!", category="error")
         else:
-            schedules.create_schedule(weekday_id, user.id, new_start_time, new_end_time)
             # Cancel appointments outside range
+            schedules.delete_schedule(schedule_id)
+            schedules.create_schedule(weekday_id, user.id, new_start_time, new_end_time)
+            appointments.cancel_outside_times(user.id, weekday_id, start_time, end_time, new_start_time, new_end_time)
             flash("Availability updated!", category="success")
             url_name = "barber.calendar_window"
             url = url_for(url_name, d=current, unit=unit, start=new_start_time)
@@ -183,10 +184,10 @@ def calendar_window(start: str):
     unavailable_ranges_data = get_unavailable_table(barber_unavailable_ranges)
 
     schedule = user.get_schedule(current, unit)
-    appointments = calendar_appointments(user.id, current, unit)
+    barber_appointments = calendar_appointments(user.id, current, unit)
     unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
 
-    times = times_list(schedule, appointments)
+    times = times_list(schedule, barber_appointments)
     dates = dates_list(current, unit)
     template_key = "edit"
     is_unavailable = availability.has_unavailability_for_date(user.id, current)
@@ -199,7 +200,7 @@ def calendar_window(start: str):
         next={"unit": unit, "d": next_date},
         user=user, 
         schedule=schedule,
-        appointments=appointments,
+        appointments=barber_appointments,
         unavailable=unavailable,
         is_unavailable=is_unavailable,
         times=times,
