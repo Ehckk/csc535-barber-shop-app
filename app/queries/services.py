@@ -9,7 +9,8 @@ from .. import db
 def list_all_services() -> list[Service]:
     query = """
         SELECT DISTINCT * 
-        FROM csc535_barber.service;
+        FROM csc535_barber.service
+        AND deleted = 0;
     """
     results = db.execute(query)
     return [Service(**data) for data in results]
@@ -29,7 +30,8 @@ def list_service_barbers(name: str) -> list[BarberUser]:
         ON Services.service_id = BarberServices.service_id
         JOIN csc535_barber.`user` AS Users
         ON BarberServices.barber_id = Users.user_id
-        WHERE Services.`name` = %(name)s;
+        WHERE Services.`name` = %(name)s
+        AND deleted = 0;
     """
     results = db.execute(query, {'name': string.capwords(name)})
     return [BarberUser(**data) for data in results]
@@ -43,7 +45,8 @@ def list_barber_services(barber_id: int) -> list[BarberService]:
         FROM csc535_barber.`service` AS Services
         JOIN csc535_barber.`barber_services` AS BarberServices
         ON Services.service_id = BarberServices.service_id
-        WHERE BarberServices.`barber_id` = %(user_id)s;
+        WHERE BarberServices.`barber_id` = %(user_id)s
+        AND deleted = 0;
     """
     results = db.execute(query, {'user_id': barber_id})
     return [BarberService(**data) for data in results]
@@ -53,7 +56,7 @@ def retrieve_service(name: str) -> Service:
     query = """
         SELECT * 
         FROM csc535_barber.service
-        WHERE `name` = %(name)s    
+        WHERE `name` = %(name)s   
     """
     results = db.execute(query, {'name': string.capwords(name)})
     if not results:
@@ -65,12 +68,14 @@ def retrieve_barber_service(barber_id: int, service_id: int):
     query = """
         SELECT 
             Services.*,
-            BarberServices.`price`
+            BarberServices.`price`,
+            BarberServices.description
         FROM csc535_barber.`service` AS Services
         JOIN csc535_barber.`barber_services` AS BarberServices
         ON Services.service_id = BarberServices.service_id
         WHERE BarberServices.barber_id = %(barber_id)s
-        AND BarberServices.`service_id` = %(service_id)s  
+        AND BarberServices.`service_id` = %(service_id)s
+        AND deleted = 0  
     """
     results = db.execute(query, {'barber_id': barber_id, 'service_id': service_id})
     if not results:
@@ -91,6 +96,7 @@ def retrieve_appointment_services(appointment_id: int):
         JOIN csc535_barber.`service` AS Services
         USING (service_id)
         WHERE Appointment.appointment_id = %(appointment_id)s
+        AND deleted = 0
     """
     params = {
         'appointment_id': appointment_id
@@ -111,15 +117,17 @@ def create_service(name: str):
     return retrieve_service(name)
 
 
-def add_barber_service(barber_id: int, name: str, price: int, description: str=None):
+def add_barber_service(barber_id: int, name: str, price: int, description: str | None=None):
     service = retrieve_service(name)
+    if retrieve_barber_service(barber_id, service.id):
+        raise AssertionError(f"You already offer a '{name}' service!")
     query = """
-        INSERT INTO csc535_barber.`barber_services` (`service_id`, `barber_id`, `price`, `description`) 
-        VALUES (%(service_id)s, %(barber_id)s, %(price)s, %(description)s);
+        INSERT INTO csc535_barber.`barber_services` (`service_id`, `barber_id`, `price`, `description`, `deleted`) 
+        VALUES (%(service_id)s, %(barber_id)s, %(price)s, %(description)s, DEFAULT);
     """
     db.execute(query, {
         'barber_id': barber_id, 
-        'service': service.id,
+        'service_id': service.id,
         'price': price,
         'description': description or 'DEFAULT'
     })
@@ -128,17 +136,18 @@ def add_barber_service(barber_id: int, name: str, price: int, description: str=N
     return retrieve_barber_service(barber_id, service.id)
 
 
-def update_barber_service(barber_id: int, service_id: int, price: str):
+def update_barber_service(barber_id: int, service_id: int, price: str, description: str | None=None):
     query = """
         UPDATE csc535_barber.`barber_services` 
-        SET price = %(price)s
+        SET price = %(price)s, description = %(description)s
         WHERE barber_id = %(barber_id)s
         AND service_id = %(service_id)s
     """
     db.execute(query, {
         'barber_id': barber_id, 
-        'service': service_id,
-        'price': price
+        'service_id': service_id,
+        'price': price,
+        'description': description
     })
     db.commit()
     return retrieve_barber_service(barber_id, service_id)
@@ -146,7 +155,8 @@ def update_barber_service(barber_id: int, service_id: int, price: str):
 
 def remove_barber_service(barber_id: int, service_id: int):
     query = """
-        DELETE FROM csc535_barber.`barber_services` 
+        UPDATE csc535_barber.`barber_services` 
+        SET deleted = 1
         WHERE barber_id = %(barber_id)s
         AND service_id = %(service_id)s
     """

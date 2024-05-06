@@ -1,3 +1,5 @@
+{% from "_render_form.html" import render_form %}
+
 {% extends "barber/services.html" %}
 
 {% block side_text %}
@@ -5,6 +7,8 @@
 {% endblock %}
 
 {% block side_content %}
+    <p>{{ current_service.description }}</p>
     <p>Current Price: ${{ current_service.price }}</p>
-    <!-- FORM GOES HERE -->
+    <h3>Edit Service</h3>
+    {{ render_form(form) }}
 {% endblock %}

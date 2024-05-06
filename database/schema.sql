@@ -139,20 +139,21 @@ CREATE TABLE csc535_barber.`barber_services` (
     `barber_id` INT NOT NULL,
     `price` int NOT NULL,
 	`description` varchar(256) DEFAULT '',
+    `deleted` bool DEFAULT 0,
     PRIMARY KEY (`service_id`, `barber_id`),
     FOREIGN KEY (`service_id`) REFERENCES `service`(`service_id`) ON DELETE CASCADE,
     FOREIGN KEY (`barber_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );
 
 INSERT INTO csc535_barber.`barber_services` VALUES
-	(1, 1, 30, DEFAULT), 
-    (2, 1, 35, DEFAULT), 
-    (3, 1, 40, DEFAULT), 
-    (4, 1, 35, DEFAULT),
-    (1, 4, 50, DEFAULT), 
-    (2, 4, 30, DEFAULT), 
-    (3, 4, 35, DEFAULT), 
-    (4, 4, 25, DEFAULT);
+	(1, 1, 30, DEFAULT, DEFAULT), 
+    (2, 1, 35, DEFAULT, DEFAULT), 
+    (3, 1, 40, DEFAULT, DEFAULT), 
+    (4, 1, 35, DEFAULT, DEFAULT),
+    (1, 4, 50, DEFAULT, DEFAULT), 
+    (2, 4, 30, DEFAULT, DEFAULT), 
+    (3, 4, 35, DEFAULT, DEFAULT), 
+    (4, 4, 25, DEFAULT, DEFAULT);
 ;
 
 CREATE TABLE csc535_barber.`appointment_services` (
