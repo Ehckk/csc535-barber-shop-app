@@ -100,7 +100,7 @@ def calendar():
     dates = dates_list(current, unit)
 
     template_key = "view"
-    print(unavailable)
+    print(schedule)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
