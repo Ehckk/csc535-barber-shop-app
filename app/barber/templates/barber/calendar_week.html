@@ -26,26 +26,32 @@
     <div class="calendar-week">
         {% for day in dates %}
             {% set date_key = day|format_date %}
+            {% if date_key in unavailable %} 
+            <div class="calendar-days unavailable"> 
+                <p class="window-text text-light-2">Unavailable</p>
+            </div>
+            {% else %}
             <div class="calendar-days">
                 {% for time, hour_times in times %}
                     <div class="calendar-ruler">
                         {% for hour_time in hour_times %}
                             <span class="calendar-ruler-value">
-                                {% for window in schedule[date_key][hour_time] %}
-                                    <div class="calendar-window success-0" style="{{ window.style() }}">
-                                        <p class="window-text text-light-2">Available</p>
-                                    </div>
-                                {% endfor %}
-                                {% for appointment in appointments[date_key][hour_time] %}
-                                    <div class="calendar-window error-0" style="{{ appointment.style() }}">
-                                        <p class="window-text text-light-2">Unavailable</p>
-                                    </div>
-                                {% endfor %}
+                            {% for window in schedule[date_key][hour_time] %}
+                                <div class="calendar-window success-0" style="{{ window.style() }}">
+                                    <p class="window-text text-light-2">Available</p>
+                                </div>
+                            {% endfor %}
+                            {% for appointment in appointments[date_key][hour_time] %}
+                                <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                                    <p class="window-text text-light-2">Booked</p>
+                                </div>
+                            {% endfor %}
                             </span>
                         {% endfor %}
                     </div>
                 {% endfor %}
             </div>
+            {% endif %}
         {% endfor %}        
     </div>
 </div>

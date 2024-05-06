@@ -149,6 +149,7 @@
     flex-direction: column;
 }
 
+.calendar-days.unavailable,
 .calendar-month-day.unavailable {
     background-color: var(--u-0);
 }
@@ -160,11 +161,17 @@
 .calendar-month-day-value {
     width: 100%;
     display: flex;
+    text-decoration: none;
 }
 
 .calendar-month-day-items {
     display: flex;
-    justify-content: center;
+    align-items: center;
+}
+
+.calendar-days.unavailable {
+    align-items: center;
+    padding-top: .5rem;
 }
 
 .calendar-month-day.unavailable > .calendar-month-day-items::before,

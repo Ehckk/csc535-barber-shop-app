@@ -24,9 +24,11 @@
             </button>
         </a>
     </div>
-    <h3 class="calendar-title">
-        {{ title }}
-    </h3>
+    <a class="calendar-title-link" href="{{ url_for('barber.calendar', unit=unit, d=current) }}">
+        <h3 class="calendar-title">
+            {{ title }}
+        </h3>
+    </a>
     <div class="calendar-controls">
     {% if not unit == 'D' %}
         <a class="link-btn" href="{{ url_for('barber.calendar', unit='D', d=current) }}">

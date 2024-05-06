@@ -2,13 +2,35 @@ from datetime import date, time
 from typing import Literal
 
 from ..utils.date import to_time
-from ..models.window import Window
+from ..models.window import Interval, Window
 from .. import db
 
 TIME_FORMAT = '%H:%M:%S'
 
+def barber_daily_schedule(barber_id: int, current=date.today()):
+    weekday_id = current.weekday()
+    query = """
+        SELECT 
+            W.*,
+            S.`start_time`,
+            S.`end_time`
+        FROM csc535_barber.`schedule` AS S
+        JOIN csc535_barber.`weekday` AS W
+        USING (`weekday_id`)
+        WHERE `barber_id` = %(barber_id)s
+        AND S.weekday_id = %(weekday_id)s
+        ORDER BY S.`weekday_id`, S.`start_time`, S.`end_time`
+    """
+    params = {
+        "barber_id": barber_id,
+        "weekday_id": weekday_id
+    }
+    return db.execute(query, params)
 
-def barber_weekly_schedule(barber_id: int):
+
+def barber_weekly_schedule(barber_id: int, unit=Interval.WEEK, current=date.today()):
+    if not unit == Interval.WEEK:
+        return barber_daily_schedule(barber_id, current) 
     query = """
         SELECT 
             W.*,

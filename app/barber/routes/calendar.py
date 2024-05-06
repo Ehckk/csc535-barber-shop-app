@@ -69,8 +69,10 @@ def calendar():
                 flash("Availability updated!", category="success")               
     else:
         form = ScheduleForm()
+        if unit == Interval.DAY:
+            delattr(form, "weekday")
         if form.validate_on_submit():
-            weekday_id = int(form.weekday.data)
+            weekday_id = current.weekday() if unit == Interval.DAY else int(form.weekday.data)
             start_time = form.start_time.data
             end_time = form.end_time.data
             if not start_time < end_time:
@@ -81,7 +83,7 @@ def calendar():
                 schedules.create_schedule(weekday_id, user.id, start_time, end_time)
                 flash("Availability updated!", category="success")
     
-    barber_schedule = schedules.barber_weekly_schedule(user.id)
+    barber_schedule = schedules.barber_weekly_schedule(user.id, unit, current)
     schedule_data = get_schedule_table(barber_schedule)
 
     barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
@@ -98,11 +100,13 @@ def calendar():
     dates = dates_list(current, unit)
 
     template_key = "view"
+    print(unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
         unit=unit,
-        current=current.strftime("%Y-%m-%d"),
+        current=current,
+        weekday=weekdays[current.weekday()],
         prev={"unit": unit, "d": prev_date},
         next={"unit": unit, "d": next_date},
         user=user, 

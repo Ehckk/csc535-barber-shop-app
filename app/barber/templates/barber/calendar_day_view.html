@@ -4,11 +4,15 @@
 {% extends "barber/calendar_day.html" %}
 
 {% block side_text %}
-    Weekly Availablility
+    {{ title }}
 {% endblock %}
 
 {% block side_content %}
-    {{ table(caption="Weekly Schedule", data=schedule_data) }}
-    <h3>Add Availability</h3>
+    {% if schedule_data %}
+        {{ table(caption=weekday + " Schedule", data=schedule_data) }}
+    {% else %}
+        <p>You have <b class="text-error-1">no listed availability</b> on this day<p>
+    {% endif %}
+    <h3>Add {{ weekday }} Availability</h3>
     {{ render_form(form) }}
 {% endblock %}
