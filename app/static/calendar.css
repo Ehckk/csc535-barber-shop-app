@@ -28,12 +28,12 @@
 }
 
 .calendar.day-container {
-    grid-template-columns: 4rem 1fr;
+    grid-template-columns: 3.5rem 1fr;
 }
 
 .calendar.week-container {
     grid-template-rows: min-content 1fr;
-    grid-template-columns: 4rem 1fr;
+    grid-template-columns: 3.5rem 1fr;
 }
 
 .calendar.month-container {
@@ -121,11 +121,11 @@
 .calendar-ruler-value {
     position: relative;
     margin: 0;
-    padding-top: .25rem;
+    padding-top: .125rem;
     display: flex;
     justify-content: center;
     align-items: baseline;
-    min-height: 58px;
+    min-height: 28px;
 }
 
 .calendar-ruler-value:first-child {
@@ -137,15 +137,20 @@
 }
 
 .calendar-month-day {
+    position: relative;
     border-color: var(--s-0);
     border-style: solid;
     border-width: 0;
     border-right-width: 2px;
     border-top-width: 2px;
     background-color: var(--s-2);
-    padding: .25rem;
     display: flex;
     flex-direction: column;
+}
+
+.calendar-days.unavailable,
+.calendar-month-day.unavailable {
+    background-color: var(--u-0);
 }
 
 .calendar-month-day:empty {
@@ -153,25 +158,104 @@
 }
 
 .calendar-month-day-value {
+    background-color: var(--u-2);
     width: 100%;
     display: flex;
+    align-items: center;
+    padding: .25rem;
+}
+
+.calendar-month-day.unavailable > .calendar-month-day-value {
+    background-color: var(--u-0);
+}
+
+.calendar-month-day-link {
+    text-decoration: none;
+    width: 100%;
 }
 
 .calendar-month-day-items {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+}
+
+.calendar-days.unavailable {
+    align-items: center;
+    padding-top: .5rem;
+}
+
+.calendar-month-day.available > .calendar-month-day-items::before {
+    content: "Available";
+    position: absolute;
+    top: 25%;
+    bottom: 37.5%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--g-0);
+    color: var(--w-0);
+}
+
+.calendar-month-day.booked > .calendar-month-day-items::after {
+    content: "Booked";
+    position: absolute;
+    top: 62.5%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--e-0);
+    color: var(--w-0);
+}
+
+.calendar-month-day.unavailable > .calendar-month-day-items::before,
+.calendar-month-day.unavailable > .calendar-month-day-items::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    min-height: 2px;
+    width: 95%;
+    background-color: var(--u-1);
+    transform-origin: center;
+}
+.calendar-month-day.unavailable > .calendar-month-day-items::before {
+    transform: rotateZ(45deg);
+}
+.calendar-month-day.unavailable > .calendar-month-day-items::after {
+    transform: rotateZ(-45deg);
 }
 
 .calendar-window {
     position: absolute;
+    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
+    padding: 0.25rem;
+    z-index: 1;
+}
+
+.calendar-window-link {
+    position: relative;
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-decoration: none;
 }
 
 .window-text {
-    font-size: .875rem;
+    padding: .25rem;
     overflow-y: hidden;
 }

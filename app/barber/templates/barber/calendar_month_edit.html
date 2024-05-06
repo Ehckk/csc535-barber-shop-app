@@ -1,0 +1,41 @@
+{% from "_render_form.html" import render_form %}
+{% from "_tables.html" import table %}
+
+{% extends "barber/calendar_month.html" %}
+
+{% block side_text %}
+    {{ selected|display_date }}
+{% endblock %}
+
+{% block side_content %}
+    <p><a href="{{url_for("barber.calendar", unit="D", d=selected) }}">Details</a></p>
+    {% set day_text = 'unavailable' if is_unavailable else 'available' %}
+    {% set day_class = 'text-error-1' if is_unavailable else 'text-info-1' %}
+    {% set btn_text = 'available' if is_unavailable else 'unavailable' %}
+    {% set btn_class = 'info-1' if is_unavailable else 'error-1' %}
+    {% set btn_url_name = "barber.calendar_available" if is_unavailable else "barber.calendar_unavailable" %}
+    {% set btn_url = url_for(btn_url_name, selected=selected, unit=unit, d=current) %}
+    <div class="side-content">
+        <p>You are <b class="{{ day_class }}">{{ day_text }}</b></p>
+        <div class="side-content">
+            <div class="side-buttons">
+                <a href="{{ btn_url }}">
+                    <button class="{{ btn_class }} text-light-1">Mark as {{ btn_text|capitalize }}</button>
+                </a>
+            </div>
+            {% if appointments_data and not is_unavailable %}
+                <p>This will <b class="text-error-1">cancel</b> any appointments on this day</p>
+            {% endif %}
+        </div>
+    </div>
+    {% if schedule_data %}
+        {% if appointments_data %}
+            {{ table(caption="Appointments", data=appointments_data) }}
+        {% else %}
+            <p>You have <b class="text-error-1">no booked appointments</b></p>
+        {% endif %}
+        {{ table(caption=weekday + " Schedule", data=schedule_data) }}
+    {% else %}
+        <p>You have <b class="text-error-1">no listed availability</b> on <b>{{ weekday }}s</b></p>
+    {% endif %}
+{% endblock %}

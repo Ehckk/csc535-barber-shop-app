@@ -1,0 +1,21 @@
+{% from "_tables.html" import table %}
+
+{% extends "barber/appointment_history.html" %}
+
+{% block side_text %}
+    Appointment Details
+{% endblock %}
+
+{% block side_content %}
+    <div class="side-container">
+        <p>{{ appointment }}</p>
+        <p>Client: {{ appointment.client.display_name() }}</p>
+        <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
+    </div>
+    {{ 
+        table(
+            caption="Services",
+            data=services_data
+        ) 
+    }}
+{% endblock %}

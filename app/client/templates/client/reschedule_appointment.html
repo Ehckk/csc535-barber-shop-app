@@ -1,6 +1,6 @@
-{% from "_macros.html" import card_list %}
 {% from "_render_form.html" import render_form %}
-{% from "_cards.html" import appointment_card %}
+{% from "_tables.html" import table %}
+
 
 {% extends "client/home.html" %}
 
@@ -8,35 +8,15 @@
     Reschedule Appointment
 {% endblock %}
 
-{% block main_content %}
-    <div class="home">
-        {% call card_list('Upcoming Appointments') %}
-            {% if not appointments %}
-                <p class="card-list-text">
-                    No upcoming appointments to show
-                </p>
-            {% else %}
-                {% for appointment in appointments %}
-                    {{ appointment_card(appointment, appt_id, url='client.appointment_details') }}
-                {% endfor %}
-            {% endif %}
-        {% endcall %}
-        {% call card_list('Requested Appointments') %}
-            {% if not requested_appointments %}
-                <p class="card-list-text">
-                    No requested appointments to show
-                </p>
-            {% else %}
-                {% for appointment in requested_appointments %}
-                    {{ appointment_card(appointment, appt_id, url='client.appointment_details') }}
-                {% endfor %}
-            {% endif %}
-        {% endcall %}
-    </div>
-{% endblock %}
 {% block side_text %}
     Reschedule Appointment
 {% endblock %}
 {% block side_content %}
+{{ 
+    table(
+        caption="Weekly Schedule",
+        data=schedule_data
+    ) 
+}}
 {{ render_form(form) }}
 {% endblock %}

@@ -1,0 +1,15 @@
+{% from "_render_form.html" import render_form %}
+{% from "_tables.html" import table %}
+
+{% extends "barber/calendar_day.html" %}
+
+{% block side_text %}
+    {{ current|display_date }}
+{% endblock %}
+
+{% block side_content %}
+<h3>{{ start_time|display_time }} - {{ end_time|display_time }}</h3>
+{{ table(caption="Schedule", data=schedule_data) }}
+<h3>Update Availability</h3>
+{{ render_form(form) }}
+{% endblock %}

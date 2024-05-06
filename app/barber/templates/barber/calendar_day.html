@@ -4,36 +4,49 @@
 <div class="calendar day-container">
     <div class="calendar-times">
         {% for hour, hour_times in times %}
-            <div class="calendar-ruler">
-                {% for _ in hour_times %}
-                    <span class="calendar-ruler-value">
-                        {% if loop.index == 1 %}
-                            {{ hour }}
-                        {% endif %}
-                    </span>
-                {% endfor %}
-            </div>
+        <div class="calendar-ruler">
+            {% for _ in hour_times %}
+            <span class="calendar-ruler-value">
+                {% if loop.index == 1 %}
+                    {{ hour }}
+                {% endif %}
+            </span>
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
+    {% set date_key = current|format_date %}
+    {% if date_key in unavailable %} 
+    <div class="calendar-days unavailable">
+        <p class="window-text text-light-2">Unavailable</p>
+    </div>
+    {% else %}
     <div class="calendar-days">
         {% for time, hour_times in times %}
-            <div class="calendar-ruler">
-                {% for hour_time in hour_times %}
-                    <span class="calendar-ruler-value">
-                        {% for window in schedule[current][hour_time] %}
-                            <div class="calendar-window success-0" style="{{ window.style() }}">
-                                <p class="window-text text-light-2">Available</p>
-                            </div>
-                        {% endfor %}
-                        {% for appointment in appointments[current][hour_time] %}
-                            <div class="calendar-window error-0" style="{{ appointment.style() }}">
-                                <p class="window-text text-light-2">Unavailable</p>
-                            </div>
-                        {% endfor %}
-                    </span>
+        <div class="calendar-ruler">
+            {% for hour_time in hour_times %}
+                <span class="calendar-ruler-value">
+                {% for window in schedule[date_key][hour_time] %}
+                    {% set style = window.style() %}
+                    {% set url_name = "barber.calendar_window" %}
+                    {% set url = url_for(url_name, unit=unit, d=current, start=hour_time) %}
+                    <div class="calendar-window success-0" style="{{ window.style() }}">
+                        <a class="calendar-window-link" href="{{ url }}">
+                            <p class="window-text text-light-2">Available</p>
+                        </a>
+                    </div>
                 {% endfor %}
-            </div>
+                {% for appointment in appointments[date_key][hour_time] %}
+                    {% set style = appointment.style() %}
+                    <div class="calendar-window error-0" style="{{ style }}">
+                        <p class="window-text text-light-2">Booked</p>
+                    </div>
+                {% endfor %}
+                </span>
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
+    {% endif %}
 </div>
 {% endblock %}

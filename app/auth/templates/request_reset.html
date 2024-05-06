@@ -1,0 +1,13 @@
+{% from "_render_form.html" import render_form %}
+
+{% extends "auth.html" %}
+{% block title %}
+    Request Password Reset
+{% endblock %}
+{% block auth %}
+    {% call render_form(form, name="Request Reset", action=url_for("auth.request_reset")) %}
+        <p>
+            <a href="{{ url_for('auth.login') }}">Login</a>
+        </p>
+    {% endcall %}
+{% endblock %}

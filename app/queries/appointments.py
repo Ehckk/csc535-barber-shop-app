@@ -1,4 +1,6 @@
 from datetime import date, time
+
+from ..utils.email import send_mail
 from ..models.appointment import Appointment
 from .. import db
 
@@ -193,6 +195,7 @@ def update_appointment(
         "appointment_id": appointment_id
     })
     db.commit()
+    return retrieve_appointment(appointment_id)
 
 
 def delete_appointment(appointment_id: int):
@@ -232,3 +235,138 @@ def retrieve_conflicting(appointment: Appointment, is_booked=False):
         "end_time": end_time,
     })
     return list_appointments(results)
+
+
+def cancel_prev_unbooked():
+    query = """
+        DELETE FROM csc535_barber.`appointment` 
+        WHERE `is_approved` = 0
+        AND NOW() > TIMESTAMP(`booked_date`, `start_time`);
+    """
+    db.execute(query)
+    db.commit()
+
+
+def cancel_on_date(barber_id: int, target: date):
+    query = """
+        SELECT * FROM csc535_barber.appointment
+        WHERE barber_id = %(barber_id)s
+        AND NOT booked_date < CURDATE()
+        AND booked_date = %(target_date)s
+    """
+    params = {
+        "barber_id": barber_id,
+        "target_date": str(target),
+    }
+    results = db.execute(query, params)
+    return list_appointments(results)
+
+
+def cancel_in_range(barber_id: int, start: date, end: date):
+    query = """
+        SELECT * FROM csc535_barber.appointment
+        WHERE barber_id = %(barber_id)s
+        AND NOT booked_date < CURDATE()
+        AND booked_date BETWEEN %(start_date)s AND %(end_date)s  
+    """
+    params = {
+        "barber_id": barber_id,
+        "start_date": str(start),
+        "end_date": str(end)
+    }
+    results = db.execute(query, params)
+    return list_appointments(results)
+
+
+def cancel_appointment(appointment: Appointment):
+    recipients = [appointment.barber.email, appointment.client.email]
+    if appointment.is_approved:
+        subject = "Appointment Canceled"
+        message = """
+            An appointment has been canceled.
+
+            Appointment: {appt}
+        """.format(appt=str(appointment))
+    else:
+        subject = "Appointment Request Declined"
+        message = """
+            A requested appointment has been declined.
+
+            Appointment: {appt}
+        """.format(appt=str(appointment))
+    send_mail(subject, recipients, body=message)
+    delete_appointment(appointment_id=appointment.id)
+
+
+def cancel_appointments(barber_id: int, start: date, end: date | None):
+    if end is None:
+        appointments = cancel_on_date(barber_id, start)
+    else:
+        appointments = cancel_in_range(barber_id, start, end)
+    for appointment in appointments:
+        cancel_appointment(appointment)
+
+
+def get_between_times(weekday_id: int, start: time, end: time):
+    query = """
+
+    """
+    params = {
+        "weekday_id": weekday_id,
+        "start_time": start,
+        "end_time": end
+    }
+    return db.execute(query, params)
+    
+
+
+def cancel_outside_times(
+    barber_id: int, 
+    weekday_id: int, 
+    old_start: time, 
+    old_end: time, 
+    new_start: time, 
+    new_end: time
+):
+    query = """
+        SELECT * FROM csc535_barber.appointment
+        WHERE barber_id = %(barber_id)s
+        AND NOT booked_date < CURDATE()
+        AND WEEKDAY(booked_date) = %(weekday_id)s
+        AND start_time BETWEEN %(old_start)s AND %(old_end)s
+        AND NOT (
+            start_time BETWEEN %(new_start)s AND %(new_end)s AND
+            DATE_ADD(start_time, INTERVAL duration MINUTE) BETWEEN %(new_start)s AND %(new_end)s
+        );
+    """
+    params = {
+        "barber_id": barber_id, 
+        "weekday_id": weekday_id, 
+        "old_start": old_start, 
+        "old_end": old_end, 
+        "new_start": new_start, 
+        "new_end": new_end 
+    }
+    results = db.execute(query, params)
+    appointments = list_appointments(results)
+    for appointment in appointments:
+        cancel_appointment(appointment)
+
+
+def cancel_service_appointments(barber_id: int, service_id: int):
+    query = """
+        SELECT A.* FROM csc535_barber.appointment AS A
+        JOIN csc535_barber.appointment_services
+        USING (appointment_id)
+        WHERE barber_id = %(barber_id)s
+        AND NOT booked_date < CURDATE()
+        AND service_id = %(service_id)s
+    """
+    params = {
+        "barber_id": barber_id,
+        "service_id": service_id
+    }
+    results = db.execute(query, params)
+    appointments = list_appointments(results)
+    for appointment in appointments:
+        cancel_appointment(appointment)

@@ -10,25 +10,40 @@
         {% endfor %}
     </div>
     <div class="calendar-month">
-        {% for days in dates %}
-            {% for day in days %}
-                {% if not day == None %}
-                    <div class="calendar-month-day">
-                        <span class="calendar-month-day-value">{{ day.day }}</span>
-                        <div class="calendar-month-day-items">
-
-                        </div>
-                    </div>
+    {% for days in dates %}
+        {% for day in days %}
+            {% if not day == None %}
+                {% set day_key = day|string %}
+                {% set is_unavailable = day_key in unavailable %}
+                {% set is_available = schedule[day_key]|length > 0 %}
+                {% set is_booked = appointments[day_key]|length > 0 %}
+                {% if is_unavailable %}
+                    {% set day_class = "calendar-month-day unavailable" %}
                 {% else %}
-                    <div class="calendar-month-day"></div>
-                    {% for appointment in appointments[date_key][hour_time] %}
-                        <div class="calendar-window error-0" style="{{ appointment.style() }}">
-                            <p class="window-text text-light-2">Unavailable</p>
-                        </div>
-                    {% endfor %}
+                    {% set available_class = "available" if is_available else "" %}
+                    {% set booked_class = "booked" if is_booked else "" %}
+                    {% set day_class = "calendar-month-day" ~ " " ~ booked_class ~ " " ~ available_class %}
                 {% endif %}
-            {% endfor %}
+                <div class="{{ day_class }}">
+                    <span class="calendar-month-day-value">
+                    {% if day < today %}
+                        {{ day.day }}
+                    {% else %}
+                        {% set url = url_for('barber.calendar_view', selected=day|string, unit=unit, d=current) %}
+                        <a href="{{ url }}" class="calendar-month-day-link">
+                            {{ day.day }}
+                        </a>
+                    {% endif %}
+                    </span>
+                    <div class="calendar-month-day-items">
+
+                    </div>
+                </div>
+            {% else %}
+                <div class="calendar-month-day"></div>
+            {% endif %}
         {% endfor %}
+    {% endfor %}
     </div>
 </div>
 {% endblock %}

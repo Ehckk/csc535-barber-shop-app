@@ -16,6 +16,13 @@ def is_submit_field(field):
 def format_date(value: date):
     return value.strftime("%Y-%m-%d") 
 
+def display_date(value: date):
+    return value.strftime("%A, %B %d, %Y") 
+
+def display_time(value: date):
+    return value.strftime("%I:%M %p") 
+
+
 def create_app():
     print("Starting application...")
     
@@ -26,6 +33,8 @@ def create_app():
     app.jinja_env.globals['is_hidden_field'] = is_hidden_field
     app.jinja_env.globals['is_submit_field'] = is_submit_field
     app.jinja_env.filters['format_date'] = format_date
+    app.jinja_env.filters['display_date'] = display_date
+    app.jinja_env.filters['display_time'] = display_time
 
     app.register_blueprint(auth)
     app.register_blueprint(barber)

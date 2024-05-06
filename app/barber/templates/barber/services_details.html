@@ -1,3 +1,5 @@
+{% from "_render_form.html" import render_form %}
+
 {% extends "barber/services.html" %}
 
 {% block side_text %}
@@ -5,6 +7,23 @@
 {% endblock %}
 
 {% block side_content %}
-    <p>Current Price: ${{ current_service.price }}</p>
-    <!-- FORM GOES HERE -->
+<p>{{ current_service.description }}</p>
+<p>Current Price: ${{ current_service.price }}</p>
+<div class="side-content">
+    <h3>Edit Service</h3>
+    {{ render_form(form) }}
+</div>
+<div class="side-content">
+    <h3>Remove Service</h3>
+    <div class="side-buttons">
+        {% set url_name = "barber.barber_service_remove" %}
+        {% set url = url_for(url_name, service_id=current_service.id) %}
+        <a href={{ url }}>
+            <button class="btn-large error-1 text-light-1">
+                Remove
+            </button>
+        </a>
+    </div>
+    <p>This will <b class="text-error-1">cancel</b> all '{{ current_service.name }}' appointments</p>
+</div>
 {% endblock %}

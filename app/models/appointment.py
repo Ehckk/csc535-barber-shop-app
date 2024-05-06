@@ -17,7 +17,7 @@ def validate_appointment_time(
     return False
 
 
-HOUR_HEIGHT = 118
+HOUR_HEIGHT = 60
 
 
 class Appointment:
@@ -73,12 +73,14 @@ class Appointment:
 			start_date: date, 
 			start_time: timedelta, 
 			duration: int, 
-			services: list[int]
+			services: list[int]=[],
+			skip_validate_services: bool=False
 		):
 		availability = schedule_for_date(barber_id, start_date)
-		if len(services) == 0:
-			message = "Select at least one service!"
-			raise AssertionError(message) 
+		if not skip_validate_services:
+			if len(services) == 0:
+				message = "Select at least one service!"
+				raise AssertionError(message) 
 		if not validate_appointment_time(availability, start_time, duration):
 			message = f"{barber_name} is unavailable during this time"
 			raise AssertionError(message) 

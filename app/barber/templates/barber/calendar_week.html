@@ -26,26 +26,39 @@
     <div class="calendar-week">
         {% for day in dates %}
             {% set date_key = day|format_date %}
+            {% if date_key in unavailable %} 
+            <div class="calendar-days unavailable"> 
+                <p class="window-text text-light-2">Unavailable</p>
+            </div>
+            {% else %}
             <div class="calendar-days">
                 {% for time, hour_times in times %}
                     <div class="calendar-ruler">
                         {% for hour_time in hour_times %}
                             <span class="calendar-ruler-value">
-                                {% for window in schedule[date_key][hour_time] %}
-                                    <div class="calendar-window success-0" style="{{ window.style() }}">
+                            {% for window in schedule[date_key][hour_time] %}
+                                {% set style = window.style() %}
+                                {% set url_name = "barber.calendar_window" %}
+                                {% set url = url_for(url_name, unit=unit, d=day, start=hour_time) %}
+                                <div class="calendar-window success-0" style="{{ window.style() }}">
+                                    <a class="calendar-window-link" href="{{ url }}">
                                         <p class="window-text text-light-2">Available</p>
-                                    </div>
-                                {% endfor %}
-                                {% for appointment in appointments[date_key][hour_time] %}
-                                    <div class="calendar-window error-0" style="{{ appointment.style() }}">
-                                        <p class="window-text text-light-2">Unavailable</p>
-                                    </div>
-                                {% endfor %}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                            {% for appointment in appointments[date_key][hour_time] %}
+                                <div class="calendar-window error-0" style="{{ appointment.style() }}">
+                                    <a class="calendar-window-link">
+                                        <p class="window-text text-light-2">Booked</p>
+                                    </a>
+                                </div>
+                            {% endfor %}
                             </span>
                         {% endfor %}
                     </div>
                 {% endfor %}
             </div>
+            {% endif %}
         {% endfor %}        
     </div>
 </div>

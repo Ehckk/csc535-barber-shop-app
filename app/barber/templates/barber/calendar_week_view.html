@@ -1,0 +1,18 @@
+{% from "_render_form.html" import render_form %}
+{% from "_tables.html" import table %}
+
+{% extends "barber/calendar_week.html" %}
+
+{% block side_text %}
+    Availablility for {{ title }}
+{% endblock %}
+
+{% block side_content %}
+    {% if schedule_data %}
+        {{ table(caption="Weekly Schedule", data=schedule_data) }}
+    {% else %}
+        <p>You have <b class="text-error-1">no listed availability</b><p>
+    {% endif %}
+    <h3>Add Availability</h3>
+    {{ render_form(form) }}
+{% endblock %}

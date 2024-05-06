@@ -1,5 +1,5 @@
 from collections import defaultdict, OrderedDict
-from datetime import time
+from datetime import time, timedelta
 
 from .date import (
     date_window,
@@ -25,3 +25,12 @@ def calendar_appointments(barber_id, current_date, interval):
         appointments[booked_date][time_key].append(appointment)
     return appointments
 
+def get_unavailable(barber_dates: list[dict]=[], barber_ranges: list[dict]=[]):
+    unavailable = set(map(lambda x: str(x["start_date"]), barber_dates) or [])
+    for dates in barber_ranges:
+        start = dates["start_date"]
+        end = dates["end_date"]
+        while start <= end:
+            unavailable.add(str(start))
+            start += timedelta(days=1)
+    return unavailable

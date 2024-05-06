@@ -1,10 +1,11 @@
+{% from "_render_form.html" import render_form %}
+
 {% extends "barber/services.html" %}
 
 {% block side_text %}
-    {{ current_service.name }}
+    Add a Service
 {% endblock %}
 
 {% block side_content %}
-    <p>Current Price: $30</p>
-    <!-- FORM GOES HERE -->
+    {{ render_form(form) }}
 {% endblock %}

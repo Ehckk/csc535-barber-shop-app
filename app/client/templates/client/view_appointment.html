@@ -17,7 +17,7 @@
     </div>
     <div class="side-container">
         <p>Barber: {{ appointment.barber.display_name() }}</p>
-        <p>{{ appointment.booked_date }}</p>
+        <p>{{ appointment.booked_date|display_date }}</p>
         <p>{{ appointment.start_time }}</p>
         <p>{{ appointment.duration }} minute{% if not appointment.duration == 1 %}s{% endif %}</p>
     </div>
@@ -34,7 +34,7 @@
             </a>     
         </div>
         <div class="side-buttons"> 
-            <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
+            <a href="{{ url_for('client.reschedule_appointment', appt_id=appointment.id) }}">
                 <button class="warning-1 text-light-2 btn-large">Reschedule</button>
             </a>
             <a href="{{ url_for('client.cancel_appointment', appt_id=appointment.id) }}">
