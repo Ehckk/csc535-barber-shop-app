@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS csc535_barber.`user` (
 );
 
 INSERT INTO csc535_barber.`user` VALUES 
-	-- (DEFAULT, 'csc535barberapp@tutamail.com', SHA('test'), 'Test', 'Test', 'Barber', 1),
-    -- (DEFAULT, 'csc535clientapp@mailfence.com', SHA('client1'), 'Test1', 'Client1', 'Client', 1),
+	-- (DEFAULT, 'csc535barberapp@tutamail.com', SHA('#3TestUser'), 'Test', 'Test', 'Barber', 1),
+    -- (DEFAULT, 'csc535clientapp@mailfence.com', SHA('#3TestUser'), 'Test1', 'Client1', 'Client', 1),
 	(DEFAULT, 'test@test.com', SHA('test'), 'Test', 'Test', 'Barber', 1),
     (DEFAULT, 'test1@test.com', SHA('client1'), 'Test1', 'Client1', 'Client', 1),
     (DEFAULT, 'test2@test.com', SHA('client2'), 'Test2', 'Client2', 'Client', 1),
