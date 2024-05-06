@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, url_for
 
 from .forms.unavailable import UnavailableForm
 from .forms.schedule import ScheduleForm
-from ...queries import schedules, availability
+from ...queries import schedules, availability, appointments
 from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...utils.calendar import calendar_appointments, get_unavailable
@@ -16,7 +16,7 @@ from ...utils.date import (
     times_list, 
     weekdays
 )
-from ...utils.table import get_schedule_table, get_unavailable_table
+from ...utils.table import get_schedule_table, get_unavailable_table, get_appointments_table
 from ...models.barber import BarberUser
 from ...models.window import Interval
 from .. import barber
@@ -86,6 +86,9 @@ def calendar():
     barber_schedule = schedules.barber_weekly_schedule(user.id, unit, current)
     schedule_data = get_schedule_table(barber_schedule)
 
+    selected_appointments = appointments.appointments_for_date(user.id, current)
+    appointments_data = get_appointments_table(selected_appointments)
+
     barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
     unavailable_dates_data = get_unavailable_table(barber_unavailable_dates, ranges=False)
 
@@ -93,30 +96,32 @@ def calendar():
     unavailable_ranges_data = get_unavailable_table(barber_unavailable_ranges)
 
     schedule = user.get_schedule(current, unit)
-    appointments = calendar_appointments(user.id, current, unit)
+    barber_appointments = calendar_appointments(user.id, current, unit)
     unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
 
-    times = times_list(schedule, appointments)
+    times = times_list(schedule, barber_appointments)
     dates = dates_list(current, unit)
 
     template_key = "view"
-    print(schedule)
+    is_unavailable = availability.has_unavailability_for_date(user.id, current)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
         unit=unit,
         current=current,
+        is_unavailable=is_unavailable,
         weekday=weekdays[current.weekday()],
         prev={"unit": unit, "d": prev_date},
         next={"unit": unit, "d": next_date},
         user=user, 
         schedule=schedule,
-        appointments=appointments,
+        appointments=barber_appointments,
         unavailable=unavailable,
         times=times,
         dates=dates,
         weekdays=weekdays,
         schedule_data=schedule_data,
+        appointments_data=appointments_data,
         unavailable_dates_data=unavailable_dates_data,
         unavailable_ranges_data=unavailable_ranges_data,
         form=form,

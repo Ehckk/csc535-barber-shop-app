@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from flask import flash, redirect, render_template, request, url_for
 
-from ...queries import schedules, availability
+from ...queries import schedules, availability, appointments
 from ...utils.decorators import has_role
 from ...utils.user import current_user
 from ...utils.calendar import calendar_appointments, get_unavailable
@@ -14,7 +14,7 @@ from ...utils.date import (
     times_list, 
     weekdays
 )
-from ...utils.table import get_schedule_table, get_unavailable_table
+from ...utils.table import get_schedule_table, get_unavailable_table, get_appointments_table
 from ...models.barber import BarberUser
 from ...models.window import Interval
 from .. import barber
@@ -39,9 +39,14 @@ def calendar_view(selected):
     if current < today_month:
         return redirect(url_for("barber.calendar", unit=Interval.MONTH, d=today))
     prev_date, next_date = date_increments(current, unit)
-    
-    barber_schedule = schedules.barber_weekly_schedule(user.id)
+
+    barber_schedule = schedules.barber_weekly_schedule(user.id, unit, selected)
+    print(barber_schedule)
     schedule_data = get_schedule_table(barber_schedule)
+
+    booked_date = selected
+    selected_appointments = appointments.appointments_for_date(user.id, booked_date)
+    appointments_data = get_appointments_table(selected_appointments)
 
     barber_unavailable_dates = availability.list_barber_unavailible_dates(user.id, current, unit)
     unavailable_dates_data = get_unavailable_table(barber_unavailable_dates, ranges=False)
@@ -49,11 +54,12 @@ def calendar_view(selected):
     barber_unavailable_ranges = availability.list_barber_unavailible_ranges(user.id, current, unit)
     unavailable_ranges_data = get_unavailable_table(barber_unavailable_ranges)
 
-    schedule = user.get_schedule(current, unit)
-    appointments = calendar_appointments(user.id, current, unit)
+    schedule = user.get_schedule(selected, unit)
+    barber_appointments = calendar_appointments(user.id, selected, unit)
     unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
+    print(schedule[str(selected)], barber_appointments[str(selected)])
 
-    times = times_list(schedule, appointments)
+    times = times_list(schedule, barber_appointments)
     dates = dates_list(current, unit)
 
     template_key = "edit"
@@ -63,18 +69,19 @@ def calendar_view(selected):
         title=date_names[unit](current),
         unit=unit,
         current=current,
-        weekday=weekdays[current.weekday()],
+        weekday=weekdays[selected.weekday()],
         prev={"unit": unit, "d": prev_date},
         next={"unit": unit, "d": next_date},
         user=user, 
         schedule=schedule,
-        appointments=appointments,
+        appointments=barber_appointments,
         unavailable=unavailable,
         is_unavailable=is_unavailable,
         times=times,
         dates=dates,
         weekdays=weekdays,
         schedule_data=schedule_data,
+        appointments_data=appointments_data,
         unavailable_dates_data=unavailable_dates_data,
         unavailable_ranges_data=unavailable_ranges_data,
         selected=selected,
@@ -156,7 +163,6 @@ def calendar_range(start, end):
 
     times = times_list(schedule, appointments)
     dates = dates_list(current, unit)
-
     template_key = "edit"
     is_unavailable = availability.has_unavailability_for_date(user.id, selected)
     return render_template(

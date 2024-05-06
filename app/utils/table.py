@@ -42,3 +42,8 @@ def get_unavailable_table(unavailable_dates: list[dict[str, date]], ranges=True)
     end_dates = list(map(lambda s: [s['end_date']], unavailable_dates))
     data = list(zip(start_dates, end_dates))
     return data
+
+
+def get_appointments_table(appointments: list):
+    data = list(zip(map(lambda appt: (str(appt),), appointments)))
+    return data

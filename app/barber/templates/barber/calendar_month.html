@@ -13,9 +13,10 @@
     {% for days in dates %}
         {% for day in days %}
             {% if not day == None %}
-                {% set is_unavailable = day|string in unavailable %}
-                {% set is_available = schedule[day|string] is defined %}
-                {% set is_booked = day|string in appointments %}
+                {% set day_key = day|string %}
+                {% set is_unavailable = day_key in unavailable %}
+                {% set is_available = schedule[day_key]|length > 0 %}
+                {% set is_booked = appointments[day_key]|length > 0 %}
                 {% if is_unavailable %}
                     {% set day_class = "calendar-month-day unavailable" %}
                 {% else %}

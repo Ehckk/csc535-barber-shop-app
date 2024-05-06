@@ -269,8 +269,8 @@ def cancel_in_range(barber_id: int, start: date, end: date):
     """
     params = {
         "barber_id": barber_id,
-        "start": str(start),
-        "end": str(end)
+        "start_date": str(start),
+        "end_date": str(end)
     }
     results = db.execute(query, params)
     return list_appointments(results)
