@@ -7,6 +7,29 @@ from .. import db
 
 TIME_FORMAT = '%H:%M:%S'
 
+
+def barber_daily_schedule_for_time(barber_id: int, current: date, start_time: time):
+    weekday_id = current.weekday()
+    query = """
+        SELECT 
+            W.*,
+            S.`start_time`,
+            S.`end_time`
+        FROM csc535_barber.`schedule` AS S
+        JOIN csc535_barber.`weekday` AS W
+        USING (`weekday_id`)
+        WHERE `barber_id` = %(barber_id)s
+        AND S.weekday_id = %(weekday_id)s
+        AND %(start_time)s BETWEEN S.start_time AND S.end_time
+        ORDER BY S.`weekday_id`, S.`start_time`, S.`end_time`
+    """
+    params = {
+        "barber_id": barber_id,
+        "weekday_id": weekday_id,
+        "start_time": start_time
+    }
+    return db.execute(query, params) 
+
 def barber_daily_schedule(barber_id: int, current=date.today()):
     weekday_id = current.weekday()
     query = """
@@ -28,9 +51,11 @@ def barber_daily_schedule(barber_id: int, current=date.today()):
     return db.execute(query, params)
 
 
-def barber_weekly_schedule(barber_id: int, unit=Interval.WEEK, current=date.today()):
+def barber_weekly_schedule(barber_id: int, unit=Interval.WEEK, current=date.today(), start_time: time=None):
     if not unit == Interval.WEEK:
-        return barber_daily_schedule(barber_id, current) 
+        if start_time:
+            return barber_daily_schedule_for_time(barber_id, current, start_time)
+        return barber_daily_schedule(barber_id, current)
     query = """
         SELECT 
             W.*,
