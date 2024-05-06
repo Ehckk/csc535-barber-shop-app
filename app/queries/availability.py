@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from . import appointments
 from ..utils.date import date_window
 from .. import db
 
@@ -128,6 +129,7 @@ def insert_unavailable_range(barber_id: int, start_date: date, end_date: date | 
         "end_date": None if end_date is None else str(end_date) 
     })
     db.commit()
+    appointments.cancel_appointments(barber_id, start_date, end_date)
 
 
 def mark_unavailable(barber_id: int, start_date: date, end_date: date | None):

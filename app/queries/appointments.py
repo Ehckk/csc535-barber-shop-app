@@ -1,4 +1,6 @@
 from datetime import date, time
+
+from ..utils.email import send_mail
 from ..models.appointment import Appointment
 from .. import db
 
@@ -243,3 +245,57 @@ def cancel_prev_unbooked():
     """
     db.execute(query)
     db.commit()
+
+
+def cancel_on_date(barber_id: int, target: date):
+    query = """
+        SELECT * FROM csc535_barber.appointment
+        WHERE barber_id = %(barber_id)s
+        AND booked_date = %(target_date)s
+    """
+    params = {
+        "barber_id": barber_id,
+        "target_date": str(target),
+    }
+    results = db.execute(query, params)
+    return list_appointments(results)
+
+
+def cancel_in_range(barber_id: int, start: date, end: date):
+    query = """
+        SELECT * FROM csc535_barber.appointment
+        WHERE barber_id = %(barber_id)s
+        AND booked_date BETWEEN %(start_date)s AND %(end_date)s  
+    """
+    params = {
+        "barber_id": barber_id,
+        "start": str(start),
+        "end": str(end)
+    }
+    results = db.execute(query, params)
+    return list_appointments(results)
+
+
+def cancel_appointments(barber_id: int, start: date, end: date | None):
+    if end is None:
+        appointments = cancel_on_date(barber_id, start)
+    else:
+        appointments = cancel_in_range(barber_id, start, end)
+    for appointment in appointments:
+        recipients = [appointment.barber.email, appointment.client.email]
+        if appointment.is_approved:
+            subject = "Appointment Canceled"
+            message = """
+                An appointment has been canceled.
+
+                Appointment: {appt}
+            """.format(appt=str(appointment))
+        else:
+            subject = "Appointment Request Declined"
+            message = """
+                A requested appointment has been declined.
+
+                Appointment: {appt}
+            """.format(appt=str(appointment))
+        send_mail(subject, recipients, body=message)
+        delete_appointment(appointment_id=appointment.id)

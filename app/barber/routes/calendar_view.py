@@ -51,7 +51,6 @@ def calendar_view(selected):
 
     schedule = user.get_schedule(current, unit)
     appointments = calendar_appointments(user.id, current, unit)
-    print(barber_unavailable_dates)
     unavailable = get_unavailable(barber_unavailable_dates, barber_unavailable_ranges)
 
     times = times_list(schedule, appointments)
