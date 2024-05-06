@@ -4,20 +4,24 @@
 {% extends "barber/calendar_month.html" %}
 
 {% block side_text %}
-    {{ selected }}
+    {{ selected|display_date }}
 {% endblock %}
 
 {% block side_content %}
-    {% set day_text = 'unavailable' if is_available else 'available' %}
+    {% set day_text = 'unavailable' if is_unavailable else 'available' %}
     <p>You are <b>{{ day_text }}</b></p>
-    {% if not is_available %}
+    {% if not is_unavailable %}
         <div class="side-buttons">
-            <button class="error-1 text-light-1">Mark as Unavailable</button>
+            <a href="{{ url_for("barber.calendar_unavailable", selected=selected, unit="M", d=current) }}">
+                <button class="error-1 text-light-1">Mark as Unavailable</button>
+            </a>
         </div>
         <p>This will <b class="text-error-1">cancel</b> any appointments on this day</p>
     {% else %}
         <div class="side-buttons">
-            <button class="info-1 text-light-1">Mark as Available</button>
+            <a href="{{ url_for("barber.calendar_available", selected=selected, unit="M", d=current) }}">
+                <button class="info-1 text-light-1">Mark as Available</button>
+            </a>
         </div>
     {% endif %}
 {% endblock %}

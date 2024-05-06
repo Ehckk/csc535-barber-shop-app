@@ -65,7 +65,7 @@ def calendar():
             elif not end_date and availability.has_unavailability_for_date(user.id, start_date):
                 flash("These dates have already been marked as unavailable!", category="error")
             else:
-                availability.create_unavailable_range(user.id, start_date, end_date)
+                availability.mark_unavailable(user.id, start_date, end_date)
                 flash("Availability updated!", category="success")               
     else:
         form = ScheduleForm()

@@ -1,8 +1,6 @@
 from datetime import date, datetime, timedelta
 from flask import flash, redirect, render_template, request, url_for
 
-from .forms.unavailable import UnavailableForm
-from .forms.schedule import ScheduleForm
 from ...queries import schedules, availability
 from ...utils.decorators import has_role
 from ...utils.user import current_user
@@ -25,7 +23,7 @@ from .. import barber
 DATE_FORMAT = "%Y-%m-%d"
 
 
-@barber.route("/calendar/<selected>", methods=["GET", "POST"])
+@barber.route("/calendar/<selected>", methods=["GET"])
 @has_role("Barber")
 def calendar_view(selected):
     user: BarberUser = current_user()
@@ -49,31 +47,6 @@ def calendar_view(selected):
     elif current < today:
         return redirect(url_for("barber.calendar", unit=Interval.DAY, d=today))   
     prev_date, next_date = date_increments(current, unit)
-
-    if unit == Interval.MONTH:
-        form = UnavailableForm()
-        date_field_kw = {"min": current, "max": next_date - timedelta(days=1)}
-        form.start_date.render_kw = date_field_kw
-        form.end_date.render_kw = date_field_kw
-        if form.validate_on_submit():
-            if form.start_date.data > form.end_date.data:
-                flash("End date cannot be before start date!", category="error")
-            else:
-                availability.update_availability(weekday_id, user.id, start_time, end_time)
-                flash("Unavailable days updated!", category="success")               
-    else:
-        form = ScheduleForm()
-        if form.validate_on_submit():
-            weekday_id = int(form.weekday.data)
-            start_time = form.start_time.data
-            end_time = form.end_time.data
-            if not start_time < end_time:
-                flash("End time must be after start time!", category="error")
-            elif schedules.check_existing(weekday_id, user.id, start_time, end_time):
-                flash("This availability is already set!", category="error")
-            else:
-                schedules.create_schedule(weekday_id, user.id, start_time, end_time)
-                flash("Availability updated!", category="success")
     
     barber_schedule = schedules.barber_weekly_schedule(user.id)
     schedule_data = get_schedule_table(barber_schedule)
@@ -93,7 +66,6 @@ def calendar_view(selected):
 
     template_key = "edit"
     is_unavailable = availability.has_unavailability_for_date(user.id, selected)
-    print(selected, is_unavailable)
     return render_template(
         f"barber/{date_templates[unit].format(template_key)}", 
         title=date_names[unit](current),
@@ -105,13 +77,53 @@ def calendar_view(selected):
         schedule=schedule,
         appointments=appointments,
         unavailable=unavailable,
+        is_unavailable=is_unavailable,
         times=times,
         dates=dates,
         weekdays=weekdays,
         schedule_data=schedule_data,
         unavailable_dates_data=unavailable_dates_data,
         unavailable_ranges_data=unavailable_ranges_data,
-        form=form,
-        selected=selected.strftime("%B %d, %Y"),
+        selected=selected,
         today=today
     )
+
+
+@barber.route("/calendar/<selected>/unavailable", methods=["GET"])
+@has_role("Barber")
+def calendar_unavailable(selected: str):
+    user = current_user()
+
+    today = date.today()
+    selected = datetime.strptime(selected, DATE_FORMAT).date()
+    current = request.args.get("d", default=None, type=str) or today.strftime(DATE_FORMAT)
+    current = datetime.strptime(current, DATE_FORMAT).date()
+    unit = Interval.MONTH
+
+    if availability.has_unavailability_for_date(user.id, selected):
+        selected_fmt = selected.format("%B %d, %Y")
+        flash(f"You are already unavailable on {selected_fmt}", category="error")
+    else:
+        availability.insert_unavailable_range(user.id, selected, None)
+        flash("Availability updated", category="success")
+    return redirect(url_for("barber.calendar_view", selected=selected, unit=unit, d=current))
+
+
+@barber.route("/calendar/<selected>/available", methods=["GET"])
+@has_role("Barber")
+def calendar_available(selected: str):
+    user = current_user()
+
+    today = date.today()
+    selected = datetime.strptime(selected, DATE_FORMAT).date()
+    current = request.args.get("d", default=None, type=str) or today.strftime(DATE_FORMAT)
+    current = datetime.strptime(current, DATE_FORMAT).date()
+    unit = Interval.MONTH
+
+    if not availability.has_unavailability_for_date(user.id, selected):
+        selected_fmt = selected.format("%B %d, %Y")
+        flash(f"You are already available on {selected_fmt}", category="error")
+    else:
+        availability.mark_available(user.id, selected)
+        flash("Availability updated", category="success")
+    return redirect(url_for("barber.calendar_view", selected=selected, unit=unit, d=current))
