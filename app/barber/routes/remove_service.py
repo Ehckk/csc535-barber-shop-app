@@ -1,4 +1,4 @@
-from flask import flash, redirect
+from flask import flash, redirect, url_for
 from ...utils.decorators import has_role
 from ...queries import services, appointments
 from ...utils.user import current_user
@@ -18,6 +18,6 @@ def barber_service_remove(service_id):
     else:
         appointments.cancel_service_appointments(user.id, service_id)
         services.remove_barber_service(user.id, service_id)
-        flash("Service removed!", category="success")
+        flash(f"'{current_service.name}' removed!", category="success")
     url_name = "barber.barber_services"
-    return redirect(url_name)
+    return redirect(url_for(url_name))

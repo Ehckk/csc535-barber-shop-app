@@ -351,3 +351,22 @@ def cancel_outside_times(
     appointments = list_appointments(results)
     for appointment in appointments:
         cancel_appointment(appointment)
+
+
+def cancel_service_appointments(barber_id: int, service_id: int):
+    query = """
+        SELECT A.* FROM csc535_barber.appointment AS A
+        JOIN csc535_barber.appointment_services
+        USING (appointment_id)
+        WHERE barber_id = %(barber_id)s
+        AND NOT booked_date < CURDATE()
+        AND service_id = %(service_id)s
+    """
+    params = {
+        "barber_id": barber_id,
+        "service_id": service_id
+    }
+    results = db.execute(query, params)
+    appointments = list_appointments(results)
+    for appointment in appointments:
+        cancel_appointment(appointment)

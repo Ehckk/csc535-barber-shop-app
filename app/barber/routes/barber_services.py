@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template
+from flask import flash, redirect, render_template, url_for
 
 from ...utils.decorators import has_role
 from ...utils.user import current_user
@@ -21,7 +21,7 @@ def barber_services():
         try:
             new_service = services.add_barber_service(user.id, name, price, description)
             url_name = "barber.barber_service_details"
-            return redirect(url_name, service_id=new_service.id)
+            return redirect(url_for(url_name, service_id=new_service.id))
         except AssertionError as error:
             flash(error, category="error")
 

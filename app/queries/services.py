@@ -162,7 +162,7 @@ def remove_barber_service(barber_id: int, service_id: int):
     """
     db.execute(query, {
         'barber_id': barber_id, 
-        'service': service_id
+        'service_id': service_id
     })
     db.commit()
 

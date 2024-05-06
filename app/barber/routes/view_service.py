@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template
+from flask import flash, redirect, render_template, url_for
 from ...utils.decorators import has_role
 from ...queries import services
 from ...utils.user import current_user
@@ -18,7 +18,7 @@ def barber_service_details(service_id):
     )
     if not current_service:
         url_name = "barber.barber_services"
-        return redirect(url_name)
+        return redirect(url_for(url_name))
 
     form = ServiceForm()
     delattr(form, "name")
